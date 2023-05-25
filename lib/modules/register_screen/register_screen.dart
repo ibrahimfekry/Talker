@@ -29,16 +29,16 @@ class RegisterScreen extends StatelessWidget {
         listener: (context, state){
           if (state is RegisterSuccessState){
             Navigator.pushNamed(context, HomeLayoutScreen.id, arguments: emailId);
-            loginCubit.users.add({
-              'emailAddress' : emailController.text,
-              'firstName' : firstNameController.text,
-              'lastName' : lastNameController.text,
-              'password' : passwordController.text,
-              'ensurePassword' : ensurePasswordController.text,
-              'date' : dateController.text,
-              'status' : 'Unavailable'
-            });
           }
+          loginCubit.users.doc(loginCubit.registerAuth.currentUser?.uid).set({
+            'emailAddress' : emailController.text,
+            'firstName' : firstNameController.text,
+            'lastName' : lastNameController.text,
+            'password' : passwordController.text,
+            'ensurePassword' : ensurePasswordController.text,
+            'date' : dateController.text,
+            'status' : 'Unavailable'
+          });
           if(state is RegisterSuccessState || state is RegisterErrorState){
             emailController.clear();
             firstNameController.clear();
@@ -179,9 +179,9 @@ class RegisterScreen extends StatelessWidget {
                               onTap: (){
                                 emailId = emailController.text;
                                  loginCubit.createUser(
-                                    emailController.text,
-                                    passwordController.text,
-                                    context
+                                   password: passwordController.text,
+                                   context: context,
+                                   email: emailController.text
                                 );
                               },
                               child: SvgPicture.asset('assets/images/icon_arrow_right.svg')),

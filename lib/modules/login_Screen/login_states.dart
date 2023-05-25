@@ -32,5 +32,11 @@ class RegisterSuccessState extends LoginStates{}
 
 class RegisterErrorState extends LoginStates{}
 
+class SearchLoading extends LoginStates{}
+
+class SearchSuccess extends LoginStates{}
+
+class SearchError extends LoginStates{}
+
 
 

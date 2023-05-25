@@ -35,6 +35,9 @@ class LoginCubit extends Cubit<LoginStates> {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
+  // search variables
+  //Map<String,dynamic>? userMapSearch;
+
   // Register Methods
   changePasswordVisibilityRegister(){
     isPasswordRegisterNormal = !isPasswordRegisterNormal;
@@ -46,9 +49,9 @@ class LoginCubit extends Cubit<LoginStates> {
     emit(ChangeEnsurePasswordRegisterVisibility());
   }
 
-  createUser(String email, password, BuildContext context) async {
+  createUser({email, password, context}) async {
     emit(RegisterLoadingState());
-    userCredentialRegister = await registerAuth.createUserWithEmailAndPassword(email: email, password: password).then((value) {
+    userCredentialRegister = await registerAuth.createUserWithEmailAndPassword(email: email, password: password).then((value) async {
       defaultSnackBar(
           context : context ,
           color: scaffoldColorDark,
@@ -165,6 +168,20 @@ class LoginCubit extends Cubit<LoginStates> {
   //   // Once signed in, return the UserCredential
   //   return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   // }
+
+
+  // Search method
+  void searchUser(text, userList) async {
+    FirebaseFirestore data = FirebaseFirestore.instance;
+    emit(SearchLoading());
+    await data.collection('users').where("email" , isEqualTo: text).get().then((value) {
+      userList = value.docs[0].data();
+      emit(SearchSuccess());
+    }).catchError((error){
+      emit(SearchError());
+    });
+  }
+
 }
 
 

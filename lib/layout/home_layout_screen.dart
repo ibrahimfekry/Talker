@@ -28,8 +28,6 @@ class HomeLayoutScreen extends StatefulWidget {
 class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
   @override
   Widget build(BuildContext context) {
-    print('alaagoogle = ${widget.googleId}');
-    print('alaaemail = ${widget.emailId}');
     LayoutCubit layoutCubit = LayoutCubit.get(context);
     List screens = [
       ChatsScreenHistory(emailId: widget.emailId, googleId: widget.googleId,),
