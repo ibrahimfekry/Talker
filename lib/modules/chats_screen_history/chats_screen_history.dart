@@ -89,9 +89,20 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                                         MaterialPageRoute(
                                             builder: (context) => ChatScreen(googleId: widget.googleId, destinationId: userList[index].emailAddress,)));
                                   } else {
+                                    String chatId = loginCubit.chatRoomId(
+                                        user1 : loginCubit.registerAuth.currentUser?.displayName,
+                                        user2: userList[index].firstName);
                                     Navigator.push(context,
                                         MaterialPageRoute(
-                                            builder: (context) => ChatScreen(emailId: widget.emailId, destinationId: userList[index].emailAddress,)));
+                                            builder: (context) => ChatScreen(
+                                              emailId: widget.emailId,
+                                              destinationId: userList[index].emailAddress,
+                                              chatId: chatId,
+                                              firstName:userList[index].firstName,
+                                              lastName: userList[index].lastName,
+                                            )
+                                        )
+                                    );
                                   }
                                 },
                                 child: ChatScreenHistoryItem( name: '${userList[index].firstName} ${userList[index].lastName}',)),

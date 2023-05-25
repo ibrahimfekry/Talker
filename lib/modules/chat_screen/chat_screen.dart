@@ -24,10 +24,13 @@ import 'chat_states.dart';
 
 class ChatScreen extends StatefulWidget {
   static String id = 'ChatScreen';
-  ChatScreen({super.key, this.googleId, this.emailId, this.destinationId});
+  ChatScreen({super.key, this.googleId, this.emailId, this.destinationId, this.chatId, this.firstName, this.lastName});
   String? emailId;
   dynamic googleId;
   dynamic destinationId;
+  dynamic chatId;
+  dynamic firstName;
+  dynamic lastName;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -45,6 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String? urlCameraImage;
   String? urlFile;
   dynamic docId;
+
 
   @override
   void initState() {
@@ -105,7 +109,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 DefaultText(
-                                  text: 'alaa baker',
+                                  text: '${widget.firstName} ${widget.lastName}',
                                   fontSize: 13.sp,
                                   fontColor: whiteColor,
                                 ),
