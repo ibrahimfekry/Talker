@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
+import '../../models/users_model.dart';
 import '../../shared/components/component/components.dart';
 import '../../shared/constants/colors.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -31,12 +33,9 @@ class LoginCubit extends Cubit<LoginStates> {
   dynamic googleId;
   dynamic cred;
 
-  // Firestore Variables
+  // FireStore Variables
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-  // search variables
-  //Map<String,dynamic>? userMapSearch;
 
   // Register Methods
   changePasswordVisibilityRegister(){
@@ -49,14 +48,25 @@ class LoginCubit extends Cubit<LoginStates> {
     emit(ChangeEnsurePasswordRegisterVisibility());
   }
 
-  createUser({email, password, context}) async {
+  createUser({email, firstName, lastName, password, ensurePassword, date, context}) async {
     emit(RegisterLoadingState());
-    userCredentialRegister = await registerAuth.createUserWithEmailAndPassword(email: email, password: password).then((value) async {
-      defaultSnackBar(
+    userCredentialRegister = await registerAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password).then((value) {
+          defaultSnackBar(
           context : context ,
           color: scaffoldColorDark,
           text: 'Your Email is Generated successfully'
-      );
+          );
+          users.doc(FirebaseAuth.instance.currentUser?.uid).set({
+            'emailAddress' : email,
+            'firstName' : firstName,
+            'lastName' : lastName,
+            'password' : password,
+            'ensurePassword' : ensurePassword,
+            'date' : date,
+            'status' : 'Unavailable'
+          });
       emit(RegisterSuccessState());
     }).catchError((e) {
       defaultSnackBar(
@@ -68,27 +78,28 @@ class LoginCubit extends Cubit<LoginStates> {
     });
   }
 
-
   // Login Methods
   changePasswordVisibilityLogin(){
     isPasswordLogin = !isPasswordLogin;
     emit(ChangePasswordVisibility());
   }
 
-  loginUserEmailAndPassword(String email, String password, BuildContext context) async {
+  loginUserEmailAndPassword({email, password, context}) async {
     emit(LoginLoadingState());
-    userCredentialLogin = await loginAuth.signInWithEmailAndPassword(email: email, password: password).then((value) {
-      defaultSnackBar(
-          context : context ,
-          color: scaffoldColorDark,
-          text: 'Login Successfully'
-      );
-      emit(LoginSuccessState());
+    userCredentialLogin = await loginAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password).then((value) {
+          defaultSnackBar(
+              context : context ,
+              color: scaffoldColorDark,
+              text: 'Login Successfully'
+          );
+          emit(LoginSuccessState());
     }).catchError((error) {
       defaultSnackBar(
-        context : context ,
-        color: Colors. red,
-        text: 'There is an error'
+          context : context ,
+          color: Colors. red,
+          text: 'There is an error'
       );
       emit(LoginErrorState());
     });
@@ -125,6 +136,17 @@ class LoginCubit extends Cubit<LoginStates> {
     await googleSignIn.signOut();
   }
 
+  Future logOut () async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    emit(LogoutLoading());
+    try{
+      await auth.signOut();
+      emit(LogoutSuccess());
+    }catch(e){
+      if (kDebugMode) {print(e);}
+      emit(LogoutError());
+    }
+  }
 
   // Reset password Methods
   Future sendCodeResetPassword({email, context}) async{
@@ -145,51 +167,104 @@ class LoginCubit extends Cubit<LoginStates> {
     }
   }
 
-  // facebook authentication
-  // FacebookLogin facebookLogin = FacebookLogin();
-  // FirebaseAuth authFacebook = FirebaseAuth.instance;
+  // Search method
+  List<UserModelRegister> userListSearch = [];
+  searchUser({text}) async {
+    FirebaseFirestore data = FirebaseFirestore.instance;
+   emit(SearchLoading());
+    await data.collection('users').where(
+        "firstName" , isEqualTo: text,)
+        .get().then((value) {
+          if(userListSearch != null){
+            userListSearch = [];
+            userListSearch.add(UserModelRegister.fromJson(value.docs[0].data()));
+          }else{
+            userListSearch.add(UserModelRegister.fromJson(value.docs[0].data()));
+          }
+          emit(SearchSuccess());
+      if (kDebugMode) {print('user list = $userListSearch');}
+    }).catchError((error){
+      emit(SearchLoading());
+    });
+    return userListSearch;
+  }
 
-  // void facebookSignInMethod () async {
-  //   FacebookLoginResult facebookLoginResult = await facebookLogin.logIn(['email']);
-  //   final accessToken = facebookLoginResult.accessToken.token;
-  //   if(facebookLoginResult.status == FacebookLoginStatus.loggedIn){
-  //     final faceCredential = FacebookAuthProvider.credential(accessToken);
-  //     authFacebook.signInWithCredential(faceCredential);
+  // String chatRoomId ({user1, user2}){
+  //   if(user1[0].toLowerCase().codeUnits[0] > user2.toLowerCase().codeUnits[0]){
+  //     return "$user1$user2";
+  //   }else{
+  //     return "$user2$user1";
   //   }
   // }
-
-  // Future<UserCredential> signInWithFacebook() async {
-  //   // Trigger the sign-in flow
-  //   final LoginResult loginResult = await FacebookAuth.instance.login();
-  //
-  //   // Create a credential from the access token
-  //   final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken.token);
-  //
-  //   // Once signed in, return the UserCredential
-  //   return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-  // }
-
-
-  // Search method
-  void searchUser(text, userList) async {
-    FirebaseFirestore data = FirebaseFirestore.instance;
-    emit(SearchLoading());
-    await data.collection('users').where("email" , isEqualTo: text).get().then((value) {
-      userList = value.docs[0].data();
-      emit(SearchSuccess());
-    }).catchError((error){
-      emit(SearchError());
-    });
-  }
-
-  String chatRoomId ({user1, user2}){
-    if(user1[0].toLowerCase().codeUnits[0] > user2.toLowerCase().codeUnits[0]){
-      return "$user1$user2";
-    }else{
-      return "$user2$user1";
-    }
-  }
 
 }
 
 
+
+
+// facebook authentication
+// FacebookLogin facebookLogin = FacebookLogin();
+// FirebaseAuth authFacebook = FirebaseAuth.instance;
+
+// void facebookSignInMethod () async {
+//   FacebookLoginResult facebookLoginResult = await facebookLogin.logIn(['email']);
+//   final accessToken = facebookLoginResult.accessToken.token;
+//   if(facebookLoginResult.status == FacebookLoginStatus.loggedIn){
+//     final faceCredential = FacebookAuthProvider.credential(accessToken);
+//     authFacebook.signInWithCredential(faceCredential);
+//   }
+// }
+
+// Future<UserCredential> signInWithFacebook() async {
+//   // Trigger the sign-in flow
+//   final LoginResult loginResult = await FacebookAuth.instance.login();
+//
+//   // Create a credential from the access token
+//   final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken.token);
+//
+//   // Once signed in, return the UserCredential
+//   return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+// }
+
+//another method to create user
+// Future <User?> createAnotherUser ({email, password}) async {
+//   FirebaseAuth auth = FirebaseAuth.instance;
+//   FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
+//   User? user;
+//   emit(RegisterLoadingState());
+//   try{
+//     user = (await auth.createUserWithEmailAndPassword(email: email, password: password)).user;
+//     if(user != null){
+//       if (kDebugMode) {print('Email created successfully');}
+//       emit(RegisterSuccessState());
+//     }else{
+//       if (kDebugMode) {print("Account creation fail");}
+//       emit(RegisterErrorState());
+//     }
+//   }catch(e){
+//     if (kDebugMode) {print(e);}
+//     emit(RegisterErrorState());
+//   }
+//   return user ;
+// }
+
+// another way to login
+// Future <User?> loginWithEmailAndPassword ({email, password}) async {
+//   FirebaseAuth auth = FirebaseAuth.instance;
+//   User? user;
+//   emit(LoginLoadingState());
+//   try{
+//     user = (await auth.signInWithEmailAndPassword(email: email, password: password)).user;
+//     if(user != null){
+//       if (kDebugMode) {print('Login successfully');}
+//       emit(LoginSuccessState());
+//     }else{
+//       if (kDebugMode) {print('Login error');}
+//       emit(LoginErrorState());
+//     }
+//   }catch(e){
+//     if (kDebugMode) {print(e);}
+//     emit(LoginErrorState());
+//   }
+//   return user;
+// }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:talki/modules/authentication_screen/auth_screen.dart';
 import 'package:talki/shared/bloc_observer/bloc_observer.dart';
 import 'package:talki/shared/constants/theme.dart';
 import 'firebase_options.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget{
               },
               theme: darkTheme,
               debugShowCheckedModeBanner: false,
+              //home: AuthenticationScreen(),
               initialRoute: LoginScreen.id,
             ),
           );

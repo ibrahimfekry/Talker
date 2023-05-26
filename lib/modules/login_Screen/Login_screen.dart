@@ -145,7 +145,11 @@ class LoginScreen extends StatelessWidget {
                               onTap: () async {
                                 emailId = emailController.text;
                                 if(formKey.currentState!.validate()){
-                                  await loginCubit.loginUserEmailAndPassword(emailController.text, passwordController.text, context);
+                                  await loginCubit.loginUserEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                    context: context
+                                  );
                                 }
                               },
                               child: SvgPicture.asset(

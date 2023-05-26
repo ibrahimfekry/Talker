@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,21 +26,13 @@ class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key, this.emailId}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
     LoginCubit loginCubit = LoginCubit.get(context);
     return BlocConsumer <LoginCubit, LoginStates> (
         listener: (context, state){
           if (state is RegisterSuccessState){
             Navigator.pushNamed(context, HomeLayoutScreen.id, arguments: emailId);
           }
-          loginCubit.users.doc(loginCubit.registerAuth.currentUser?.uid).set({
-            'emailAddress' : emailController.text,
-            'firstName' : firstNameController.text,
-            'lastName' : lastNameController.text,
-            'password' : passwordController.text,
-            'ensurePassword' : ensurePasswordController.text,
-            'date' : dateController.text,
-            'status' : 'Unavailable'
-          });
           if(state is RegisterSuccessState || state is RegisterErrorState){
             emailController.clear();
             firstNameController.clear();
@@ -179,10 +173,14 @@ class RegisterScreen extends StatelessWidget {
                               onTap: (){
                                 emailId = emailController.text;
                                  loginCubit.createUser(
+                                   email: emailController.text,
+                                   firstName: firstNameController.text,
+                                   lastName: lastNameController.text,
                                    password: passwordController.text,
-                                   context: context,
-                                   email: emailController.text
-                                );
+                                   ensurePassword: ensurePasswordController.text,
+                                   date: dateController.text,
+                                   context: context
+                                 );
                               },
                               child: SvgPicture.asset('assets/images/icon_arrow_right.svg')),
                           fallback: (context) => const Center(child: CircularProgressIndicator(),),

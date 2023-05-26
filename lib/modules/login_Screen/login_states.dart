@@ -20,6 +20,12 @@ class SendCodeLoading extends LoginStates{}
 
 class SendCodeSuccess extends LoginStates{}
 
+class LogoutLoading extends LoginStates{}
+
+class LogoutSuccess extends LoginStates{}
+
+class LogoutError extends LoginStates{}
+
 class SendCodeError extends LoginStates{}
 
 class ChangePasswordRegisterVisibility extends LoginStates{}

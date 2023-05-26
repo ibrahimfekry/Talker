@@ -18,8 +18,8 @@ class DefaultTextField extends StatelessWidget {
     this.onSubmitted,
     this.onTap,
     this.validator,
-    //this.contentVertical,
-    //this.contentHorizontal,
+    this.contentVertical = 11,
+    this.contentHorizontal = 12,
     this.obscureText = false
   }) : super(key: key);
 
@@ -36,8 +36,8 @@ class DefaultTextField extends StatelessWidget {
   double? borderRadius;
   bool obscureText;
   dynamic validator;
-  //double? contentVertical = 0;
-  //double? contentHorizontal = 0;
+  double contentVertical = 0;
+  double contentHorizontal = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class DefaultTextField extends StatelessWidget {
             suffixIcon: suffix,
             border: InputBorder.none,
             hintText: hintText,
-            //contentPadding: EdgeInsets.symmetric(vertical: 15.h , horizontal: 2.w),
+            contentPadding: EdgeInsets.symmetric(vertical: contentVertical , horizontal: contentHorizontal),
             hintStyle: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.w700, color: silverColor),
           ),
         )
