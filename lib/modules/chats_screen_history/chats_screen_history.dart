@@ -102,9 +102,9 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                                 ? ListView.separated(
                                     itemCount: loginCubit.userListSearch.length,
                                     itemBuilder: (context, index) => ItemChatHistory(
-                                      firstName: loginCubit.userListSearch[0].firstName!,
-                                      lastName: loginCubit.userListSearch[0].lastName!,
-                                      emailId: widget.emailId!,
+                                      firstName: loginCubit.userListSearch[0].firstName,
+                                      lastName: loginCubit.userListSearch[0].lastName,
+                                      emailId: widget.emailId,
                                       destinationId: loginCubit.userListSearch[index].emailAddress,
                                       googleId: widget.googleId,
                                     ),
@@ -113,9 +113,9 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                                 : ListView.separated(
                                     itemCount: userList.length,
                                     itemBuilder: (context, index) => ItemChatHistory(
-                                      firstName: userList[index].firstName!,
-                                      lastName: userList[index].lastName!,
-                                      emailId: widget.emailId!,
+                                      firstName: userList[index].firstName,
+                                      lastName: userList[index].lastName,
+                                      emailId: widget.emailId,
                                       destinationId: userList[index].emailAddress,
                                       googleId: widget.googleId,
                                     ),

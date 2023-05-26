@@ -12,11 +12,11 @@ class ItemChatHistory extends StatelessWidget{
     this.googleId,
     this.destinationId
   });
-  String emailId;
+  String? emailId;
   dynamic googleId;
   dynamic destinationId;
-  String firstName;
-  String lastName;
+  String? firstName;
+  String? lastName;
 
   @override
   Widget build(BuildContext context) {
