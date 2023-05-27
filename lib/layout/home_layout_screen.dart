@@ -31,7 +31,6 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
     LayoutCubit layoutCubit = LayoutCubit.get(context);
     List screens = [
       ChatsScreenHistory(emailId: widget.emailId, googleId: widget.googleId,),
-      CallsScreen(),
       AddScreen(),
       GroupsScreen(),
       MenuScreen()
@@ -57,14 +56,9 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
                 showTxt: true,
               ),
               BottomBarButton(
-                buttonTxt: 'Calls',
-                iconUrl: 'assets/images/icon_calls.svg',
-                showTxt: true,
-              ),
-              BottomBarButton(
                 buttonTxt: 'Add',
                 iconUrl: 'assets/images/icon_add.svg',
-                showTxt: false,
+                showTxt: true,
               ),
               BottomBarButton(
                 buttonTxt: 'Groups',
