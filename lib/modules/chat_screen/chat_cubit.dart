@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'chat_states.dart';
@@ -16,10 +17,11 @@ class ChatCubit extends Cubit<ChatStates> {
 
   File? file;
   var imagePicker = ImagePicker();
-  late String? url ;
+  String? url ;
   uploadImage() async {
     emit(UploadImageLoading());
     try {
+      print('alaaaaaaaaaaa');
       XFile? imgPicked = await imagePicker.pickImage(source: ImageSource.gallery);
       var nameImage = basename(imgPicked!.path);
       if (imgPicked != null) {
@@ -30,10 +32,11 @@ class ChatCubit extends Cubit<ChatStates> {
         print(file);
         await refStorage.putFile(file!);
         url = await refStorage.getDownloadURL();
-        print('Url : $url');
+        print('Url Image : $url');
       }
       emit(UploadImageSuccess());
     }catch(e){
+      if (kDebugMode) {print('error is $e');}
       emit(UploadImageError());
     }
   }

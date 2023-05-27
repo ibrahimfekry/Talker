@@ -58,6 +58,8 @@ class LoginCubit extends Cubit<LoginStates> {
           color: scaffoldColorDark,
           text: 'Your Email is Generated successfully'
           );
+          
+          userCredentialRegister?.user?.updateDisplayName('$firstName$lastName');
           users.doc(FirebaseAuth.instance.currentUser?.uid).set({
             'emailAddress' : email,
             'firstName' : firstName,
@@ -189,13 +191,7 @@ class LoginCubit extends Cubit<LoginStates> {
     return userListSearch;
   }
 
-  // String chatRoomId ({user1, user2}){
-  //   if(user1[0].toLowerCase().codeUnits[0] > user2.toLowerCase().codeUnits[0]){
-  //     return "$user1$user2";
-  //   }else{
-  //     return "$user2$user1";
-  //   }
-  // }
+
 
 }
 

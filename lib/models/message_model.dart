@@ -1,14 +1,14 @@
 class MessageModel {
   String? message;
-  String? id;
+  String? sendBy;
 
   MessageModel({
     this.message,
-    this.id
+    this.sendBy
   });
 
    MessageModel.fromJson(json){
      message = json['message'];
-     id = json['id'];
+     sendBy = json['sendBy'];
   }
 }

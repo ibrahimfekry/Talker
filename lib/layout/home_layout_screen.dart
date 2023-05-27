@@ -36,6 +36,7 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
       GroupsScreen(),
       MenuScreen()
     ];
+
     return BlocConsumer<LayoutCubit, LayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {

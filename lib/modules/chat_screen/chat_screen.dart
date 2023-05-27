@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,9 +29,9 @@ class ChatScreen extends StatefulWidget {
   String? emailId;
   dynamic googleId;
   dynamic destinationId;
-  dynamic chatId;
   dynamic firstName;
   dynamic lastName;
+  String? chatId;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -47,8 +48,6 @@ class _ChatScreenState extends State<ChatScreen> {
   String? urlImage;
   String? urlCameraImage;
   String? urlFile;
-  dynamic docId;
-
 
   @override
   void initState() {
@@ -66,8 +65,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    setDocId();
-    CollectionReference messages = FirebaseFirestore.instance.collection('messages').doc(docId).collection('channel');
+    CollectionReference messages = FirebaseFirestore.instance.collection('messages')
+        .doc(widget.chatId).collection('channel');
     return StreamBuilder<QuerySnapshot>(
         stream: messages.orderBy('messageTime', descending: true).snapshots(),
         builder: (context, snapshot) {
@@ -87,7 +86,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 if(chatCubit.phoneNumber != null) {
                   sendController.text = chatCubit.phoneNumber;
                 }
-                print('doci = $docId');
                 return ModalProgressHUD(
                   inAsyncCall: state is UploadImageLoading || state is UploadCameraImageLoading || state is UploadFileLoading ? true : false,
                   child: Scaffold(
@@ -176,9 +174,9 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: ListView.separated(
                               reverse: true,
                               itemBuilder: (context, index){
-                                  return messageList[index].id == widget.emailId || messageList[index].id == widget.googleId
-                                        ? ChatBubbleItem(message: messageList[index].message,)
-                                        : ChatBubbleItemReceive(message: messageList[index].message,);
+                                  return messageList[index].sendBy == widget.emailId || messageList[index].sendBy == widget.googleId
+                                      ? ChatBubbleItemReceive(message: messageList[index].message,)
+                                      : ChatBubbleItem(message: messageList[index].message,);
                               },
                               separatorBuilder: (context, index) => SizedBox(height: 25.h,),
                               itemCount: snapshot.data!.docs.length,
@@ -203,31 +201,13 @@ class _ChatScreenState extends State<ChatScreen> {
                             textColor: whiteColor,
                             onTapTextForm: (){},
                             sendFunction: () {
-                              messages.doc().set({
-                                'message': sendController.text,
-                                'messageTime': DateTime.now(),
-                                'desId' : widget.destinationId,
-                                'id': widget.emailId != null ? widget.emailId.toString() : widget.googleId.toString(),
-                              }).then((value) {
-                                sendController.clear();
-                                chatCubit.phoneNumber = null;
-                                urlImage = null;
-                                urlCameraImage = null;
-                                urlFile = null ;
-                                scrollController.animateTo(
-                                    0,
-                                    duration: const Duration(seconds: 1),
-                                    curve: Curves.fastOutSlowIn);
-                              });
+                              sendMessage(messages, chatCubit);
                             },
                             addTapFunction: () {
                               if (isBottomSheet) {
-                                scaffoldKey.currentState
-                                    ?.showBottomSheet((context) {
+                                scaffoldKey.currentState?.showBottomSheet((context) {
                                   return BlocConsumer <ChatCubit, ChatStates>(
-                                    listener: (context, state) {
-                                      // TODO: implement listener
-                                    },
+                                    listener: (context, state) {},
                                     builder: (context, state) {
                                       return Container(
                                         color: HexColor('#000000'),
@@ -331,21 +311,26 @@ class _ChatScreenState extends State<ChatScreen> {
         });
   }
 
-  void setDocId() {
-     if(widget.emailId == null){
-      if((docId != null && docId == "${widget.destinationId.toString()}+${widget.googleId.toString()}") ||
-          (docId != null && docId == "${widget.googleId.toString()}+${widget.destinationId.toString()}")) {
-        docId = "${widget.googleId.toString()}+${widget.destinationId}";
-      }else{
-        docId = "${widget.googleId.toString()}+${widget.destinationId}";
-      }
-    }else{
-      if((docId != null && docId == "${widget.destinationId.toString()}+${widget.emailId.toString()}") ||
-          (docId != null && docId == "${widget.emailId.toString()}+${widget.destinationId.toString()}")) {
-        docId = "${widget.emailId.toString()}+${widget.destinationId}";
-      }else{
-        docId = "${widget.emailId.toString()}+${widget.destinationId}";
-      }
-    }
+  void sendMessage(CollectionReference<Object?> messages, ChatCubit chatCubit) {
+   if(sendController.text.isNotEmpty){
+     messages.doc().set({
+       'message': sendController.text,
+       'messageTime': DateTime.now(),
+       'desId' : widget.destinationId,
+       'sendBy': widget.emailId != null ? widget.emailId.toString() : widget.googleId.toString(),
+     }).then((value) {
+       sendController.clear();
+       chatCubit.phoneNumber = null;
+       urlImage = null;
+       urlCameraImage = null;
+       urlFile = null ;
+       scrollController.animateTo(
+           0,
+           duration: const Duration(seconds: 1),
+           curve: Curves.fastOutSlowIn);
+     });
+   }else{
+     if (kDebugMode){print('Enter some Text');}
+   }
   }
 }

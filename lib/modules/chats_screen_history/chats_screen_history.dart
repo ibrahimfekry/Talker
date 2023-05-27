@@ -17,8 +17,7 @@ import '../chat_screen/chat_screen.dart';
 
 class ChatsScreenHistory extends StatefulWidget {
   ChatsScreenHistory(
-      {Key? key, this.googleId, this.emailId, this.destinationId})
-      : super(key: key);
+      {Key? key, this.googleId, this.emailId, this.destinationId}) : super(key: key);
   static String id = 'ChatScreenHistory';
   String? emailId;
   dynamic googleId;
@@ -107,6 +106,8 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                                       emailId: widget.emailId,
                                       destinationId: loginCubit.userListSearch[index].emailAddress,
                                       googleId: widget.googleId,
+                                      user1: loginCubit.registerAuth.currentUser?.email,
+                                      user2: userList[index].emailAddress,
                                     ),
                                     separatorBuilder: (context, index) => SizedBox(height: 13.h,),
                                   )
@@ -118,6 +119,8 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                                       emailId: widget.emailId,
                                       destinationId: userList[index].emailAddress,
                                       googleId: widget.googleId,
+                                      user1: loginCubit.registerAuth.currentUser?.email,
+                                      user2:  userList[index].emailAddress,
                                     ),
                                     separatorBuilder: (context, index) => SizedBox(height: 13.h,),
                                   ),
