@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../models/users_model.dart';
 import '../../../modules/chat_screen/chat_screen.dart';
 import 'chat_screen_history_item.dart';
 
@@ -12,7 +13,9 @@ class ItemChatHistory extends StatelessWidget{
     this.googleId,
     this.destinationId,
     this.user1,
-    this.user2
+    this.user2,
+    this.status,
+    this.url,
   });
   String? emailId;
   dynamic googleId;
@@ -21,6 +24,9 @@ class ItemChatHistory extends StatelessWidget{
   String? lastName;
   dynamic user1;
   dynamic user2;
+  dynamic status;
+  String? url;
+
 
   String chatRoomId ({user1, user2}){
     if(user1[0].toLowerCase().codeUnits[0] > user2.toLowerCase().codeUnits[0]){
@@ -43,6 +49,8 @@ class ItemChatHistory extends StatelessWidget{
                       firstName: firstName,
                       lastName: lastName,
                       chatId: roomID,
+                      status: status,
+                      url: url,
                     )
                 )
             );
@@ -55,6 +63,8 @@ class ItemChatHistory extends StatelessWidget{
                       firstName: firstName,
                       lastName: lastName,
                       chatId: roomID,
+                      status: status,
+                      url: url,
                     )
                 )
             );
@@ -62,6 +72,8 @@ class ItemChatHistory extends StatelessWidget{
         },
         child: ChatScreenHistoryItem(
           name: '$firstName $lastName',
+          status: status,
+          url: url,
         )
     );
   }

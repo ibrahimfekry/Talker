@@ -6,7 +6,9 @@ import '../../constants/colors.dart';
 
 class ChatActiveItem extends StatelessWidget{
   String? name;
-  ChatActiveItem({super.key, this.name});
+  String? status;
+  String? url;
+  ChatActiveItem({super.key, this.name, this.status, this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +19,18 @@ class ChatActiveItem extends StatelessWidget{
           child: Stack(
             alignment: AlignmentDirectional.bottomEnd,
             children: [
-              SvgPicture.asset('assets/images/icon_avatar.svg',),
-              SvgPicture.asset('assets/images/icon_green.svg'),
+              url == null ? SvgPicture.asset('assets/images/icon_avatar.svg',) : Container(
+                  width: 50.w,
+                  height: 50.h,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.black
+                  ),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Image(image: NetworkImage('$url'),)
+              ),
+              SvgPicture.asset('assets/images/icon_green.svg')
+              //status == "Online" ? SvgPicture.asset('assets/images/icon_green.svg') : Container(),
             ],
           ),
         ),

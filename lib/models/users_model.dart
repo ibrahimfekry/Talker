@@ -1,10 +1,13 @@
 class UserModelRegister{
+  String? url;
   String? emailAddress;
   String? firstName;
   String? lastName;
   String? password;
   String? ensurePassword;
   String? date;
+  String? status;
+  String? uid;
 
 
   UserModelRegister({
@@ -14,6 +17,9 @@ class UserModelRegister{
     this.password,
     this.ensurePassword,
     this.date,
+    this.status,
+    this.uid,
+    this.url
   });
 
   UserModelRegister.fromJson(json){
@@ -23,6 +29,9 @@ class UserModelRegister{
     password = json["password"];
     ensurePassword = json["ensurePassword"];
     date= json["date"];
+    status= json["status"];
+    uid= json["uid"];
+    url= json["urlImage"];
   }
 
   Map toMap() {
@@ -33,6 +42,9 @@ class UserModelRegister{
       "password" : password,
       "ensurePassword" : ensurePassword,
       "date" : date,
+      "status" : status,
+      "uid" : uid,
+      "urlImage" : url,
     };
   }
 

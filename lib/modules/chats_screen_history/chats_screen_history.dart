@@ -1,23 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:talki/modules/login_Screen/login_cubit.dart';
-import 'package:talki/modules/login_Screen/login_states.dart';
+import 'package:talki/shared/cubit/login_register_cubit/login_cubit.dart';
+import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
 import '../../models/users_model.dart';
 import '../../shared/components/widgets/chat_item_active.dart';
 import '../../shared/components/widgets/child_chat_history.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
-import '../../shared/components/widgets/chat_screen_history_item.dart';
-import '../chat_screen/chat_screen.dart';
 
 class ChatsScreenHistory extends StatefulWidget {
-  ChatsScreenHistory(
-      {Key? key, this.googleId, this.emailId, this.destinationId}) : super(key: key);
+
+  ChatsScreenHistory( {Key? key, this.googleId, this.emailId, this.destinationId,}) : super(key: key);
+
+  ///////////////////////// variables
   static String id = 'ChatScreenHistory';
   String? emailId;
   dynamic googleId;
@@ -27,8 +28,34 @@ class ChatsScreenHistory extends StatefulWidget {
   State<ChatsScreenHistory> createState() => _ChatsScreenHistoryState();
 }
 
-class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
+class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBindingObserver{
+
+  //////////////////////////// variables
   TextEditingController searchController = TextEditingController();
+  FirebaseAuth authStates = FirebaseAuth.instance;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    setStatus("Online");
+  }
+
+  void setStatus(String status) async {
+    await firebaseFirestore.collection('users').doc(authStates.currentUser?.uid).update({
+      "status" : status,
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    if(state == AppLifecycleState.resumed){
+      setStatus("Online");
+    }else{
+      setStatus("Offline");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +64,8 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
     return StreamBuilder<QuerySnapshot>(
         stream: users.snapshots(),
         builder: (context, snapshot) {
+          List<UserModelRegister> userList = [];
           if (snapshot.hasData) {
-            List<UserModelRegister> userList = [];
             for (int i = 0; i < snapshot.data!.docs.length; i++) {
               userList.add(UserModelRegister.fromJson(snapshot.data?.docs[i]));
             }
@@ -57,11 +84,11 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                           child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) => ChatActiveItem(
-                                  name:
-                                      '${userList[index].firstName} ${userList[index].lastName}'),
-                              separatorBuilder: (context, index) => SizedBox(
-                                    width: 11.w,
-                                  ),
+                                name: '${userList[index].firstName} ${userList[index].lastName}',
+                                status: userList[index].status,
+                                url: userList[index].url,
+                              ),
+                              separatorBuilder: (context, index) => SizedBox(width: 11.w,),
                               itemCount: userList.length),
                         ),
                         SizedBox(
@@ -108,6 +135,8 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                                       googleId: widget.googleId,
                                       user1: loginCubit.registerAuth.currentUser?.email,
                                       user2: userList[index].emailAddress,
+                                      status: userList[index].status,
+                                      url: userList[index].url,
                                     ),
                                     separatorBuilder: (context, index) => SizedBox(height: 13.h,),
                                   )
@@ -117,10 +146,12 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                                       firstName: userList[index].firstName,
                                       lastName: userList[index].lastName,
                                       emailId: widget.emailId,
-                                      destinationId: userList[index].emailAddress,
+                                      destinationId:userList[index].emailAddress,
                                       googleId: widget.googleId,
                                       user1: loginCubit.registerAuth.currentUser?.email,
-                                      user2:  userList[index].emailAddress,
+                                      user2: userList[index].emailAddress,
+                                      status: userList[index].status,
+                                      url: userList[index].url,
                                     ),
                                     separatorBuilder: (context, index) => SizedBox(height: 13.h,),
                                   ),

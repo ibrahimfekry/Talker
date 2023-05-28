@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:math';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -5,9 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-import '../../models/users_model.dart';
-import '../../shared/components/component/components.dart';
-import '../../shared/constants/colors.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../../models/users_model.dart';
+import '../../components/component/components.dart';
+import '../../constants/colors.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'login_states.dart';
 
@@ -48,7 +53,7 @@ class LoginCubit extends Cubit<LoginStates> {
     emit(ChangeEnsurePasswordRegisterVisibility());
   }
 
-  createUser({email, firstName, lastName, password, ensurePassword, date, context}) async {
+  createUser({email, firstName, lastName, password, ensurePassword, date, context,urlImage}) async {
     emit(RegisterLoadingState());
     userCredentialRegister = await registerAuth.createUserWithEmailAndPassword(
         email: email,
@@ -61,13 +66,15 @@ class LoginCubit extends Cubit<LoginStates> {
           
           userCredentialRegister?.user?.updateDisplayName('$firstName$lastName');
           users.doc(FirebaseAuth.instance.currentUser?.uid).set({
+            'urlImage' : urlImage,
             'emailAddress' : email,
             'firstName' : firstName,
             'lastName' : lastName,
             'password' : password,
             'ensurePassword' : ensurePassword,
             'date' : date,
-            'status' : 'Unavailable'
+            'status' : 'Offline',
+            'uid' : FirebaseAuth.instance.currentUser?.uid,
           });
       emit(RegisterSuccessState());
     }).catchError((e) {
@@ -78,6 +85,31 @@ class LoginCubit extends Cubit<LoginStates> {
       );
       emit(RegisterErrorState());
     });
+  }
+
+  File? file;
+  var imagePicker = ImagePicker();
+  String? url ;
+  uploadImage() async {
+    emit(UploadImageRegisterLoading());
+    try {
+      XFile? imgPicked = await imagePicker.pickImage(source: ImageSource.gallery);
+      var nameImage = basename(imgPicked!.path);
+      if (imgPicked != null) {
+        file = File(imgPicked.path);
+        var random = Random().nextInt(10000);
+        nameImage = '$random$nameImage';
+        var refStorage = FirebaseStorage.instance.ref("images/$nameImage");
+        print(file);
+        await refStorage.putFile(file!);
+        url = await refStorage.getDownloadURL();
+        print('Url Image : $url');
+      }
+      emit(UploadImageRegisterSuccess());
+    }catch(e){
+      if (kDebugMode) {print('error is $e');}
+      emit(UploadImageRegisterError());
+    }
   }
 
   // Login Methods

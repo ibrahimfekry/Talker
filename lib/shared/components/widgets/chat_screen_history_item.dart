@@ -10,8 +10,10 @@ class ChatScreenHistoryItem extends StatelessWidget {
 
   String? name;
   String? time;
+  String? status;
+  String? url;
 
-  ChatScreenHistoryItem({super.key, this.name, this.time});
+  ChatScreenHistoryItem({super.key, this.name, this.time, this.status, this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +25,23 @@ class ChatScreenHistoryItem extends StatelessWidget {
           child: Stack(
             alignment: AlignmentDirectional.bottomEnd,
             children: [
-              SvgPicture.asset('assets/images/icon_avatar.svg',),
-              SvgPicture.asset('assets/images/icon_green.svg'),
+              url == null ? SvgPicture.asset('assets/images/icon_avatar.svg',) : Container(
+                  width: 50.w,
+                  height: 50.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.black
+                  ),
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Image(image: NetworkImage('$url'),)
+              ),
+              status == "Offline" ? Container(
+                width: 11.w,
+                height: 11.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+              ) : SvgPicture.asset('assets/images/icon_green.svg')
             ],
           ),
         ),
@@ -34,22 +51,9 @@ class ChatScreenHistoryItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DefaultText(text: name,fontColor: whiteColor,fontSize: 10.sp,fontWeight: FontWeight.w300,),
-              // SizedBox(height: 3.h,),
-              // Container(
-              //     width: 225.w,height: 23.h,
-              //     child: DefaultText(text:'Hello there! .',fontColor: whiteColor,fontSize: 10.sp,fontWeight: FontWeight.w300,)),
             ],
           ),
         ),
-        // Column(
-        //   children: [
-        //     DefaultText(text:time,fontColor: whiteColor,fontSize: 10.sp,fontWeight: FontWeight.w300,),
-        //     Container(
-        //         width:15.w,height:15.h,
-        //         color: orangeColor,
-        //         child: Center(child: Text('8'))),
-        //   ],
-        // ),
       ],
     );
   }

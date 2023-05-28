@@ -13,14 +13,18 @@ import '../modules/menu_screen/menu_screen.dart';
 import '../shared/components/widgets/bottom_bar_button.dart';
 import '../shared/components/widgets/text_widget.dart';
 import '../shared/constants/colors.dart';
-import 'layout_cubit.dart';
-import 'layout_states.dart';
+import '../shared/cubit/layout_cubt/layout_cubit.dart';
+import '../shared/cubit/layout_cubt/layout_states.dart';
 
 class HomeLayoutScreen extends StatefulWidget {
+
   HomeLayoutScreen({Key? key, this.emailId, this.googleId}) : super(key: key);
+
+  //////////////////////// variables
   static String id = 'HomeLayout';
   String? emailId;
   dynamic googleId;
+
   @override
   State<HomeLayoutScreen> createState() => _HomeLayoutScreenState();
 }
@@ -28,6 +32,7 @@ class HomeLayoutScreen extends StatefulWidget {
 class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
   @override
   Widget build(BuildContext context) {
+
     LayoutCubit layoutCubit = LayoutCubit.get(context);
     List screens = [
       ChatsScreenHistory(emailId: widget.emailId, googleId: widget.googleId,),
@@ -35,20 +40,19 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
       GroupsScreen(),
       MenuScreen()
     ];
-
     return BlocConsumer<LayoutCubit, LayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+          ),
           bottomNavigationBar: CurvedNavigationBar(
             height: 56.h,
             color: scaffoldColorDark,
             backgroundColor: orangeColor,
             animationCurve: Curves.easeInOut,
-            onTap: (index) {
-              layoutCubit.changeIndex(index);
-            },
+            onTap: (index) { layoutCubit.changeIndex(index);},
             items: <Widget>[
               BottomBarButton(
                 buttonTxt: 'Chats',
