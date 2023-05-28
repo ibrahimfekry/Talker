@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +14,8 @@ import '../../shared/cubit/chat_cubit/chat_cubit.dart';
 import '../../shared/cubit/chat_cubit/chat_states.dart';
 
 class GroupChatRoom extends StatefulWidget{
-
+  String? emailId;
+  dynamic googleId;
   int? index;
   GroupChatRoom({super.key, this.index});
 
@@ -47,7 +51,9 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
             Expanded(
               child: ListView.separated(
                 reverse: true,
-                itemBuilder: (context, index){},
+                itemBuilder: (context, index){
+
+                },
                 separatorBuilder: (context, index) => SizedBox(height: 25.h,),
                 itemCount: 2,
                 controller: scrollController,
@@ -64,7 +70,9 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
               sendController: chatMessage,
               textColor: whiteColor,
               onTapTextForm: (){},
-              sendFunction: () {},
+              sendFunction: () {
+
+              },
               addTapFunction: () {
                 if (isBottomSheet) {
                   scaffoldKey.currentState?.showBottomSheet((context) {
@@ -138,5 +146,28 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
         ),
       ),
     );
+  }
+
+  void sendMessage(CollectionReference<Object?> messagesGroup, ChatCubit chatCubit) {
+    if(chatMessage.text.isNotEmpty){
+      messagesGroup.doc().set({
+        'message': chatMessage.text,
+        'messageTime': DateTime.now(),
+        //'desId' : widget.destinationId,
+        'sendBy': FirebaseAuth.instance.currentUser?.email != null ? FirebaseAuth.instance.currentUser?.email.toString() : widget.googleId.toString(),
+      }).then((value) {
+        chatMessage.clear();
+        chatCubit.phoneNumber = null;
+        // urlImage = null;
+        // urlCameraImage = null;
+        // urlFile = null ;
+        scrollController.animateTo(
+            0,
+            duration: const Duration(seconds: 1),
+            curve: Curves.fastOutSlowIn);
+      });
+    }else{
+      if (kDebugMode){print('Enter some Text');}
+    }
   }
 }

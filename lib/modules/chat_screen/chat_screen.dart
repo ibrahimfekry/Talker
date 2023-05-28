@@ -74,6 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     Future<bool> onBackPressed() async {
       if(widget.isContact == true){
+        widget.isContact = false;
         Navigator.pop(context);
         Navigator.pop(context);
       }else{
