@@ -7,8 +7,8 @@ import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
 import '../login_Screen/Login_screen.dart';
-import '../login_Screen/login_cubit.dart';
-import '../login_Screen/login_states.dart';
+import '../../shared/cubit/login_register_cubit/login_cubit.dart';
+import '../../shared/cubit/login_register_cubit/login_states.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({Key? key}) : super(key: key);

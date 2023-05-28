@@ -1,20 +1,26 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../layout/home_layout_screen.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
 import '../../shared/constants/styles.dart';
-import '../login_Screen/login_cubit.dart';
-import '../login_Screen/login_states.dart';
+import '../../shared/cubit/chat_cubit/chat_states.dart';
+import '../../shared/cubit/login_register_cubit/login_cubit.dart';
+import '../../shared/cubit/login_register_cubit/login_states.dart';
 
 class RegisterScreen extends StatelessWidget {
+
+  RegisterScreen({Key? key, this.emailId}) : super(key: key);
+
+  ////////////////////////////////// variables
   static String id ='RegisterScreen';
   TextEditingController emailController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
@@ -23,10 +29,10 @@ class RegisterScreen extends StatelessWidget {
   TextEditingController ensurePasswordController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   String? emailId ;
-  RegisterScreen({Key? key, this.emailId}) : super(key: key);
+
+  ///////////////////////////////// Build Method
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
     LoginCubit loginCubit = LoginCubit.get(context);
     return BlocConsumer <LoginCubit, LoginStates> (
         listener: (context, state){
@@ -44,7 +50,9 @@ class RegisterScreen extends StatelessWidget {
         },
         builder: (context, state){
           return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+            ),
             body: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Padding(
@@ -62,11 +70,26 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 4.h,),
-                    Center(
-                      child: GestureDetector(
-                          onTap: (){},
-                          child: SvgPicture.asset('assets/images/icon_camera.svg')
+                    ConditionalBuilder(
+                      condition: state is !UploadImageRegisterLoading,
+                      builder: (context) => Center(
+                        child: GestureDetector(
+                            onTap: () async {
+                              await loginCubit.uploadImage();
+                            },
+                            child: loginCubit.url == null ? SvgPicture.asset('assets/images/icon_camera.svg')
+                                : Container(
+                                    width: 60.w,
+                                    height: 60.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                    ),
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    child: Image(image: NetworkImage('${loginCubit.url}'), )
+                            )
+                        ),
                       ),
+                      fallback: (BuildContext context) => const Center(child: CircularProgressIndicator(),),
                     ),
                     SizedBox(height: 14.h,),
                     DefaultTextField(
@@ -179,6 +202,7 @@ class RegisterScreen extends StatelessWidget {
                                    password: passwordController.text,
                                    ensurePassword: ensurePasswordController.text,
                                    date: dateController.text,
+                                   urlImage: loginCubit.url,
                                    context: context
                                  );
                               },

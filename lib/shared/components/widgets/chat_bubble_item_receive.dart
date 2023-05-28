@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:talki/shared/components/widgets/text_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../modules/chat_screen/chat_cubit.dart';
-import '../../../modules/chat_screen/chat_states.dart';
+import '../../cubit/chat_cubit/chat_cubit.dart';
+import '../../cubit/chat_cubit/chat_states.dart';
 import '../../../modules/pdf_screen/pdf_screen.dart';
 import '../../constants/colors.dart';
 

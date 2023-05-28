@@ -1,4 +1,5 @@
 class UserModelRegister{
+  String? url;
   String? emailAddress;
   String? firstName;
   String? lastName;
@@ -18,6 +19,7 @@ class UserModelRegister{
     this.date,
     this.status,
     this.uid,
+    this.url
   });
 
   UserModelRegister.fromJson(json){
@@ -29,6 +31,7 @@ class UserModelRegister{
     date= json["date"];
     status= json["status"];
     uid= json["uid"];
+    url= json["urlImage"];
   }
 
   Map toMap() {
@@ -41,6 +44,7 @@ class UserModelRegister{
       "date" : date,
       "status" : status,
       "uid" : uid,
+      "urlImage" : url,
     };
   }
 

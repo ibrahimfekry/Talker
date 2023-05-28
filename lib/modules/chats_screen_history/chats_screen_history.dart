@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:talki/modules/login_Screen/login_cubit.dart';
-import 'package:talki/modules/login_Screen/login_states.dart';
+import 'package:talki/shared/cubit/login_register_cubit/login_cubit.dart';
+import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
 import '../../models/users_model.dart';
 import '../../shared/components/widgets/chat_item_active.dart';
 import '../../shared/components/widgets/child_chat_history.dart';
@@ -15,20 +15,22 @@ import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
 
 class ChatsScreenHistory extends StatefulWidget {
-  ChatsScreenHistory(
-      {Key? key, this.googleId, this.emailId, this.destinationId, this.status,}) : super(key: key);
+
+  ChatsScreenHistory( {Key? key, this.googleId, this.emailId, this.destinationId,}) : super(key: key);
+
+  ///////////////////////// variables
   static String id = 'ChatScreenHistory';
   String? emailId;
   dynamic googleId;
   dynamic destinationId;
-  String? status;
-  List<UserModelRegister> userList = [];
 
   @override
   State<ChatsScreenHistory> createState() => _ChatsScreenHistoryState();
 }
 
 class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBindingObserver{
+
+  //////////////////////////// variables
   TextEditingController searchController = TextEditingController();
   FirebaseAuth authStates = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -61,9 +63,10 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
     return StreamBuilder<QuerySnapshot>(
         stream: users.snapshots(),
         builder: (context, snapshot) {
+          List<UserModelRegister> userList = [];
           if (snapshot.hasData) {
             for (int i = 0; i < snapshot.data!.docs.length; i++) {
-              widget.userList.add(UserModelRegister.fromJson(snapshot.data?.docs[i]));
+              userList.add(UserModelRegister.fromJson(snapshot.data?.docs[i]));
             }
             return BlocConsumer<LoginCubit, LoginStates>(
               listener: (context, state) {},
@@ -81,11 +84,12 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
                           child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) => ChatActiveItem(
-                                name: '${widget.userList[index].firstName} ${widget.userList[index].lastName}',
-                                status: widget.userList[index].status,
+                                name: '${userList[index].firstName} ${userList[index].lastName}',
+                                status: userList[index].status,
+                                url: userList[index].url,
                               ),
                               separatorBuilder: (context, index) => SizedBox(width: 11.w,),
-                              itemCount: widget.userList.length),
+                              itemCount: userList.length),
                         ),
                         SizedBox(
                           height: 13.h,
@@ -118,7 +122,7 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
                           height: 28.h,
                         ),
                         ConditionalBuilder(
-                          condition: state is !SearchLoading || widget.userList.isNotEmpty,
+                          condition: state is !SearchLoading || userList.isNotEmpty,
                           builder: (context) =>  Expanded(
                             child: loginCubit.userListSearch.isNotEmpty
                                 ? ListView.separated(
@@ -130,22 +134,24 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
                                       destinationId: loginCubit.userListSearch[index].emailAddress,
                                       googleId: widget.googleId,
                                       user1: loginCubit.registerAuth.currentUser?.email,
-                                      user2: widget.userList[index].emailAddress,
-                                      status: widget.userList[index].status,
+                                      user2: userList[index].emailAddress,
+                                      status: userList[index].status,
+                                      url: userList[index].url,
                                     ),
                                     separatorBuilder: (context, index) => SizedBox(height: 13.h,),
                                   )
                                 : ListView.separated(
-                                    itemCount: widget.userList.length,
+                                    itemCount: userList.length,
                                     itemBuilder: (context, index) => ItemChatHistory(
-                                      firstName: widget.userList[index].firstName,
-                                      lastName: widget.userList[index].lastName,
+                                      firstName: userList[index].firstName,
+                                      lastName: userList[index].lastName,
                                       emailId: widget.emailId,
-                                      destinationId:widget.userList[index].emailAddress,
+                                      destinationId:userList[index].emailAddress,
                                       googleId: widget.googleId,
                                       user1: loginCubit.registerAuth.currentUser?.email,
-                                      user2:  widget.userList[index].emailAddress,
-                                      status: widget.userList[index].status,
+                                      user2: userList[index].emailAddress,
+                                      status: userList[index].status,
+                                      url: userList[index].url,
                                     ),
                                     separatorBuilder: (context, index) => SizedBox(height: 13.h,),
                                   ),

@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../shared/constants/colors.dart';
-import '../chat_screen/chat_cubit.dart';
+import '../../shared/cubit/chat_cubit/chat_cubit.dart';
 import '../chat_screen/chat_screen.dart';
-import '../chat_screen/chat_states.dart';
+import '../../shared/cubit/chat_cubit/chat_states.dart';
 
 class ContactScreen extends StatefulWidget {
   static String id = 'ContactScreen';
   String? emailId;
   dynamic googleId;
   dynamic destinationId;
-  ContactScreen({super.key, this.emailId, this.googleId, this.destinationId});
+  String? roomId;
+  String? firstName;
+  String? lastName;
+  String? status;
+  String? url;
+  ContactScreen({super.key, this.emailId, this.googleId, this.destinationId, this.roomId, this.firstName, this.lastName, this.status,this.url,});
 
   @override
   State<ContactScreen> createState() => _ContactScreenState();
@@ -45,7 +50,18 @@ class _ContactScreenState extends State<ContactScreen> {
                       return GestureDetector(
                         onTap: (){
                           chatCubit.phoneNumber = "${chatCubit.contacts[index].displayName}\n + ${chatCubit.contacts[index].phones?[0].value}" ;
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen(emailId: widget.emailId, googleId: widget.googleId,destinationId: widget.destinationId,)),);
+                          Navigator.pop(context);
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen(
+                            emailId: widget.emailId,
+                            googleId: widget.googleId,
+                            destinationId: widget.destinationId,
+                            chatId: widget.roomId,
+                            firstName: widget.firstName,
+                            lastName: widget.lastName,
+                            status: widget.status,
+                            url: widget.url,
+                            isContact: true,
+                          )),);
                         },
                         child: Container(
                           decoration: BoxDecoration(

@@ -8,13 +8,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
-import 'login_cubit.dart';
-import 'login_states.dart';
+import '../../shared/cubit/login_register_cubit/login_cubit.dart';
+import '../../shared/cubit/login_register_cubit/login_states.dart';
 import '../forget_password_screen/forget_password_screen.dart';
 import '../register_screen/register_screen.dart';
 
 
 class LoginScreen extends StatelessWidget {
+
+  ///////////////////////////// Variables
   LoginScreen({Key? key, this.emailId}) : super(key: key);
   static String id = 'LoginScreen';
   TextEditingController emailController = TextEditingController();
@@ -23,21 +25,28 @@ class LoginScreen extends StatelessWidget {
   String? emailId;
   GlobalKey <FormState> formKey = GlobalKey <FormState>();
 
+  //////////////////////////// Method Build
   @override
   Widget build(BuildContext context) {
     LoginCubit loginCubit = LoginCubit.get(context);
     return BlocConsumer <LoginCubit, LoginStates> (
         listener: (context, state){
           if (state is LoginSuccessState ){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeLayoutScreen(emailId: emailId,)));
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeLayoutScreen(emailId: emailId,)), (route) => false,);
           }
           if (state is LoginWithGoogleSuccess){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeLayoutScreen(googleId: loginCubit.googleId,)));
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeLayoutScreen(googleId: loginCubit.googleId,)), (route) => false,);
+          }
+          if(state is LoginSuccessState || state is LoginErrorState){
+            emailController.clear();
+            passwordController.clear();
           }
         },
         builder: (context, state){
           return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+            ),
             body: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 54.h),
@@ -46,8 +55,7 @@ class LoginScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image(image: const AssetImage(
-                        'assets/images/talkiImage.png',),
+                      Image(image: const AssetImage('assets/images/talkiImage.png',),
                         width: 132.w,
                         height: 55.h,
                       ),
@@ -102,7 +110,7 @@ class LoginScreen extends StatelessWidget {
                           },
                           child: loginCubit.isPasswordLogin ? Icon(Icons.visibility_off, color: silverColor,) : Icon(Icons.visibility, color: silverColor,),
                         ),
-                        textInputType: TextInputType.visiblePassword,
+                        textInputType: TextInputType.number,
                       ),
                       SizedBox(height: 12.h,),
                       Row(
@@ -151,9 +159,7 @@ class LoginScreen extends StatelessWidget {
                                   );
                                 }
                               },
-                              child: SvgPicture.asset(
-                                'assets/images/icon_arrow_right.svg',
-                              ),
+                              child: SvgPicture.asset('assets/images/icon_arrow_right.svg',),
                             ),
                             fallback: (context) => const Center (child: CircularProgressIndicator(),),
                           ),

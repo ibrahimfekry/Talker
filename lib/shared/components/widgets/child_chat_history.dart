@@ -15,6 +15,7 @@ class ItemChatHistory extends StatelessWidget{
     this.user1,
     this.user2,
     this.status,
+    this.url,
   });
   String? emailId;
   dynamic googleId;
@@ -24,6 +25,7 @@ class ItemChatHistory extends StatelessWidget{
   dynamic user1;
   dynamic user2;
   dynamic status;
+  String? url;
 
 
   String chatRoomId ({user1, user2}){
@@ -48,6 +50,7 @@ class ItemChatHistory extends StatelessWidget{
                       lastName: lastName,
                       chatId: roomID,
                       status: status,
+                      url: url,
                     )
                 )
             );
@@ -61,6 +64,7 @@ class ItemChatHistory extends StatelessWidget{
                       lastName: lastName,
                       chatId: roomID,
                       status: status,
+                      url: url,
                     )
                 )
             );
@@ -69,6 +73,7 @@ class ItemChatHistory extends StatelessWidget{
         child: ChatScreenHistoryItem(
           name: '$firstName $lastName',
           status: status,
+          url: url,
         )
     );
   }
