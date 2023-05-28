@@ -6,7 +6,8 @@ import '../../constants/colors.dart';
 
 class ChatActiveItem extends StatelessWidget{
   String? name;
-  ChatActiveItem({super.key, this.name});
+  String? status;
+  ChatActiveItem({super.key, this.name, this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,8 @@ class ChatActiveItem extends StatelessWidget{
             alignment: AlignmentDirectional.bottomEnd,
             children: [
               SvgPicture.asset('assets/images/icon_avatar.svg',),
-              SvgPicture.asset('assets/images/icon_green.svg'),
+              SvgPicture.asset('assets/images/icon_green.svg')
+              //status == "Online" ? SvgPicture.asset('assets/images/icon_green.svg') : Container(),
             ],
           ),
         ),

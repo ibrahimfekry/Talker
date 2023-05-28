@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,23 +13,47 @@ import '../../shared/components/widgets/child_chat_history.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
-import '../../shared/components/widgets/chat_screen_history_item.dart';
-import '../chat_screen/chat_screen.dart';
 
 class ChatsScreenHistory extends StatefulWidget {
   ChatsScreenHistory(
-      {Key? key, this.googleId, this.emailId, this.destinationId}) : super(key: key);
+      {Key? key, this.googleId, this.emailId, this.destinationId, this.status,}) : super(key: key);
   static String id = 'ChatScreenHistory';
   String? emailId;
   dynamic googleId;
   dynamic destinationId;
+  String? status;
+  List<UserModelRegister> userList = [];
 
   @override
   State<ChatsScreenHistory> createState() => _ChatsScreenHistoryState();
 }
 
-class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
+class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBindingObserver{
   TextEditingController searchController = TextEditingController();
+  FirebaseAuth authStates = FirebaseAuth.instance;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    setStatus("Online");
+  }
+
+  void setStatus(String status) async {
+    await firebaseFirestore.collection('users').doc(authStates.currentUser?.uid).update({
+      "status" : status,
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    if(state == AppLifecycleState.resumed){
+      setStatus("Online");
+    }else{
+      setStatus("Offline");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +62,8 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
         stream: users.snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<UserModelRegister> userList = [];
             for (int i = 0; i < snapshot.data!.docs.length; i++) {
-              userList.add(UserModelRegister.fromJson(snapshot.data?.docs[i]));
+              widget.userList.add(UserModelRegister.fromJson(snapshot.data?.docs[i]));
             }
             return BlocConsumer<LoginCubit, LoginStates>(
               listener: (context, state) {},
@@ -57,12 +81,11 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                           child: ListView.separated(
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) => ChatActiveItem(
-                                  name:
-                                      '${userList[index].firstName} ${userList[index].lastName}'),
-                              separatorBuilder: (context, index) => SizedBox(
-                                    width: 11.w,
-                                  ),
-                              itemCount: userList.length),
+                                name: '${widget.userList[index].firstName} ${widget.userList[index].lastName}',
+                                status: widget.userList[index].status,
+                              ),
+                              separatorBuilder: (context, index) => SizedBox(width: 11.w,),
+                              itemCount: widget.userList.length),
                         ),
                         SizedBox(
                           height: 13.h,
@@ -95,7 +118,7 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                           height: 28.h,
                         ),
                         ConditionalBuilder(
-                          condition: state is !SearchLoading || userList.isNotEmpty,
+                          condition: state is !SearchLoading || widget.userList.isNotEmpty,
                           builder: (context) =>  Expanded(
                             child: loginCubit.userListSearch.isNotEmpty
                                 ? ListView.separated(
@@ -107,20 +130,22 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
                                       destinationId: loginCubit.userListSearch[index].emailAddress,
                                       googleId: widget.googleId,
                                       user1: loginCubit.registerAuth.currentUser?.email,
-                                      user2: userList[index].emailAddress,
+                                      user2: widget.userList[index].emailAddress,
+                                      status: widget.userList[index].status,
                                     ),
                                     separatorBuilder: (context, index) => SizedBox(height: 13.h,),
                                   )
                                 : ListView.separated(
-                                    itemCount: userList.length,
+                                    itemCount: widget.userList.length,
                                     itemBuilder: (context, index) => ItemChatHistory(
-                                      firstName: userList[index].firstName,
-                                      lastName: userList[index].lastName,
+                                      firstName: widget.userList[index].firstName,
+                                      lastName: widget.userList[index].lastName,
                                       emailId: widget.emailId,
-                                      destinationId: userList[index].emailAddress,
+                                      destinationId:widget.userList[index].emailAddress,
                                       googleId: widget.googleId,
                                       user1: loginCubit.registerAuth.currentUser?.email,
-                                      user2:  userList[index].emailAddress,
+                                      user2:  widget.userList[index].emailAddress,
+                                      status: widget.userList[index].status,
                                     ),
                                     separatorBuilder: (context, index) => SizedBox(height: 13.h,),
                                   ),

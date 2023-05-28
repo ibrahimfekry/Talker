@@ -67,7 +67,8 @@ class LoginCubit extends Cubit<LoginStates> {
             'password' : password,
             'ensurePassword' : ensurePassword,
             'date' : date,
-            'status' : 'Unavailable'
+            'status' : 'Offline',
+            'uid' : FirebaseAuth.instance.currentUser?.uid,
           });
       emit(RegisterSuccessState());
     }).catchError((e) {

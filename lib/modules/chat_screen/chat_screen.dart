@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:talki/modules/chat_screen/record_message/sound_player.dart';
 import 'package:talki/modules/chat_screen/record_message/sound_recorder.dart';
 import '../../models/message_model.dart';
+import '../../models/users_model.dart';
 import '../../shared/components/widgets/bottom_sheet_item.dart';
 import '../../shared/components/widgets/chat_bubble_item_receive.dart';
 import '../../shared/components/widgets/chat_bubble_item_send.dart';
@@ -25,13 +27,15 @@ import 'chat_states.dart';
 
 class ChatScreen extends StatefulWidget {
   static String id = 'ChatScreen';
-  ChatScreen({super.key, this.googleId, this.emailId, this.destinationId, this.chatId, this.firstName, this.lastName});
+  ChatScreen({super.key, this.googleId, this.emailId, this.destinationId, this.chatId, this.firstName, this.lastName, this.status,});
   String? emailId;
   dynamic googleId;
   dynamic destinationId;
   dynamic firstName;
   dynamic lastName;
   String? chatId;
+  String? status;
+
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -127,7 +131,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       width: 4.w,
                                     ),
                                     DefaultText(
-                                      text: 'online',
+                                      text: widget.status,
                                       fontSize: 12.sp,
                                       fontColor: orangeColor,
                                     ),

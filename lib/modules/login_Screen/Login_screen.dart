@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
-import '../reset_password_screen/reset_password_screen.dart';
 import 'login_cubit.dart';
 import 'login_states.dart';
 import '../forget_password_screen/forget_password_screen.dart';
