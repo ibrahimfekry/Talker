@@ -33,6 +33,7 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
+    LoginCubit loginCubit = LoginCubit.get(context);
     return StreamBuilder<QuerySnapshot>(
         stream: users.snapshots(),
         builder: (context, snapshot) {
@@ -44,7 +45,6 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> {
             return BlocConsumer<LoginCubit, LoginStates>(
               listener: (context, state) {},
               builder: (context, state) {
-                LoginCubit loginCubit = LoginCubit.get(context);
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                   child: SizedBox(
