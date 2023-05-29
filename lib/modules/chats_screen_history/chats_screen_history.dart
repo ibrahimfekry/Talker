@@ -99,7 +99,7 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
                           suffix: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  loginCubit.searchUser(text: searchController.text);
+                                  loginCubit.searchUser(text: searchController.text,);
                                 });
                               },
                               child: Icon(
@@ -128,15 +128,15 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
                                 ? ListView.separated(
                                     itemCount: loginCubit.userListSearch.length,
                                     itemBuilder: (context, index) => ItemChatHistory(
-                                      firstName: loginCubit.userListSearch[0].firstName,
-                                      lastName: loginCubit.userListSearch[0].lastName,
+                                      firstName: loginCubit.userListSearch[index].firstName,
+                                      lastName: loginCubit.userListSearch[index].lastName,
                                       emailId: widget.emailId,
                                       destinationId: loginCubit.userListSearch[index].emailAddress,
                                       googleId: widget.googleId,
-                                      user1: loginCubit.registerAuth.currentUser?.email,
-                                      user2: userList[index].emailAddress,
-                                      status: userList[index].status,
-                                      url: userList[index].url,
+                                      user1: loginCubit.registerAuth.currentUser?.uid,
+                                      user2: loginCubit.userListSearch[index].uid,
+                                      status: loginCubit.userListSearch[index].status,
+                                      url: loginCubit.userListSearch[index].url,
                                     ),
                                     separatorBuilder: (context, index) => SizedBox(height: 13.h,),
                                   )
@@ -148,8 +148,8 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
                                       emailId: widget.emailId,
                                       destinationId:userList[index].emailAddress,
                                       googleId: widget.googleId,
-                                      user1: loginCubit.registerAuth.currentUser?.email,
-                                      user2: userList[index].emailAddress,
+                                      user1: loginCubit.registerAuth.currentUser?.uid,
+                                      user2: userList[index].uid,
                                       status: userList[index].status,
                                       url: userList[index].url,
                                     ),

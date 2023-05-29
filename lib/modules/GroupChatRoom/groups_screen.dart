@@ -75,13 +75,15 @@ class _GroupsScreenState extends State<GroupsScreen> {
                   },
                 ),
             ),
-        ElevatedButton(
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const AddMembersInGroup(),
+        Center(
+          child: ElevatedButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const AddMembersInGroup(),
+              ),
             ),
+            child: const Icon(Icons.create, color: Colors.white,),
           ),
-          child: const Icon(Icons.create, color: Colors.white,),
         ),
       ],
     );

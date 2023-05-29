@@ -3,35 +3,39 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'group_info.dart';
 
-class GroupChatRoom extends StatelessWidget{
-  String? emailId;
-  dynamic googleId;
-  int? index;
+class GroupChatRoom extends StatelessWidget {
   final String groupChatId, groupName;
-  GroupChatRoom({super.key, this.index, required this.groupName, required this.groupChatId});
 
-  TextEditingController chatMessage = TextEditingController();
-  final scrollController = ScrollController();
-  bool isBottomSheet = true;
-  var scaffoldKey = GlobalKey<ScaffoldState>();
-  final FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  GroupChatRoom({required this.groupName, required this.groupChatId, Key? key})
+      : super(key: key);
+
+  final TextEditingController _message = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void onSendMessage() async {
-    if (chatMessage.text.isNotEmpty) {
+    if (_message.text.isNotEmpty) {
       Map<String, dynamic> chatData = {
-        "sendBy": auth.currentUser!.displayName,
-        "message": chatMessage.text,
-        "time": DateTime.now(),
+        "sendBy": _auth.currentUser!.displayName,
+        "message": _message.text,
+        "type": "text",
+        "time": FieldValue.serverTimestamp(),
       };
-      chatMessage.clear();
-      await fireStore.collection('groups').doc(groupChatId).collection('chats').add(chatData);
+
+      _message.clear();
+
+      await _firestore
+          .collection('groups')
+          .doc(groupChatId)
+          .collection('chats')
+          .add(chatData);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(groupName),
@@ -55,7 +59,7 @@ class GroupChatRoom extends StatelessWidget{
               height: size.height / 1.27,
               width: size.width,
               child: StreamBuilder<QuerySnapshot>(
-                stream: fireStore
+                stream: _firestore
                     .collection('groups')
                     .doc(groupChatId)
                     .collection('chats')
@@ -93,7 +97,7 @@ class GroupChatRoom extends StatelessWidget{
                       height: size.height / 17,
                       width: size.width / 1.3,
                       child: TextField(
-                        controller: chatMessage,
+                        controller: _message,
                         decoration: InputDecoration(
                             suffixIcon: IconButton(
                               onPressed: () {},
@@ -122,7 +126,7 @@ class GroupChatRoom extends StatelessWidget{
       if (chatMap['type'] == "text") {
         return Container(
           width: size.width,
-          alignment: chatMap['sendBy'] == auth.currentUser!.displayName
+          alignment: chatMap['sendBy'] == _auth.currentUser!.displayName
               ? Alignment.centerRight
               : Alignment.centerLeft,
           child: Container(
@@ -159,7 +163,7 @@ class GroupChatRoom extends StatelessWidget{
       } else if (chatMap['type'] == "img") {
         return Container(
           width: size.width,
-          alignment: chatMap['sendBy'] == auth.currentUser!.displayName
+          alignment: chatMap['sendBy'] == _auth.currentUser!.displayName
               ? Alignment.centerRight
               : Alignment.centerLeft,
           child: Container(
@@ -176,15 +180,15 @@ class GroupChatRoom extends StatelessWidget{
           width: size.width,
           alignment: Alignment.center,
           child: Container(
-            padding:  EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            margin:  EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               color: Colors.black38,
             ),
             child: Text(
               chatMap['message'],
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
