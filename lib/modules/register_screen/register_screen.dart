@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:talki/shared/components/component/components.dart';
 import '../../layout/home_layout_screen.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
@@ -54,7 +55,6 @@ class RegisterScreen extends StatelessWidget {
                 padding: EdgeInsetsDirectional.only(start: 20.w,end: 20.w,),
                 child: Form(
                   key: formKey,
-                  autovalidateMode: AutovalidateMode.always,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -152,7 +152,7 @@ class RegisterScreen extends StatelessWidget {
                           },
                           child: loginCubit.isPasswordRegisterNormal? Icon(Icons.visibility_off, color: silverColor,) : Icon(Icons.visibility, color: silverColor,),
                         ),
-                        textInputType: TextInputType.visiblePassword,
+                        textInputType: TextInputType.number,
                         validator: (value){
                           if(value.isEmpty){
                             return 'Required Field';
@@ -173,7 +173,7 @@ class RegisterScreen extends StatelessWidget {
                           },
                           child: loginCubit.isEnsurePasswordRegister? Icon(Icons.visibility_off, color: silverColor,) : Icon(Icons.visibility, color: silverColor,),
                         ),
-                        textInputType: TextInputType.visiblePassword,
+                        textInputType: TextInputType.number,
                         validator: (value){
                           if(value.isEmpty){
                             return 'Required Field';
@@ -230,17 +230,27 @@ class RegisterScreen extends StatelessWidget {
                             condition: state is !RegisterLoadingState,
                             builder: (context) => GestureDetector(
                                 onTap: (){
-                                  emailId = emailController.text;
-                                   loginCubit.createUser(
-                                     email: emailController.text,
-                                     firstName: firstNameController.text,
-                                     lastName: lastNameController.text,
-                                     password: passwordController.text,
-                                     ensurePassword: ensurePasswordController.text,
-                                     date: dateController.text,
-                                     urlImage: loginCubit.url,
-                                     context: context
-                                   );
+                                  if (formKey.currentState!.validate ()){
+                                    if (passwordController.text != ensurePasswordController.text){
+                                      defaultSnackBar(
+                                          context: context,
+                                          text: 'Two password not matching',
+                                          color: Colors.red
+                                      );
+                                    }else{
+                                      emailId = emailController.text;
+                                      loginCubit.createUser(
+                                          email: emailController.text,
+                                          firstName: firstNameController.text,
+                                          lastName: lastNameController.text,
+                                          password: passwordController.text,
+                                          ensurePassword: ensurePasswordController.text,
+                                          date: dateController.text,
+                                          urlImage: loginCubit.url,
+                                          context: context
+                                      );
+                                    }
+                                  }
                                 },
                                 child: SvgPicture.asset('assets/images/icon_arrow_right.svg')),
                             fallback: (context) => const Center(child: CircularProgressIndicator(),),
