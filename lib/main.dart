@@ -3,9 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talki/shared/bloc_observer/bloc_observer.dart';
 import 'package:talki/shared/constants/theme.dart';
-import 'package:talki/shared/cubit/group_cubit/group_cubit.dart';
 import 'firebase_options.dart';
 import 'layout/home_layout_screen.dart';
+import 'modules/group_chats/group_chats/group_chat_screen.dart';
 import 'shared/cubit/layout_cubt/layout_cubit.dart';
 import 'modules/add_screen/add_screen.dart';
 import 'modules/calls_screen/calls_screen.dart';
@@ -14,7 +14,6 @@ import 'modules/chat_screen/chat_screen.dart';
 import 'modules/chats_screen_history/chats_screen_history.dart';
 import 'modules/contact_screen/contact_screen.dart';
 import 'modules/forget_password_screen/forget_password_screen.dart';
-import 'modules/GroupChatRoom/groups_screen.dart';
 import 'modules/login_Screen/Login_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'shared/cubit/login_register_cubit/login_cubit.dart';
@@ -44,7 +43,7 @@ class MyApp extends StatelessWidget{
               BlocProvider(create: (context) => LayoutCubit()),
               BlocProvider(create: (context) => LoginCubit()),
               BlocProvider(create: (context) => ChatCubit()),
-              BlocProvider(create: (context) => GroupCubit()..getAvailableGroups()),
+              //BlocProvider(create: (context) => GroupCubit()..getAvailableGroups()),
             ],
             child: MaterialApp(
               routes: {
@@ -56,7 +55,7 @@ class MyApp extends StatelessWidget{
                 ChatsScreenHistory.id:(context)=> ChatsScreenHistory(),
                 CallsScreen.id : (context) =>  CallsScreen(),
                 AddScreen.id : (context) => const AddScreen(),
-                GroupsScreen.id : (context) => const GroupsScreen(),
+                GroupScreen.id : (context) => const GroupScreen(),
                 MenuScreen.id : (context) => const MenuScreen(),
                 ChatScreen.id : (context) => ChatScreen(),
                 PdfScreen.id : (context) => PdfScreen(),

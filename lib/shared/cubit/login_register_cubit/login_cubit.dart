@@ -63,7 +63,6 @@ class LoginCubit extends Cubit<LoginStates> {
           color: scaffoldColorDark,
           text: 'Your Email is Generated successfully'
           );
-          userCredentialRegister?.user?.updateDisplayName(firstName);
           users.doc(FirebaseAuth.instance.currentUser?.uid).set({
             'urlImage' : urlImage,
             'emailAddress' : email,
@@ -75,6 +74,7 @@ class LoginCubit extends Cubit<LoginStates> {
             'status' : 'Offline',
             'uid' : FirebaseAuth.instance.currentUser?.uid,
           });
+          userCredentialRegister?.user?.updateDisplayName('$firstName$lastName');
           print('name is = ${userCredentialRegister?.user?.displayName}');
       emit(RegisterSuccessState());
     }).catchError((e) {

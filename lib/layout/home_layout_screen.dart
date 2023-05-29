@@ -8,7 +8,7 @@ import 'package:hexcolor/hexcolor.dart';
 import '../modules/add_screen/add_screen.dart';
 import '../modules/calls_screen/calls_screen.dart';
 import '../modules/chats_screen_history/chats_screen_history.dart';
-import '../modules/GroupChatRoom/groups_screen.dart';
+import '../modules/group_chats/group_chats/group_chat_screen.dart';
 import '../modules/menu_screen/menu_screen.dart';
 import '../shared/components/widgets/bottom_bar_button.dart';
 import '../shared/components/widgets/text_widget.dart';
@@ -37,7 +37,7 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
     List screens = [
       ChatsScreenHistory(emailId: widget.emailId, googleId: widget.googleId,),
       AddScreen(),
-      GroupsScreen(),
+      GroupScreen(),
       MenuScreen()
     ];
     return BlocConsumer<LayoutCubit, LayoutStates>(

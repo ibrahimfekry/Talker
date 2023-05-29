@@ -1,30 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:talki/layout/home_layout_screen.dart';
 
-class AddMembersINGroup extends StatefulWidget {
-  final String groupChatId, name;
-  final List membersList;
-  const AddMembersINGroup(
-      {required this.name,
-      required this.membersList,
-      required this.groupChatId,
-      Key? key})
+import 'group_chat_screen.dart';
+
+class AddMembersInGroupInfo extends StatefulWidget {
+  AddMembersInGroupInfo(
+      {Key? key,
+      required this.groupName,
+      required this.groupId,
+      required this.membersList})
       : super(key: key);
+  final String groupName, groupId;
+  final List membersList;
 
   @override
-  _AddMembersINGroupState createState() => _AddMembersINGroupState();
+  State<AddMembersInGroupInfo> createState() => _AddMembersInGroupInfoState();
 }
 
-class _AddMembersINGroupState extends State<AddMembersINGroup> {
-  final TextEditingController _search = TextEditingController();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class _AddMembersInGroupInfoState extends State<AddMembersInGroupInfo> {
   Map<String, dynamic>? userMap;
   bool isLoading = false;
+  final TextEditingController searchController = TextEditingController();
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
   List membersList = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     membersList = widget.membersList;
   }
@@ -34,9 +38,9 @@ class _AddMembersINGroupState extends State<AddMembersINGroup> {
       isLoading = true;
     });
 
-    await _firestore
+    await firestore
         .collection('users')
-        .where("email", isEqualTo: _search.text)
+        .where("firstName", isEqualTo: searchController.text)
         .get()
         .then((value) {
       setState(() {
@@ -48,24 +52,30 @@ class _AddMembersINGroupState extends State<AddMembersINGroup> {
   }
 
   void onAddMembers() async {
-    membersList.add(userMap);
-
-    await _firestore.collection('groups').doc(widget.groupChatId).update({
-      "members": membersList,
+    membersList.add({
+      'firstName': userMap!['firstName'],
+      'emailAddress': userMap!['emailAddress'],
+      'uid': userMap!['uid'],
+      'isAdmin': false,
     });
-
-    await _firestore
+    await firestore.collection('groups').doc(widget.groupId).update({
+      'members': membersList,
+    });
+    await firestore
         .collection('users')
-        .doc(userMap!['uid'])
+        .doc(auth.currentUser!.uid)
         .collection('groups')
-        .doc(widget.groupChatId)
-        .set({"name": widget.name, "id": widget.groupChatId});
+        .doc(widget.groupId)
+        .set({
+      'name': widget.groupName,
+      'id': widget.groupId,
+    });
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>GroupScreen()), (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Members"),
@@ -85,7 +95,7 @@ class _AddMembersINGroupState extends State<AddMembersINGroup> {
                 height: size.height / 14,
                 width: size.width / 1.15,
                 child: TextField(
-                  controller: _search,
+                  controller: searchController,
                   decoration: InputDecoration(
                     hintText: "Search",
                     border: OutlineInputBorder(
@@ -111,11 +121,13 @@ class _AddMembersINGroupState extends State<AddMembersINGroup> {
                   ),
             userMap != null
                 ? ListTile(
-                    onTap: onAddMembers,
                     leading: Icon(Icons.account_box),
-                    title: Text(userMap!['name']),
-                    subtitle: Text(userMap!['email']),
-                    trailing: Icon(Icons.add),
+                    title: Text(userMap!['firstName']),
+                    subtitle: Text(userMap!['emailAddress']),
+                    trailing: IconButton(
+                      onPressed: onAddMembers,
+                      icon: Icon(Icons.add),
+                    ),
                   )
                 : SizedBox(),
           ],
