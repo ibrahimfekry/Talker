@@ -199,15 +199,15 @@ class _GroupInfoState extends State<GroupInfo> {
 
                     checkAdmin()
                         ? ListTile(
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => AddMembersINGroup(
-                                  groupChatId: widget.groupId,
-                                  name: widget.groupName,
-                                  membersList: membersList,
-                                ),
-                              ),
-                            ),
+                            // onTap: () => Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (_) => AddMembersINGroup(
+                            //       groupChatId: widget.groupId,
+                            //       name: widget.groupName,
+                            //       membersList: membersList,
+                            //     ),
+                            //   ),
+                            // ),
                             leading: const Icon(
                               Icons.add,
                             ),

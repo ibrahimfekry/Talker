@@ -203,7 +203,7 @@ class LoginCubit extends Cubit<LoginStates> {
 
   // Search method
   List<UserModelRegister> userListSearch = [];
-  searchUser({text, index}) async {
+  searchUser({text}) async {
     FirebaseFirestore data = FirebaseFirestore.instance;
    emit(SearchLoading());
     await data.collection('users').where(

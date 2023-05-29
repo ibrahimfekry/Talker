@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talki/shared/bloc_observer/bloc_observer.dart';
 import 'package:talki/shared/constants/theme.dart';
+import 'package:talki/shared/cubit/group_cubit/group_cubit.dart';
 import 'firebase_options.dart';
 import 'layout/home_layout_screen.dart';
 import 'shared/cubit/layout_cubt/layout_cubit.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget{
               BlocProvider(create: (context) => LayoutCubit()),
               BlocProvider(create: (context) => LoginCubit()),
               BlocProvider(create: (context) => ChatCubit()),
+              BlocProvider(create: (context) => GroupCubit()),
             ],
             child: MaterialApp(
               routes: {
