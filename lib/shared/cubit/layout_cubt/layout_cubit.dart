@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../modules/add_screen/add_screen.dart';
 import '../../../modules/calls_screen/calls_screen.dart';
 import '../../../modules/chats_screen_history/chats_screen_history.dart';
-import '../../../modules/groups_screen/groups_screen.dart';
+import '../../../modules/GroupChatRoom/groups_screen.dart';
 import '../../../modules/menu_screen/menu_screen.dart';
 import '../../components/widgets/text_widget.dart';
 import '../../constants/colors.dart';

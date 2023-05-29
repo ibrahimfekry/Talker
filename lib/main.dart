@@ -13,7 +13,7 @@ import 'modules/chat_screen/chat_screen.dart';
 import 'modules/chats_screen_history/chats_screen_history.dart';
 import 'modules/contact_screen/contact_screen.dart';
 import 'modules/forget_password_screen/forget_password_screen.dart';
-import 'modules/groups_screen/groups_screen.dart';
+import 'modules/GroupChatRoom/groups_screen.dart';
 import 'modules/login_Screen/Login_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'shared/cubit/login_register_cubit/login_cubit.dart';

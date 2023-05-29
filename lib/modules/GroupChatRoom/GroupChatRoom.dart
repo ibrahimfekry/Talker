@@ -1,173 +1,200 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:talki/shared/components/widgets/text_widget.dart';
-import 'package:talki/shared/constants/colors.dart';
+import 'group_info.dart';
 
-import '../../shared/components/widgets/bottom_sheet_item.dart';
-import '../../shared/components/widgets/text_form_field_send_item.dart';
-import '../../shared/cubit/chat_cubit/chat_cubit.dart';
-import '../../shared/cubit/chat_cubit/chat_states.dart';
-
-class GroupChatRoom extends StatefulWidget{
+class GroupChatRoom extends StatelessWidget{
   String? emailId;
   dynamic googleId;
   int? index;
-  GroupChatRoom({super.key, this.index});
+  final String groupChatId, groupName;
+  GroupChatRoom({super.key, this.index, required this.groupName, required this.groupChatId});
 
-  @override
-  State<GroupChatRoom> createState() => _GroupChatRoomState();
-}
-
-class _GroupChatRoomState extends State<GroupChatRoom> {
   TextEditingController chatMessage = TextEditingController();
   final scrollController = ScrollController();
   bool isBottomSheet = true;
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  final FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  void onSendMessage() async {
+    if (chatMessage.text.isNotEmpty) {
+      Map<String, dynamic> chatData = {
+        "sendBy": auth.currentUser!.displayName,
+        "message": chatMessage.text,
+        "time": DateTime.now(),
+      };
+      chatMessage.clear();
+      await fireStore.collection('groups').doc(groupChatId).collection('chats').add(chatData);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: DefaultText(
-          text: 'Group ${widget.index!+1}',
-          fontSize: 16.sp,
-        ),
+        title: Text(groupName),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.more_vert, color: whiteColor,)),
+          IconButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => GroupInfo(
+                    groupName: groupName,
+                    groupId: groupChatId,
+                  ),
+                ),
+              ),
+              icon: Icon(Icons.more_vert)),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsetsDirectional.only(
-            start: 15.w, top: 29.h, end: 15.w),
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            Expanded(
-              child: ListView.separated(
-                reverse: true,
-                itemBuilder: (context, index){
+            Container(
+              height: size.height / 1.27,
+              width: size.width,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: fireStore
+                    .collection('groups')
+                    .doc(groupChatId)
+                    .collection('chats')
+                    .orderBy('time')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> chatMap =
+                        snapshot.data!.docs[index].data()
+                        as Map<String, dynamic>;
 
-                },
-                separatorBuilder: (context, index) => SizedBox(height: 25.h,),
-                itemCount: 2,
-                controller: scrollController,
-              ),
-            ),
-            SizedBox(
-              height: 15.h,
-            ),
-            SendBoxItem(
-              containerColor: HexColor('#1C1C1C'),
-              onTapRecord: (){},
-              onTapStop: (){},
-              fontSize: 13.sp,
-              sendController: chatMessage,
-              textColor: whiteColor,
-              onTapTextForm: (){},
-              sendFunction: () {
-
-              },
-              addTapFunction: () {
-                if (isBottomSheet) {
-                  scaffoldKey.currentState?.showBottomSheet((context) {
-                    return BlocConsumer <ChatCubit, ChatStates>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        return Container(
-                          color: HexColor('#000000'),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.symmetric(horizontal: 15.w , vertical: 15.w),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child:  BottomSheetItem(
-                                        backgroundUrl:'assets/images/backgroundGallery.svg',
-                                        imageUrl: 'assets/images/white.svg',
-                                        imageUrl2: 'assets/images/gallery.svg',
-                                        onTap: (){},
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: BottomSheetItem(
-                                        backgroundUrl:'assets/images/cameraBackground.svg',
-                                        imageUrl: 'assets/images/camera.svg',
-                                        onTap: () {},
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: BottomSheetItem(
-                                        backgroundUrl:'assets/images/documentBackground.svg',
-                                        imageUrl: 'assets/images/document.svg',
-                                        onTap: () {},
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 15.h,),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: BottomSheetItem(
-                                        backgroundUrl:'assets/images/contactBackground.svg',
-                                        imageUrl: 'assets/images/contact.svg',
-                                        onTap: (){},
-                                      ),
-                                    ),
-                                    Expanded(child: Container()),
-                                    Expanded(child: Container()),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        );
+                        return messageTile(size, chatMap);
                       },
                     );
-                  }).closed.then((value){
-                    isBottomSheet = true;
-                  });
-                  isBottomSheet = false;
-                } else {
-                  Navigator.pop(context);
-                  isBottomSheet = true;
-                }
-              },
-            )
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            ),
+            Container(
+              height: size.height / 10,
+              width: size.width,
+              alignment: Alignment.center,
+              child: Container(
+                height: size.height / 12,
+                width: size.width / 1.1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: size.height / 17,
+                      width: size.width / 1.3,
+                      child: TextField(
+                        controller: chatMessage,
+                        decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.photo),
+                            ),
+                            hintText: "Send Message",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            )),
+                      ),
+                    ),
+                    IconButton(
+                        icon: Icon(Icons.send), onPressed: onSendMessage),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void sendMessage(CollectionReference<Object?> messagesGroup, ChatCubit chatCubit) {
-    if(chatMessage.text.isNotEmpty){
-      messagesGroup.doc().set({
-        'message': chatMessage.text,
-        'messageTime': DateTime.now(),
-        //'desId' : widget.destinationId,
-        'sendBy': FirebaseAuth.instance.currentUser?.email != null ? FirebaseAuth.instance.currentUser?.email.toString() : widget.googleId.toString(),
-      }).then((value) {
-        chatMessage.clear();
-        chatCubit.phoneNumber = null;
-        // urlImage = null;
-        // urlCameraImage = null;
-        // urlFile = null ;
-        scrollController.animateTo(
-            0,
-            duration: const Duration(seconds: 1),
-            curve: Curves.fastOutSlowIn);
-      });
-    }else{
-      if (kDebugMode){print('Enter some Text');}
-    }
+  Widget messageTile(Size size, Map<String, dynamic> chatMap) {
+    return Builder(builder: (_) {
+      if (chatMap['type'] == "text") {
+        return Container(
+          width: size.width,
+          alignment: chatMap['sendBy'] == auth.currentUser!.displayName
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
+          child: Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.blue,
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    chatMap['sendBy'],
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    height: size.height / 200,
+                  ),
+                  Text(
+                    chatMap['message'],
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              )),
+        );
+      } else if (chatMap['type'] == "img") {
+        return Container(
+          width: size.width,
+          alignment: chatMap['sendBy'] == auth.currentUser!.displayName
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            height: size.height / 2,
+            child: Image.network(
+              chatMap['message'],
+            ),
+          ),
+        );
+      } else if (chatMap['type'] == "notify") {
+        return Container(
+          width: size.width,
+          alignment: Alignment.center,
+          child: Container(
+            padding:  EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            margin:  EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.black38,
+            ),
+            child: Text(
+              chatMap['message'],
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      } else {
+        return SizedBox();
+      }
+    });
   }
 }
