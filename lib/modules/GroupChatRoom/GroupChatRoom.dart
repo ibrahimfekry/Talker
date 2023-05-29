@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'group_info.dart';
 
 class GroupChatRoom extends StatelessWidget {
-  final String groupChatId, groupName;
+  final String? groupChatId, groupName;
 
-  GroupChatRoom({required this.groupName, required this.groupChatId, Key? key})
+  GroupChatRoom({
+    required this.groupName,
+    required this.groupChatId,
+    Key? key})
       : super(key: key);
 
   final TextEditingController _message = TextEditingController();
@@ -35,17 +38,18 @@ class GroupChatRoom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
+    print('groupId = $groupChatId');
+    print('groupName = $groupName');
     return Scaffold(
       appBar: AppBar(
-        title: Text(groupName),
+        title: Text('$groupName'),
         actions: [
           IconButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => GroupInfo(
-                    groupName: groupName,
-                    groupId: groupChatId,
+                    groupName: '$groupName',
+                    groupId: '$groupChatId',
                   ),
                 ),
               ),
