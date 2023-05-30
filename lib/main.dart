@@ -43,7 +43,6 @@ class MyApp extends StatelessWidget{
               BlocProvider(create: (context) => LayoutCubit()),
               BlocProvider(create: (context) => LoginCubit()),
               BlocProvider(create: (context) => ChatCubit()),
-              //BlocProvider(create: (context) => GroupCubit()..getAvailableGroups()),
             ],
             child: MaterialApp(
               routes: {

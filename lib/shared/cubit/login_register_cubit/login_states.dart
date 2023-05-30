@@ -53,12 +53,40 @@ class RegisterSuccessState extends LoginStates{}
 
 class RegisterErrorState extends LoginStates{}
 
-////////////////////////// search states
+////////////////////////// search Chat history screen states
 class SearchLoading extends LoginStates{}
 
 class SearchSuccess extends LoginStates{}
 
 class SearchError extends LoginStates{}
+
+///////////////////////// get available group
+class GetAvailableGroupsLoading extends LoginStates{}
+
+class GetAvailableGroupsSuccess extends LoginStates{}
+
+class GetAvailableGroupsError extends LoginStates{}
+
+////////////////////////// search Chat history screen states
+class SearchGroupNameLoading extends LoginStates{}
+
+class SearchGroupNameSuccess extends LoginStates{}
+
+class SearchGroupNameError extends LoginStates{}
+
+/////////////////////////// Get current user details
+class GetCurrentUserDetailsLoading extends LoginStates{}
+
+class GetCurrentUserDetailsSuccess extends LoginStates{}
+
+class GetCurrentUserDetailsError extends LoginStates{}
+
+/////////////////////////// search to add members to group
+class AddMemberSearchLoading extends LoginStates{}
+
+class AddMemberSearchSuccess extends LoginStates{}
+
+class AddMemberSearchError extends LoginStates{}
 
 
 

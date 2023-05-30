@@ -29,7 +29,7 @@ class _CreateGroupState extends State<CreateGroup> {
     });
     groupId = Uuid().v1();
     await firestore.collection('groups').doc(groupId).set({
-      'group name':groupNameController.text,
+      'groupName':groupNameController.text,
       'members': widget.membersList,
       'id': groupId,
     });

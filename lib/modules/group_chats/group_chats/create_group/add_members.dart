@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talki/shared/constants/colors.dart';
+import 'package:talki/shared/cubit/login_register_cubit/login_cubit.dart';
+import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
 
 import 'create_group.dart';
 
@@ -14,79 +17,40 @@ class AddMembersInGroup extends StatefulWidget {
 
 class _AddMembersInGroupState extends State<AddMembersInGroup> {
   final TextEditingController searchController = TextEditingController();
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseFirestore fireStore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
-  List<Map<String, dynamic>> membersList = [];
-  bool isLoading = false;
-  Map<String, dynamic>? userMap;
 
   @override
   void initState() {
     super.initState();
-    getCurrentUserDetails();
+    LoginCubit.get(context).getCurrentUserDetails();
   }
-
-  void getCurrentUserDetails() async {
-    await firestore
-        .collection('users')
-        .doc(auth.currentUser!.uid)
-        .get()
-        .then((map) {
-      setState(() {
-        membersList.add({
-          "firstName": map['firstName'],
-          "emailAddress": map['emailAddress'],
-          "uid": map['uid'],
-          "isAdmin": true,
-        });
-      });
-    });
-  }
-
-void onSearch() async {
-  setState(() {
-    isLoading = true;
-  });
-  await firestore
-      .collection('users')
-      .where("firstName", isEqualTo: searchController.text)
-      .get()
-      .then((value) {
-    setState(() {
-      userMap = value.docs[0].data();
-      isLoading = false;
-    });
-    print(userMap);
-  });
-}
 
   void onResultTap() {
     bool isAlreadyExist = false;
-
-    for (int i = 0; i < membersList.length; i++) {
-      if (membersList[i]['uid'] == userMap!['uid']) {
+    for (int i = 0; i < LoginCubit.get(context).membersList.length; i++) {
+      if (LoginCubit.get(context).membersList[i]['uid'] == LoginCubit.get(context).userMap!['uid']) {
         isAlreadyExist = true;
       }
     }
-
     if (!isAlreadyExist) {
       setState(() {
-        membersList.add({
-          "firstName": userMap!['firstName'],
-          "emailAddress": userMap!['emailAddress'],
-          "uid": userMap!['uid'],
+        LoginCubit.get(context).membersList.add({
+          "firstName": LoginCubit.get(context).userMap!['firstName'],
+          "emailAddress": LoginCubit.get(context).userMap!['emailAddress'],
+          "uid": LoginCubit.get(context).userMap!['uid'],
           "isAdmin": false,
         });
 
-        userMap = null;
+        LoginCubit.get(context).userMap = null;
       });
     }
   }
 
   void onRemoveMembers(int index) {
-    if (membersList[index]['uid'] != auth.currentUser!.uid) {
+    if (LoginCubit.get(context).membersList[index]['uid'] != auth.currentUser!.uid) {
       setState(() {
-        membersList.removeAt(index);
+        LoginCubit.get(context).membersList.removeAt(index);
       });
     }
   }
@@ -94,94 +58,107 @@ void onSearch() async {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    LoginCubit loginCubit = LoginCubit.get(context);
+    return BlocConsumer<LoginCubit, LoginStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Add Members"),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: ListView.builder(
+                    itemCount: loginCubit.membersList.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: Icon(
+                          Icons.account_circle,
+                          color: whiteColor,
+                        ),
+                        title: Text(
+                          loginCubit.membersList[index]['firstName'],
+                          style: TextStyle(color: whiteColor),
+                        ),
+                        subtitle: Text(loginCubit.membersList[index]['emailAddress'],
+                            style: TextStyle(color: whiteColor)),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => onRemoveMembers(index),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: size.height / 20,
+                ),
+                Container(
+                  height: size.height / 14,
+                  width: size.width,
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    height: size.height / 14,
+                    width: size.width / 1.15,
+                    child: TextField(
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hintText: "Search",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: size.height / 50,),
+                state is AddMemberSearchLoading
+                    ? Container(
+                        height: size.height / 12,
+                        width: size.height / 12,
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(),
+                      )
+                    : ElevatedButton(
+                        onPressed: (){
+                          loginCubit.searchAddMember(text: searchController.text);
+                        },
+                        child: Text("Search"),
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Add Members"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: ListView.builder(
-                itemCount: membersList.length,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(Icons.account_circle, color: whiteColor,),
-                    title: Text(membersList[index]['firstName'], style: TextStyle(color: whiteColor),),
-                    subtitle: Text(membersList[index]['emailAddress'], style: TextStyle(color: whiteColor)),
-                    trailing: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () => onRemoveMembers(index),
-                    ),
-                  );
-                },
-              ),
+                      ),
+                loginCubit.userMap != null
+                    ? ListTile(
+                        leading: Icon(Icons.account_box, color: whiteColor,),
+                        title: Text("${loginCubit.userMap?['firstName']}", style: TextStyle(color: whiteColor),),
+                        subtitle: Text("${loginCubit.userMap?['emailAddress']}", style: TextStyle(color: whiteColor)),
+                        trailing: IconButton(
+                          onPressed: onResultTap,
+                          icon: Icon(Icons.add, color: whiteColor,),
+                        ),
+                      )
+                    : const SizedBox(),
+              ],
             ),
-            SizedBox(
-              height: size.height / 20,
-            ),
-            Container(
-              height: size.height / 14,
-              width: size.width,
-              alignment: Alignment.center,
-              child: Container(
-                height: size.height / 14,
-                width: size.width / 1.15,
-                child: TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+          ),
+          floatingActionButton: loginCubit.membersList.length >= 2
+              ? FloatingActionButton(
+                  child: const Icon(Icons.forward),
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => CreateGroup(
+                        membersList: loginCubit.membersList,
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: size.height / 50,
-            ),
-            isLoading
-                ? Container(
-                    height: size.height / 12,
-                    width: size.height / 12,
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator(),
-                  )
-                : ElevatedButton(
-                    onPressed: onSearch,
-                    child: Text("Search"),
-                  ),
-            userMap != null
-                ? ListTile(
-                    leading: Icon(Icons.account_box),
-                    title: Text(userMap?['firstName']),
-                    subtitle: Text(userMap?['emailAddress']),
-                    trailing: IconButton(
-                      onPressed: onResultTap,
-                      icon: Icon(Icons.add),
-                    ),
-                  )
-                : SizedBox(),
-          ],
-        ),
-      ),
-      floatingActionButton: membersList.length >= 2
-          ? FloatingActionButton(
-              child: Icon(Icons.forward),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => CreateGroup(
-                    membersList: membersList,
-                  ),
-                ),
-              ),
-            )
-          : SizedBox(),
+                )
+              : SizedBox(),
+        );
+      },
     );
   }
 }

@@ -39,61 +39,71 @@ class LoginCubit extends Cubit<LoginStates> {
   dynamic cred;
 
   // FireStore Variables
-  FirebaseFirestore fireStore = FirebaseFirestore.instance;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
+  // variables for available group
+  final FirebaseFirestore fireStoreGroup = FirebaseFirestore.instance;
+  final FirebaseAuth authGroup = FirebaseAuth.instance;
+  List groupList = [];
+  List groupSearchList = [];
+
   // Register Methods
-  changePasswordVisibilityRegister(){
+  changePasswordVisibilityRegister() {
     isPasswordRegisterNormal = !isPasswordRegisterNormal;
     emit(ChangePasswordRegisterVisibility());
   }
 
-  changeEnsurePasswordVisibilityRegister(){
+  changeEnsurePasswordVisibilityRegister() {
     isEnsurePasswordRegister = !isEnsurePasswordRegister;
     emit(ChangeEnsurePasswordRegisterVisibility());
   }
 
-  createUser({email, firstName, lastName, password, ensurePassword, date, context,urlImage}) async {
+  createUser(
+      {email,
+      firstName,
+      lastName,
+      password,
+      ensurePassword,
+      date,
+      context,
+      urlImage}) async {
     emit(RegisterLoadingState());
-    userCredentialRegister = await registerAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password).then((value) {
-          defaultSnackBar(
-          context : context ,
+    userCredentialRegister = await registerAuth
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((value) {
+      defaultSnackBar(
+          context: context,
           color: scaffoldColorDark,
-          text: 'Your Email is Generated successfully'
-          );
-          users.doc(FirebaseAuth.instance.currentUser?.uid).set({
-            'urlImage' : urlImage,
-            'emailAddress' : email,
-            'firstName' : firstName,
-            'lastName' : lastName,
-            'password' : password,
-            'ensurePassword' : ensurePassword,
-            'date' : date,
-            'status' : 'Offline',
-            'uid' : FirebaseAuth.instance.currentUser?.uid,
-          });
-          userCredentialRegister?.user?.updateDisplayName('$firstName$lastName');
-          print('name is = ${userCredentialRegister?.user?.displayName}');
+          text: 'Your Email is Generated successfully');
+      users.doc(FirebaseAuth.instance.currentUser?.uid).set({
+        'urlImage': urlImage,
+        'emailAddress': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'password': password,
+        'ensurePassword': ensurePassword,
+        'date': date,
+        'status': 'Offline',
+        'uid': FirebaseAuth.instance.currentUser?.uid,
+      });
+      userCredentialRegister?.user?.updateDisplayName('$firstName$lastName');
+      print('name is = ${userCredentialRegister?.user?.displayName}');
       emit(RegisterSuccessState());
     }).catchError((e) {
       defaultSnackBar(
-          context : context ,
-          color: Colors.red,
-          text: 'There is an error'
-      );
+          context: context, color: Colors.red, text: 'There is an error');
       emit(RegisterErrorState());
     });
   }
 
   File? file;
   var imagePicker = ImagePicker();
-  String? url ;
+  String? url;
   uploadImage() async {
     emit(UploadImageRegisterLoading());
     try {
-      XFile? imgPicked = await imagePicker.pickImage(source: ImageSource.gallery);
+      XFile? imgPicked =
+          await imagePicker.pickImage(source: ImageSource.gallery);
       var nameImage = basename(imgPicked!.path);
       if (imgPicked != null) {
         file = File(imgPicked.path);
@@ -106,129 +116,223 @@ class LoginCubit extends Cubit<LoginStates> {
         print('Url Image : $url');
       }
       emit(UploadImageRegisterSuccess());
-    }catch(e){
-      if (kDebugMode) {print('error is $e');}
+    } catch (e) {
+      if (kDebugMode) {
+        print('error is $e');
+      }
       emit(UploadImageRegisterError());
     }
   }
 
   // Login Methods
-  changePasswordVisibilityLogin(){
+  changePasswordVisibilityLogin() {
     isPasswordLogin = !isPasswordLogin;
     emit(ChangePasswordVisibility());
   }
 
   loginUserEmailAndPassword({email, password, context}) async {
     emit(LoginLoadingState());
-    userCredentialLogin = await loginAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password).then((value) {
-          defaultSnackBar(
-              context : context ,
-              color: scaffoldColorDark,
-              text: 'Login Successfully'
-          );
-          emit(LoginSuccessState());
+    userCredentialLogin = await loginAuth
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((value) {
+      defaultSnackBar(
+          context: context,
+          color: scaffoldColorDark,
+          text: 'Login Successfully');
+      emit(LoginSuccessState());
     }).catchError((error) {
       defaultSnackBar(
-          context : context ,
-          color: Colors. red,
-          text: 'There is an error'
-      );
+          context: context, color: Colors.red, text: 'There is an error');
       emit(LoginErrorState());
     });
   }
 
-  Future <UserCredential?> signInWithGoogle(context) async {
+  Future<UserCredential?> signInWithGoogle(context) async {
     emit(LoginWithGoogleLoading());
-    try{
-      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
-      final GoogleSignInAuthentication? googleAuth = await googleSignInAccount?.authentication;
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleSignInAccount?.authentication;
       credentialGoogle = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
       defaultSnackBar(
-          context : context ,
+          context: context,
           color: scaffoldColorDark,
-          text: 'Login Successfully'
-      );
-      cred =  await authGoogle.signInWithCredential(credentialGoogle!);
+          text: 'Login Successfully');
+      cred = await authGoogle.signInWithCredential(credentialGoogle!);
       emit(LoginWithGoogleSuccess());
-    } catch (e){
+    } catch (e) {
       defaultSnackBar(
-          context : context ,
-          color: scaffoldColorDark,
-          text: 'Error is $e'
-      );
+          context: context, color: scaffoldColorDark, text: 'Error is $e');
       emit(LoginWithGoogleError());
     }
-    return cred ;
+    return cred;
   }
 
-  Future <void> signOut () async {
+  Future<void> signOut() async {
     await googleSignIn.signOut();
   }
 
-  Future logOut () async {
+  Future logOut() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     emit(LogoutLoading());
-    try{
+    try {
       await auth.signOut();
       emit(LogoutSuccess());
-    }catch(e){
-      if (kDebugMode) {print(e);}
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
       emit(LogoutError());
     }
   }
 
   // Reset password Methods
-  Future sendCodeResetPassword({email, context}) async{
+  Future sendCodeResetPassword({email, context}) async {
     emit(SendCodeLoading());
-    try{
+    try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       emit(SendCodeSuccess());
-    }on FirebaseAuthException catch (e){
+    } on FirebaseAuthException catch (e) {
       showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
               content: Text(e.message.toString()),
             );
-          }
-      );
+          });
       emit(SendCodeError());
     }
   }
 
-  // Search method
+  // Search method for chat historyScreen
   List<UserModelRegister> userListSearch = [];
   searchUser({text}) async {
     FirebaseFirestore data = FirebaseFirestore.instance;
-   emit(SearchLoading());
-    await data.collection('users').where(
-        "firstName" , isEqualTo: text,)
-        .get().then((value) {
-          if(userListSearch != null){
-            userListSearch = [];
-            userListSearch.add(UserModelRegister.fromJson(value.docs[0].data()));
-          }else{
-            userListSearch.add(UserModelRegister.fromJson(value.docs[0].data()));
-          }
-          emit(SearchSuccess());
-      if (kDebugMode) {print('user list = $userListSearch');}
-    }).catchError((error){
+    emit(SearchLoading());
+    await data
+        .collection('users')
+        .where(
+          "firstName",
+          isEqualTo: text,
+        )
+        .get()
+        .then((value) {
+      if (userListSearch != null) {
+        userListSearch = [];
+        userListSearch.add(UserModelRegister.fromJson(value.docs[0].data()));
+      } else {
+        userListSearch.add(UserModelRegister.fromJson(value.docs[0].data()));
+      }
+      emit(SearchSuccess());
+      if (kDebugMode) {
+        print('user list = $userListSearch');
+      }
+    }).catchError((error) {
       emit(SearchLoading());
     });
     return userListSearch;
   }
 
+  // get Available groups
+  String? uid;
+  void getAvailableGroups() async {
+    emit(GetAvailableGroupsLoading());
+    uid = authGroup.currentUser!.uid;
+    await fireStoreGroup
+        .collection('users')
+        .doc(uid)
+        .collection('groups')
+        .get()
+        .then((value) {
+      groupList = value.docs;
+      emit(GetAvailableGroupsSuccess());
+    }).catchError((error) {
+      emit(GetAvailableGroupsError());
+    });
+  }
 
+  // Search method for group screen
+  searchGroupName({text, doc}) async {
+    FirebaseFirestore data = FirebaseFirestore.instance;
+    emit(SearchGroupNameLoading());
+    await data
+        .collection('users')
+        .doc(doc)
+        .collection('groups')
+        .where(
+          "name",
+          isEqualTo: text,
+        )
+        .get()
+        .then((value) {
+      if (groupSearchList != []) {
+        groupSearchList = [];
+        groupSearchList = value.docs;
+      } else {
+        groupSearchList = value.docs;
+      }
+      emit(SearchGroupNameSuccess());
+      if (kDebugMode) {
+        print('user list = $groupSearchList');
+      }
+    }).catchError((error) {
+      emit(SearchGroupNameError());
+    });
+    return groupSearchList;
+  }
 
+  // get Current user details
+  List<Map<String, dynamic>> membersList = [];
+  void getCurrentUserDetails() async {
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    emit(GetCurrentUserDetailsLoading());
+    if (membersList.isEmpty) {
+      await fireStore
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .get()
+          .then((map) {
+        membersList.add({
+          "firstName": map['firstName'],
+          "emailAddress": map['emailAddress'],
+          "uid": map['uid'],
+          "isAdmin": true,
+        });
+        emit(GetCurrentUserDetailsSuccess());
+      }).catchError((error) {
+        emit(GetCurrentUserDetailsError());
+      });
+    }
+  }
+
+  // search for add member to create group
+  Map<String, dynamic>? userMap;
+  searchAddMember({required String text}) async {
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    emit(AddMemberSearchLoading());
+    await fireStore.collection('users').where("firstName", isEqualTo: text).get().then((value) {
+      if (userMap == {}) {
+        userMap = value.docs[0].data();
+      } else {
+        userMap = {};
+        userMap = value.docs[0].data();
+      }
+      if (kDebugMode) {print(userMap);}
+      emit(AddMemberSearchSuccess());
+    }).catchError((error) {
+      if (kDebugMode) {print("error search = $error");}
+      emit(AddMemberSearchError());
+    });
+    return userMap;
+  }
+
+  
 }
-
-
-
 
 // facebook authentication
 // FacebookLogin facebookLogin = FacebookLogin();
