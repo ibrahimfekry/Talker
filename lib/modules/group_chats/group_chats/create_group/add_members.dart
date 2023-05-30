@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talki/shared/constants/colors.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_cubit.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
-
 import 'create_group.dart';
 
 class AddMembersInGroup extends StatefulWidget {
@@ -69,9 +68,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                     },
                   ),
                 ),
-                SizedBox(
-                  height: size.height / 20,
-                ),
+                SizedBox(height: size.height / 20,),
                 Container(
                   height: size.height / 14,
                   width: size.width,
@@ -96,14 +93,13 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                         height: size.height / 12,
                         width: size.height / 12,
                         alignment: Alignment.center,
-                        child: CircularProgressIndicator(),
+                        child: const CircularProgressIndicator(),
                       )
                     : ElevatedButton(
                         onPressed: (){
                           loginCubit.searchAddMember(text: searchController.text);
                         },
-                        child: Text("Search"),
-
+                        child: const Text("Search"),
                       ),
                 loginCubit.userMap != null
                     ? ListTile(
@@ -132,7 +128,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                     ),
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
         );
       },
     );
