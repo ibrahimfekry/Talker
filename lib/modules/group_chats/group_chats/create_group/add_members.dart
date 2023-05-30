@@ -16,6 +16,7 @@ class AddMembersInGroup extends StatefulWidget {
 }
 
 class _AddMembersInGroupState extends State<AddMembersInGroup> {
+
   final TextEditingController searchController = TextEditingController();
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,35 +25,6 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
   void initState() {
     super.initState();
     LoginCubit.get(context).getCurrentUserDetails();
-  }
-
-  void onResultTap() {
-    bool isAlreadyExist = false;
-    for (int i = 0; i < LoginCubit.get(context).membersList.length; i++) {
-      if (LoginCubit.get(context).membersList[i]['uid'] == LoginCubit.get(context).userMap!['uid']) {
-        isAlreadyExist = true;
-      }
-    }
-    if (!isAlreadyExist) {
-      setState(() {
-        LoginCubit.get(context).membersList.add({
-          "firstName": LoginCubit.get(context).userMap!['firstName'],
-          "emailAddress": LoginCubit.get(context).userMap!['emailAddress'],
-          "uid": LoginCubit.get(context).userMap!['uid'],
-          "isAdmin": false,
-        });
-
-        LoginCubit.get(context).userMap = null;
-      });
-    }
-  }
-
-  void onRemoveMembers(int index) {
-    if (LoginCubit.get(context).membersList[index]['uid'] != auth.currentUser!.uid) {
-      setState(() {
-        LoginCubit.get(context).membersList.removeAt(index);
-      });
-    }
   }
 
   @override
@@ -89,7 +61,9 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                             style: TextStyle(color: whiteColor)),
                         trailing: IconButton(
                           icon: const Icon(Icons.close),
-                          onPressed: () => onRemoveMembers(index),
+                          onPressed: () {
+                            loginCubit.onRemoveMembers(index);
+                          },
                         ),
                       );
                     },
@@ -137,7 +111,9 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                         title: Text("${loginCubit.userMap?['firstName']}", style: TextStyle(color: whiteColor),),
                         subtitle: Text("${loginCubit.userMap?['emailAddress']}", style: TextStyle(color: whiteColor)),
                         trailing: IconButton(
-                          onPressed: onResultTap,
+                          onPressed: (){
+                            loginCubit.onResultTap();
+                          },
                           icon: Icon(Icons.add, color: whiteColor,),
                         ),
                       )
