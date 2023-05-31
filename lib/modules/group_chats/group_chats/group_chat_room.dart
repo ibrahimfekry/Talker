@@ -3,131 +3,249 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
 
+import '../../../shared/components/widgets/bottom_sheet_item.dart';
+import '../../../shared/components/widgets/text_form_field_send_item.dart';
 import '../../../shared/components/widgets/text_widget.dart';
+import '../../../shared/constants/colors.dart';
 import '../../../shared/cubit/login_register_cubit/login_cubit.dart';
+import '../../chat_screen/record_message/sound_player.dart';
+import '../../chat_screen/record_message/sound_recorder.dart';
 import 'group_info.dart';
 
-class GroupChatRoom extends StatelessWidget {
+class GroupChatRoom extends StatefulWidget {
   GroupChatRoom({Key? key, required this.groupChatId, required this.groupName})
       : super(key: key);
+  final String groupChatId, groupName;
+
+  @override
+  State<GroupChatRoom> createState() => _GroupChatRoomState();
+}
+
+class _GroupChatRoomState extends State<GroupChatRoom> {
 
   final TextEditingController messageController = TextEditingController();
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
-  final String groupChatId, groupName;
   final scrollController = ScrollController();
+  final recorder = SoundRecorder();
+  final player = SoundPlayer();
+  bool isBottomSheet = true;
+  var scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     LoginCubit loginCubit = LoginCubit.get(context);
-    return BlocConsumer<LoginCubit, LoginStates>(
-      listener: (context, state) {
-        if (state is SendMessageGroupSuccess) {
-          messageController.clear();
-        }
-      },
-      builder: (context, state) {
-        return StreamBuilder<QuerySnapshot>(
-            stream: fireStore.collection('groups').doc(groupChatId).collection('chats').orderBy('time').snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return BlocConsumer<LoginCubit, LoginStates>(
-                  listener: (context, state) {
-                    if (state is SendMessageGroupSuccess) {
-                      scrollController.animateTo(0,
-                          duration: const Duration(seconds: 1),
-                          curve: Curves.fastOutSlowIn);
-                    }
-                  },
-                  builder: (context, state) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        leading: const Icon(
-                          Icons.group,
-                          color: Colors.white,
-                        ),
-                        automaticallyImplyLeading: false,
-                        title: Padding(
-                          padding: EdgeInsetsDirectional.only(start: 10.w),
-                          child: DefaultText(
-                            text: groupName,
-                            fontSize: 20.sp,
-                          ),
-                        ),
-                        actions: [
-                          IconButton(
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => GroupInfo(
-                                            groupName: groupName,
-                                            groupId: groupChatId,
-                                          ))),
-                              icon: const Icon(Icons.more_vert)),
-                          SizedBox(
-                            width: 10.w,
-                          )
-                        ],
+    return StreamBuilder<QuerySnapshot>(
+        stream: fireStore.collection('groups').doc(widget.groupChatId).collection('chats').orderBy('time', descending: true).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return BlocConsumer<LoginCubit, LoginStates>(
+              listener: (context, state) {
+                if (state is SendMessageGroupSuccess) {
+                  messageController.clear();
+                }
+              },
+              builder: (context, state) {
+                return Scaffold(
+                  key: scaffoldKey,
+                  appBar: AppBar(
+                    leading: const Icon(Icons.group, color: Colors.white,),
+                    automaticallyImplyLeading: false,
+                    title: Padding(
+                      padding: EdgeInsetsDirectional.only(start: 10.w),
+                      child: DefaultText(
+                        text: widget.groupName,
+                        fontSize: 20.sp,
                       ),
-                      body: Column(
-                        children: [
-                          Expanded(
-                            child: ListView.separated(
-                              reverse: true,
-                              controller: scrollController,
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (context, index) {
-                                Map<String, dynamic> chatMap =
-                                    snapshot.data!.docs[index].data()
-                                        as Map<String, dynamic>;
-                                return messageTile(size, chatMap);
-                              },
-                              separatorBuilder: (context, index) => SizedBox(
-                                height: 10.h,
-                              ),
+                    ),
+                    actions: [
+                      IconButton(
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => GroupInfo(
+                                        groupName: widget.groupName,
+                                        groupId: widget.groupChatId,
+                                      ))),
+                          icon: const Icon(Icons.more_vert)),
+                      SizedBox(width: 10.w,)
+                    ],
+                  ),
+                  body: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.separated(
+                            reverse: true,
+                            controller: scrollController,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              Map<String, dynamic> chatMap = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                              return messageTile(size, chatMap);
+                            },
+                            separatorBuilder: (context, index) => SizedBox(height: 10.h,
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: size.height / 12,
-                                width: size.width / 1.3,
-                                child: TextField(
-                                  controller: messageController,
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  )),
-                                ),
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    loginCubit.onSendMessage(
-                                      messageText: messageController.text,
-                                      groupChatId: groupChatId,
-                                      sendBy: auth.currentUser!.email,
+                        ),
+                        SendBoxItem(
+                          containerColor: HexColor('#1C1C1C'),
+                          onTapRecord: () async {
+                            await recorder.toogleRecording();
+                            setState((){});
+                          },
+                          onTapStop: () async {
+                            await player.tooglePlaying(whenFinished: ()=> setState((){}));
+                            setState((){});
+                          },
+                          fontSize: 13.sp,
+                          sendController: messageController,
+                          textColor: whiteColor,
+                          onTapTextForm: (){},
+                          sendFunction: () {
+                            loginCubit.onSendMessage(
+                                messageText: messageController.text,
+                                groupChatId: widget.groupChatId,
+                                sendBy: auth.currentUser!.email,
+                                scrollController: scrollController
+                            );
+                          },
+                          addTapFunction: () {
+                            if (isBottomSheet) {
+                              scaffoldKey.currentState?.showBottomSheet((context) {
+                                return BlocConsumer <LoginCubit, LoginStates>(
+                                  listener: (context, state) {},
+                                  builder: (context, state) {
+                                    return Container(
+                                      color: HexColor('#000000'),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.symmetric(horizontal: 15.w , vertical: 15.w),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child:  BottomSheetItem(
+                                                    backgroundUrl:'assets/images/backgroundGallery.svg',
+                                                    imageUrl: 'assets/images/white.svg',
+                                                    imageUrl2: 'assets/images/gallery.svg',
+                                                    onTap: () async {
+                                                      // Navigator.pop(context);
+                                                      // await chatCubit.uploadImage();
+                                                      // urlImage = chatCubit.url;
+                                                      // if (url != null) {
+                                                      //   sendController.text = urlImage!;
+                                                      // }
+                                                    },
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: BottomSheetItem(
+                                                    backgroundUrl:'assets/images/cameraBackground.svg',
+                                                    imageUrl: 'assets/images/camera.svg',
+                                                    onTap: () async {
+                                                      // Navigator.pop(context);
+                                                      // await chatCubit.uploadImageCamera();
+                                                      // urlCameraImage = chatCubit.urlCamera;
+                                                      // if(urlCameraImage != null){
+                                                      //   sendController.text = urlCameraImage!;
+                                                      // }
+                                                    },
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: BottomSheetItem(
+                                                    backgroundUrl:'assets/images/documentBackground.svg',
+                                                    imageUrl: 'assets/images/document.svg',
+                                                    onTap: () async {
+                                                      // Navigator.pop(context);
+                                                      // await chatCubit.pickFile();
+                                                      // urlFile = chatCubit.urlFile;
+                                                      // if(urlFile != null){
+                                                      //   sendController.text = urlFile!;
+                                                      // }
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 15.h,),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: BottomSheetItem(
+                                                    backgroundUrl:'assets/images/contactBackground.svg',
+                                                    imageUrl: 'assets/images/contact.svg',
+                                                    onTap: ()  {
+                                                      // Navigator.pop(context);
+                                                      // chatCubit.getContactPermission();
+                                                    },
+                                                  ),
+                                                ),
+                                                Expanded(child: Container()),
+                                                Expanded(child: Container()),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     );
                                   },
-                                  icon: const Icon(Icons.send)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                                );
+                              }).closed.then((value){
+                                isBottomSheet = true;
+                              });
+                              isBottomSheet = false;
+                            } else {
+                              Navigator.pop(context);
+                              isBottomSheet = true;
+                            }
+                          },
+                        )
+
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     SizedBox(
+                        //       height: size.height / 12,
+                        //       width: size.width / 1.3,
+                        //       child: TextField(
+                        //         controller: messageController,
+                        //         decoration: InputDecoration(
+                        //             border: OutlineInputBorder(
+                        //           borderRadius: BorderRadius.circular(10),
+                        //         )),
+                        //       ),
+                        //     ),
+                        //     IconButton(
+                        //         onPressed: () {
+                        //           loginCubit.onSendMessage(
+                        //             messageText: messageController.text,
+                        //             groupChatId: groupChatId,
+                        //             sendBy: auth.currentUser!.email,
+                        //             scrollController: scrollController
+                        //           );
+                        //         },
+                        //         icon: const Icon(Icons.send)),
+                        //   ],
+                        // ),
+                      ],
+                    ),
+                  ),
                 );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            });
-      },
-    );
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 
   Widget messageTile(Size size, Map<String, dynamic> chatMap) {
