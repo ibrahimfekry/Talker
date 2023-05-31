@@ -132,12 +132,8 @@ class _GroupScreenState extends State<GroupScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (_) => GroupChatRoom(
-                                                        groupChatId: loginCubit
-                                                                .groupSearchList[
-                                                            index]['id'],
-                                                        groupName: loginCubit
-                                                                .groupSearchList[
-                                                            index]['name'],
+                                                        groupChatId: loginCubit.groupSearchList[index]['id'],
+                                                        groupName: loginCubit.groupSearchList[index]['name'],
                                                       ))),
                                           leading: const Icon(
                                             Icons.group,
@@ -164,12 +160,8 @@ class _GroupScreenState extends State<GroupScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (_) => GroupChatRoom(
-                                                        groupChatId: snapshot
-                                                            .data
-                                                            ?.docs[index]['id'],
-                                                        groupName: snapshot.data
-                                                                ?.docs[index]
-                                                            ['name'],
+                                                        groupChatId: snapshot.data?.docs[index]['id'],
+                                                        groupName: snapshot.data?.docs[index]['name'],
                                                       ))),
                                           leading: const Icon(
                                             Icons.group,
@@ -184,9 +176,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                       }),
                                 ),
                               ),
-                    SizedBox(
-                      height: 15.h,
-                    ),
+                    SizedBox(height: 15.h,),
                   ],
                 ),
               );

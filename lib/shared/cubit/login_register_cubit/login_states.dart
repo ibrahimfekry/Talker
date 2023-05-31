@@ -102,3 +102,23 @@ class RemoveMemberFromAddMemberSuccess extends LoginStates{}
 
 class RemoveMemberFromAddMemberError extends LoginStates{}
 
+/////////////////////////// create group
+class CreateGroupLoading extends LoginStates{}
+
+class CreateGroupSuccess extends LoginStates{}
+
+class CreateGroupError extends LoginStates{}
+
+/////////////////////////// delete group
+class DeleteGroupLoading extends LoginStates{}
+
+class DeleteGroupSuccess extends LoginStates{}
+
+class DeleteGroupError extends LoginStates{}
+
+/////////////////////////// send message group
+class SendMessageGroupLoading extends LoginStates{}
+
+class SendMessageGroupSuccess extends LoginStates{}
+
+class SendMessageGroupError extends LoginStates{}

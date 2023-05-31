@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 import '../../../models/users_model.dart';
 import '../../components/component/components.dart';
 import '../../constants/colors.dart';
@@ -367,6 +368,81 @@ class LoginCubit extends Cubit<LoginStates> {
         emit(RemoveMemberFromAddMemberSuccess());
     }else{
       emit(RemoveMemberFromAddMemberError());
+    }
+  }
+
+  // create group
+  String? groupId;
+  void createGroup({required String text, required List memberList}) async {
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    emit(CreateGroupLoading());
+    try{
+      groupId = const Uuid().v1();
+      await fireStore.collection('groups').doc(groupId).set({
+        'groupName': text,
+        'members': memberList,
+        'id': groupId,
+      });
+      for (int i = 0; i < membersList.length; i++) {
+        String uid = membersList[i]['uid'];
+        await fireStore
+            .collection('users')
+            .doc(uid)
+            .collection('groups')
+            .doc(groupId)
+            .set({
+          'name': text,
+          'id': groupId,
+        });
+      }
+      //add messages in group chat
+      await fireStore.collection('groups').doc(groupId).collection('chats').add({
+        'message':'${auth.currentUser!.displayName} created this group',
+        'type':'notify',
+      });
+      emit(CreateGroupSuccess());
+    }catch (e){
+      if (kDebugMode) {print("create group error is $e");}
+      emit(CreateGroupError());
+    }
+  }
+
+  // delete group
+  void deleteGroup()async{
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    emit(DeleteGroupLoading());
+    try{
+      await fireStore.collection('groups').doc(groupId).delete();
+      emit(DeleteGroupSuccess());
+    }catch (e){
+      emit(DeleteGroupError());
+    }
+  }
+
+  // Send Message for chat group
+  void onSendMessage({required String messageText, dynamic sendBy, dynamic groupChatId,}) async {
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    emit(SendMessageGroupLoading());
+    try{
+      if (messageText.isNotEmpty) {
+        Map<String, dynamic> chatData = {
+          "sendBy": sendBy,
+          "message": messageText,
+          "type": "text",
+          "time": DateTime.now(),
+        };
+        await fireStore
+            .collection('groups')
+            .doc(groupChatId)
+            .collection('chats')
+            .add(chatData);
+        emit(SendMessageGroupSuccess());
+      }else{
+        emit(SendMessageGroupError());
+      }
+    }catch (e){
+      emit(SendMessageGroupError());
     }
   }
 

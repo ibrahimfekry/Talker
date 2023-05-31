@@ -204,8 +204,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         ],
                       ),
                       body: Padding(
-                        padding: EdgeInsetsDirectional.only(
-                            start: 15.w, top: 29.h, end: 15.w),
+                        padding: EdgeInsetsDirectional.only(start: 15.w, top: 29.h, end: 15.w),
                         child: Column(
                           children: [
                             Expanded(
@@ -372,4 +371,5 @@ class _ChatScreenState extends State<ChatScreen> {
      if (kDebugMode){print('Enter some Text');}
    }
   }
+
 }
