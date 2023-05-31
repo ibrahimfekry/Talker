@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talki/shared/constants/colors.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_cubit.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
-
 import 'create_group.dart';
 
 class AddMembersInGroup extends StatefulWidget {
@@ -16,6 +15,7 @@ class AddMembersInGroup extends StatefulWidget {
 }
 
 class _AddMembersInGroupState extends State<AddMembersInGroup> {
+
   final TextEditingController searchController = TextEditingController();
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,35 +24,6 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
   void initState() {
     super.initState();
     LoginCubit.get(context).getCurrentUserDetails();
-  }
-
-  void onResultTap() {
-    bool isAlreadyExist = false;
-    for (int i = 0; i < LoginCubit.get(context).membersList.length; i++) {
-      if (LoginCubit.get(context).membersList[i]['uid'] == LoginCubit.get(context).userMap!['uid']) {
-        isAlreadyExist = true;
-      }
-    }
-    if (!isAlreadyExist) {
-      setState(() {
-        LoginCubit.get(context).membersList.add({
-          "firstName": LoginCubit.get(context).userMap!['firstName'],
-          "emailAddress": LoginCubit.get(context).userMap!['emailAddress'],
-          "uid": LoginCubit.get(context).userMap!['uid'],
-          "isAdmin": false,
-        });
-
-        LoginCubit.get(context).userMap = null;
-      });
-    }
-  }
-
-  void onRemoveMembers(int index) {
-    if (LoginCubit.get(context).membersList[index]['uid'] != auth.currentUser!.uid) {
-      setState(() {
-        LoginCubit.get(context).membersList.removeAt(index);
-      });
-    }
   }
 
   @override
@@ -89,15 +60,15 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                             style: TextStyle(color: whiteColor)),
                         trailing: IconButton(
                           icon: const Icon(Icons.close),
-                          onPressed: () => onRemoveMembers(index),
+                          onPressed: () {
+                            loginCubit.onRemoveMembers(index);
+                          },
                         ),
                       );
                     },
                   ),
                 ),
-                SizedBox(
-                  height: size.height / 20,
-                ),
+                SizedBox(height: size.height / 20,),
                 Container(
                   height: size.height / 14,
                   width: size.width,
@@ -122,14 +93,13 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                         height: size.height / 12,
                         width: size.height / 12,
                         alignment: Alignment.center,
-                        child: CircularProgressIndicator(),
+                        child: const CircularProgressIndicator(),
                       )
                     : ElevatedButton(
                         onPressed: (){
                           loginCubit.searchAddMember(text: searchController.text);
                         },
-                        child: Text("Search"),
-
+                        child: const Text("Search"),
                       ),
                 loginCubit.userMap != null
                     ? ListTile(
@@ -137,7 +107,9 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                         title: Text("${loginCubit.userMap?['firstName']}", style: TextStyle(color: whiteColor),),
                         subtitle: Text("${loginCubit.userMap?['emailAddress']}", style: TextStyle(color: whiteColor)),
                         trailing: IconButton(
-                          onPressed: onResultTap,
+                          onPressed: (){
+                            loginCubit.onResultTap();
+                          },
                           icon: Icon(Icons.add, color: whiteColor,),
                         ),
                       )
@@ -156,7 +128,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                     ),
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
         );
       },
     );

@@ -331,7 +331,43 @@ class LoginCubit extends Cubit<LoginStates> {
     return userMap;
   }
 
+  // on result add members
+  void onResultTap() {
+    bool isAlreadyExist = false;
+    emit(OnResultAddMembersLoading());
+    try{
+      for (int i = 0; i < membersList.length; i++) {
+        if (membersList[i]['uid'] == userMap!['uid']) {
+          isAlreadyExist = true;
+        }
+      }
+      if (!isAlreadyExist) {
+        membersList.add({
+          "firstName": userMap!['firstName'],
+          "emailAddress": userMap!['emailAddress'],
+          "uid": userMap!['uid'],
+          "isAdmin": false,
+        });
+        userMap = null;
+      }
+      emit(OnResultAddMembersSuccess());
+    }catch(e){
+      emit(OnResultAddMembersError());
+    }
+  }
 
+  // remove member from add member
+  void onRemoveMembers(int index) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    emit(RemoveMemberFromAddMemberLoading());
+    if (membersList[index]['uid'] != auth.currentUser!.uid) {
+        membersList.removeAt(index);
+        emit(RemoveMemberFromAddMemberSuccess());
+    }else{
+      emit(RemoveMemberFromAddMemberError());
+    }
+  }
+  
 }
 
 // facebook authentication

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'group_info.dart';
 
 class GroupChatRoom extends StatelessWidget {
   GroupChatRoom({Key? key, required this.groupChatId,required this.groupName}) : super(key: key);
+
   final TextEditingController messageController = TextEditingController();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -50,7 +52,7 @@ class GroupChatRoom extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: size.height / 1.27,
               width: size.width,
               child: StreamBuilder<QuerySnapshot>(
@@ -74,13 +76,13 @@ class GroupChatRoom extends StatelessWidget {
                 },
               ),
             ),
-            Container(
+            SizedBox(
               height: size.height / 12,
               width: size.width / 0.5,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  SizedBox(
                     height: size.height / 12,
                     width: size.width / 1.3,
                     child: TextField(
@@ -112,8 +114,8 @@ class GroupChatRoom extends StatelessWidget {
               ? Alignment.centerRight
               : Alignment.centerLeft,
           child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 14),
-              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+              padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 14.w),
+              margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 color: Colors.blue,
@@ -136,7 +138,7 @@ class GroupChatRoom extends StatelessWidget {
                   Text(
                     chatMap['message'],
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
@@ -151,8 +153,8 @@ class GroupChatRoom extends StatelessWidget {
               ? Alignment.centerRight
               : Alignment.centerLeft,
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 14.w),
+            margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
             height: size.height / 2,
             child: Image.network(
               chatMap['message'],
@@ -164,8 +166,8 @@ class GroupChatRoom extends StatelessWidget {
           width: size.width,
           alignment: Alignment.center,
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
+            margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
               color: Colors.black38,
@@ -173,7 +175,7 @@ class GroupChatRoom extends StatelessWidget {
             child: Text(
               chatMap['message'],
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -181,7 +183,7 @@ class GroupChatRoom extends StatelessWidget {
           ),
         );
       } else {
-        return SizedBox();
+        return const SizedBox();
       }
     });
 }

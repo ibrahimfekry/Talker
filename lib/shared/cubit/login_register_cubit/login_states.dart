@@ -88,5 +88,17 @@ class AddMemberSearchSuccess extends LoginStates{}
 
 class AddMemberSearchError extends LoginStates{}
 
+/////////////////////////// on result add members
+class OnResultAddMembersLoading extends LoginStates{}
 
+class OnResultAddMembersSuccess extends LoginStates{}
+
+class OnResultAddMembersError extends LoginStates{}
+
+/////////////////////////// remove members from add members screen
+class RemoveMemberFromAddMemberLoading extends LoginStates{}
+
+class RemoveMemberFromAddMemberSuccess extends LoginStates{}
+
+class RemoveMemberFromAddMemberError extends LoginStates{}
 
