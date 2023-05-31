@@ -331,7 +331,7 @@ class LoginCubit extends Cubit<LoginStates> {
     return userMap;
   }
 
-  
+
 }
 
 // facebook authentication
