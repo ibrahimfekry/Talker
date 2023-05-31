@@ -301,6 +301,7 @@ class LoginCubit extends Cubit<LoginStates> {
           "firstName": map['firstName'],
           "emailAddress": map['emailAddress'],
           "uid": map['uid'],
+          "urlImage" : map['urlImage'],
           "isAdmin": true,
         });
         emit(GetCurrentUserDetailsSuccess());
@@ -332,7 +333,7 @@ class LoginCubit extends Cubit<LoginStates> {
   }
 
   // on result add members
-  void onResultTap() {
+  onResultTap() {
     bool isAlreadyExist = false;
     emit(OnResultAddMembersLoading());
     try{
@@ -346,6 +347,7 @@ class LoginCubit extends Cubit<LoginStates> {
           "firstName": userMap!['firstName'],
           "emailAddress": userMap!['emailAddress'],
           "uid": userMap!['uid'],
+          "urlImage" : userMap!['urlImage'],
           "isAdmin": false,
         });
         userMap = null;
@@ -367,7 +369,7 @@ class LoginCubit extends Cubit<LoginStates> {
       emit(RemoveMemberFromAddMemberError());
     }
   }
-  
+
 }
 
 // facebook authentication

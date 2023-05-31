@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:talki/shared/components/widgets/text_widget.dart';
 import 'package:talki/shared/constants/colors.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_cubit.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
+import '../../../../shared/components/widgets/add_member_Item.dart';
+import '../../../../shared/components/widgets/text_form_field.dart';
 import 'create_group.dart';
 
 class AddMembersInGroup extends StatefulWidget {
@@ -15,8 +20,7 @@ class AddMembersInGroup extends StatefulWidget {
 }
 
 class _AddMembersInGroupState extends State<AddMembersInGroup> {
-
-  final TextEditingController searchController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -31,104 +35,89 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
     final Size size = MediaQuery.of(context).size;
     LoginCubit loginCubit = LoginCubit.get(context);
     return BlocConsumer<LoginCubit, LoginStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AddMemberSearchSuccess) {
+          searchController.clear();
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Add Members"),
+            automaticallyImplyLeading: false,
+            title: DefaultText(
+              text: "Add Members",
+              fontSize: 20.sp,
+            ),
+            actions: [
+              loginCubit.membersList.length >= 2 ? IconButton( onPressed: () {
+                Navigator.of(context).push( MaterialPageRoute(
+                  builder: (_) => CreateGroup( membersList: loginCubit.membersList,),),);
+                },
+                  icon: Icon(Icons.forward, color: orangeColor, size: 30,),
+              ) : const SizedBox(),
+              SizedBox(width: 10.w,),
+            ],
           ),
           body: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: ListView.builder(
-                    itemCount: loginCubit.membersList.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: Icon(
-                          Icons.account_circle,
-                          color: whiteColor,
-                        ),
-                        title: Text(
-                          loginCubit.membersList[index]['firstName'],
-                          style: TextStyle(color: whiteColor),
-                        ),
-                        subtitle: Text(loginCubit.membersList[index]['emailAddress'],
-                            style: TextStyle(color: whiteColor)),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) => SizedBox(height: 10.h,),
+                      itemCount: loginCubit.membersList.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return AddMemberItem (
+                          iconColor: whiteColor,
+                          firstName: loginCubit.membersList[index]['firstName'],
+                          emailAddress: loginCubit.membersList[index]['emailAddress'],
+                          icon: Icons.close,
+                          onPress: (){
                             loginCubit.onRemoveMembers(index);
                           },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: size.height / 20,),
-                Container(
-                  height: size.height / 14,
-                  width: size.width,
-                  alignment: Alignment.center,
-                  child: SizedBox(
-                    height: size.height / 14,
-                    width: size.width / 1.15,
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        hintText: "Search",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
+                          url: loginCubit.membersList[index]['urlImage'],
+                        );
+                      },
                     ),
                   ),
-                ),
-                SizedBox(height: size.height / 50,),
-                state is AddMemberSearchLoading
-                    ? Container(
-                        height: size.height / 12,
-                        width: size.height / 12,
-                        alignment: Alignment.center,
-                        child: const CircularProgressIndicator(),
-                      )
-                    : ElevatedButton(
-                        onPressed: (){
-                          loginCubit.searchAddMember(text: searchController.text);
-                        },
-                        child: const Text("Search"),
-                      ),
-                loginCubit.userMap != null
-                    ? ListTile(
-                        leading: Icon(Icons.account_box, color: whiteColor,),
-                        title: Text("${loginCubit.userMap?['firstName']}", style: TextStyle(color: whiteColor),),
-                        subtitle: Text("${loginCubit.userMap?['emailAddress']}", style: TextStyle(color: whiteColor)),
-                        trailing: IconButton(
-                          onPressed: (){
-                            loginCubit.onResultTap();
+                  SizedBox(height: size.height / 20,),
+                  DefaultTextField(
+                    color: whiteColor,
+                    suffix: ConditionalBuilder(
+                      condition: state is! AddMemberSearchLoading,
+                      builder: (context) => GestureDetector(
+                          onTap: () {
+                            loginCubit.searchAddMember(
+                                text: searchController.text);
                           },
-                          icon: Icon(Icons.add, color: whiteColor,),
-                        ),
-                      )
-                    : const SizedBox(),
-              ],
+                          child: Icon(Icons.search, color: orangeColor,)
+                      ),
+                      fallback: (context) => const Center(child: CircularProgressIndicator(),),
+                    ),
+                    contentVertical: 11.h,
+                    contentHorizontal: 12.w,
+                    hintText: 'Search for contents',
+                    controller: searchController,
+                  ),
+                  SizedBox(height: size.height / 50,),
+                  loginCubit.userMap != null ? AddMemberItem (
+                    iconColor: whiteColor,
+                    firstName: "${loginCubit.userMap?['firstName']}",
+                    emailAddress: "${loginCubit.userMap?['emailAddress']}",
+                    icon: Icons.add,
+                    onPress: (){
+                      loginCubit.onResultTap();
+                    },
+                    url: "${loginCubit.userMap?['urlImage']}",
+                  ) : const SizedBox()
+                ],
+              ),
             ),
           ),
-          floatingActionButton: loginCubit.membersList.length >= 2
-              ? FloatingActionButton(
-                  child: const Icon(Icons.forward),
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => CreateGroup(
-                        membersList: loginCubit.membersList,
-                      ),
-                    ),
-                  ),
-                )
-              : const SizedBox(),
         );
       },
     );
