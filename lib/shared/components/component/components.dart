@@ -19,51 +19,123 @@ void defaultSnackBar({required BuildContext context , required String text , req
   ));
 }
 
- Widget childImage({urlImage}){
-    return Image.network(urlImage);
+ Widget childImage({urlImage, sendBy}){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if(sendBy != null)
+            Column(
+              children: [
+                DefaultText(
+                  text: '$sendBy',
+                  fontColor: whiteColor,
+                  fontSize: 13.sp,
+                ),
+                SizedBox(height: 2.h,),
+                Container(height: 1.h, color: scaffoldColorDark,),
+                SizedBox(height: 4.h,),
+              ],
+            ),
+          Image.network(urlImage)
+        ],
+      ),
+    );
 }
 
-Widget childPdf({urlPdf, context}){
-  return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, PdfScreen.id, arguments: urlPdf);
-      },
-      child: Padding(
-        padding: EdgeInsetsDirectional.only(
-            start: 10.w, end: 24.w, top: 10.h, bottom: 10.h),
-        child: DefaultText(
-          text: 'file.pdf',
-          fontColor: whiteColor,
-        ),
-      ));
+Widget childPdf({urlPdf, context, sendBy}){
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if(sendBy != null)
+          Column(
+            children: [
+              DefaultText(
+                text: '$sendBy',
+                fontColor: whiteColor,
+                fontSize: 13.sp,
+              ),
+              SizedBox(height: 2.h,),
+              Container(height: 1.h, color: scaffoldColorDark,),
+              SizedBox(height: 4.h,),
+            ],
+          ),
+        GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, PdfScreen.id, arguments: urlPdf);
+            },
+            child: DefaultText(
+              text: 'file.pdf',
+              fontColor: whiteColor,
+            )),
+      ],
+    ),
+  );
 }
 
-Widget childWord (){
-  return GestureDetector(
-      onTap: () {},
-      child: Padding(
-        padding: EdgeInsetsDirectional.only(
-            start: 10.w, end: 24.w, top: 10.h, bottom: 10.h),
-        child: DefaultText(
-          text: 'file.docx',
-          fontColor: whiteColor,
-        ),
-      ));
+Widget childWord ({sendBy}){
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if(sendBy != null)
+          Column(
+            children: [
+              DefaultText(
+                text: '$sendBy',
+                fontColor: whiteColor,
+                fontSize: 13.sp,
+              ),
+              SizedBox(height: 2.h,),
+              Container(height: 1.h, color: scaffoldColorDark,),
+              SizedBox(height: 4.h,),
+            ],
+          ),
+        GestureDetector(
+            onTap: () {},
+            child: DefaultText(
+              text: 'file.docx',
+              fontColor: whiteColor,
+            )),
+      ],
+    ),
+  );
 }
 
-Widget childExcel (){
-  return GestureDetector(
-      onTap: () {
-        //Navigator.pushNamed(context, WebViewScreen.id, arguments: message);
-      },
-      child: Padding(
-        padding: EdgeInsetsDirectional.only(
-            start: 10.w, end: 24.w, top: 10.h, bottom: 10.h),
-        child: DefaultText(
-          text: 'file.xlsx',
-          fontColor: whiteColor,
-        ),
-      ));
+Widget childExcel ({sendBy}){
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if(sendBy != null)
+          Column(
+            children: [
+              DefaultText(
+                text: '$sendBy',
+                fontColor: whiteColor,
+                fontSize: 13.sp,
+              ),
+              SizedBox(height: 2.h,),
+              Container(height: 1.h, color: scaffoldColorDark,),
+              SizedBox(height: 4.h,),
+            ],
+          ),
+        GestureDetector(
+            onTap: () {
+              //Navigator.pushNamed(context, WebViewScreen.id, arguments: message);
+            },
+            child: DefaultText(
+              text: 'file.xlsx',
+              fontColor: whiteColor,
+            )),
+      ],
+    ),
+  );
 }
 
 Widget childMp3 ({
@@ -72,34 +144,73 @@ Widget childMp3 ({
   context,
   required double value,
   required double max,
-  dynamic onChanged
+  dynamic onChanged,
+  sendBy
 }){
-  return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          icon,
-          SizedBox(width: MediaQuery.of(context).size.width / 2.4,
-            child: Slider(
-              value: value,
-              max: max,
-              onChanged: onChanged,
-              activeColor: orangeColor,
-              inactiveColor: Colors.orange.withOpacity(.3),
-            ),
-          )
-        ],
-      ));
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if(sendBy != null)
+          Column(
+            children: [
+              DefaultText(
+                text: '$sendBy',
+                fontColor: whiteColor,
+                fontSize: 13.sp,
+              ),
+              SizedBox(height: 2.h,),
+              Container(height: 1.h, color: scaffoldColorDark,),
+              SizedBox(height: 4.h,),
+            ],
+          ),
+        GestureDetector(
+            onTap: onTap,
+            child: Row(
+              children: [
+                icon,
+                SizedBox(width: MediaQuery.of(context).size.width / 2.4,
+                  child: Slider(
+                    value: value,
+                    max: max,
+                    onChanged: onChanged,
+                    activeColor: orangeColor,
+                    inactiveColor: Colors.orange.withOpacity(.3),
+                  ),
+                )
+              ],
+            )),
+      ],
+    ),
+  );
 }
 
-Widget defaultMessage({message}){
+Widget defaultMessage({message, sendBy}){
   return Padding(
-    padding: EdgeInsetsDirectional.only(
-        start: 10.w, end: 24.w, top: 10.h, bottom: 10.h),
-    child: DefaultText(
-      text: "$message",
-      fontColor: whiteColor,
-      fontSize: 13.sp,
+    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if(sendBy != null)
+          Column(
+            children: [
+              DefaultText(
+                text: '$sendBy',
+                fontColor: silverColor,
+                fontSize: 13.sp,
+              ),
+              SizedBox(height: 2.h,),
+              Container(height: 1.h, color: scaffoldColorDark,),
+              SizedBox(height: 4.h,),
+            ],
+          ),
+        DefaultText(
+          text: "$message",
+          fontColor: whiteColor,
+          fontSize: 13.sp,
+        ),
+      ],
     ),
   );
 }

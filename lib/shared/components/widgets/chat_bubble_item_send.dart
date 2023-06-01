@@ -11,8 +11,9 @@ import '../component/components.dart';
 class ChatBubbleItem extends StatefulWidget {
   final String? message;
   bool isTapContact;
+  dynamic sendBy;
 
-  ChatBubbleItem({super.key, required this.message, this.isTapContact = false});
+  ChatBubbleItem({super.key, required this.message, this.isTapContact = false,this.sendBy});
 
   @override
   State<ChatBubbleItem> createState() => _ChatBubbleItemState();
@@ -68,16 +69,16 @@ class _ChatBubbleItemState extends State<ChatBubbleItem> {
 
   @override
   Widget build(BuildContext context) {
-    typeOfMessage(message: widget.message);
+    typeOfMessage(message: widget.message, sendBy: widget.sendBy);
     return BlocConsumer<ChatCubit, ChatStates>(
       listener: (context, state) {},
       builder: (context, state) {
         ChatCubit chatCubit = ChatCubit.get(context);
         return GestureDetector(
           onTap: (){
-            if(chatCubit.phoneNumber != null){
-              launchUrl(chatCubit.contacts[0].phones![0].value! as Uri);
-            }
+            // if(chatCubit.phoneNumber != null){
+            //   launchUrl(chatCubit.contacts[0].phones![0].value! as Uri);
+            // }
           },
           child: Align(
             alignment: Alignment.centerLeft,
@@ -98,20 +99,21 @@ class _ChatBubbleItemState extends State<ChatBubbleItem> {
     );
   }
 
-  typeOfMessage({message}){
+  typeOfMessage({message, sendBy}){
     if (message.contains('jpg') ||
         message.contains('jpeg') ||
         message.contains('png')) {
-      child = childImage(urlImage: message);
+      child = childImage(urlImage: message, sendBy: sendBy);
     } else if (message.contains('pdf')) {
-      child = childPdf(context: context, urlPdf: message);
+      child = childPdf(context: context, urlPdf: message, sendBy: sendBy);
     } else if (message.contains('docx')) {
       child = childWord();
     } else if (message.contains('xlsx')) {
-      child = childExcel();
+      child = childExcel(sendBy: sendBy);
     } else if (message.contains('mp3')) {
       child = childMp3(
         context: context,
+        sendBy: sendBy,
         onTap: (){
           if (isPlayingNetwork) {
             setState(() {
@@ -133,7 +135,7 @@ class _ChatBubbleItemState extends State<ChatBubbleItem> {
         },
       );
     } else {
-      child = defaultMessage(message: message);
+      child = defaultMessage(message: message, sendBy: sendBy);
     }
   }
 }

@@ -8,11 +8,13 @@ import '../../cubit/chat_cubit/chat_cubit.dart';
 import '../../cubit/chat_cubit/chat_states.dart';
 import '../../../modules/pdf_screen/pdf_screen.dart';
 import '../../constants/colors.dart';
+import '../component/components.dart';
 
 class ChatBubbleItemReceive extends StatefulWidget {
   final String? message;
+  dynamic sendBy;
 
-  ChatBubbleItemReceive({super.key, required this.message});
+  ChatBubbleItemReceive({super.key, required this.message, this.sendBy});
 
   @override
   State<ChatBubbleItemReceive> createState() => _ChatBubbleItemReceiveState();
@@ -69,103 +71,18 @@ class _ChatBubbleItemReceiveState extends State<ChatBubbleItemReceive> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.message!.contains('jpg') ||
-        widget.message!.contains('jpeg') ||
-        widget.message!.contains('png')) {
-      child = Image.network(widget.message!);
-    } else if (widget.message!.contains('pdf')) {
-      child = GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, PdfScreen.id,
-                arguments: widget.message);
-          },
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(
-                start: 10.w, end: 24.w, top: 10.h, bottom: 10.h),
-            child: DefaultText(
-              text: 'PDF File',
-              fontColor: whiteColor,
-            ),
-          ));
-    } else if (widget.message!.contains('docx')) {
-      child = GestureDetector(
-          onTap: () {
-            //Navigator.pushNamed(context, WebViewScreen.id, arguments: message);
-          },
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(
-                start: 10.w, end: 24.w, top: 10.h, bottom: 10.h),
-            child: DefaultText(
-              text: 'file.docx',
-              fontColor: whiteColor,
-            ),
-          ));
-    } else if (widget.message!.contains('xlsx')) {
-      child = GestureDetector(
-          onTap: () {
-            //Navigator.pushNamed(context, WebViewScreen.id, arguments: message);
-          },
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(
-                start: 10.w, end: 24.w, top: 10.h, bottom: 10.h),
-            child: DefaultText(
-              text: 'file.xlsx',
-              fontColor: whiteColor,
-            ),
-          ));
-    } else if (widget.message!.contains('mp3')) {
-      child = GestureDetector(
-          onTap: () {
-            if (isPlayingNetwork) {
-              setState(() {
-                isPlayingNetwork = false;
-              });
-              stopNetworkAudio();
-            } else {
-              setState(() {
-                isPlayingNetwork = true;
-              });
-              playNetworkAudio(widget.message);
-            }
-          },
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              isPlayingNetwork
-                  ? const Icon(Icons.pause)
-                  : const Icon(Icons.play_arrow),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 2.4,
-                child: Slider(
-                  value: currentPosition.inSeconds.toDouble(),
-                  max: musicLength.inSeconds.toDouble(),
-                  onChanged: (val) {
-                    seekTo(val.toInt());
-                  },
-                  activeColor: silverColor,
-                  inactiveColor: Colors.grey.withOpacity(.3),
-                ),
-              )
-            ],
-          ));
-    } else {
-      child = Padding(
-        padding: EdgeInsetsDirectional.only(
-            start: 10.w, end: 24.w, top: 10.h, bottom: 10.h),
-        child: DefaultText(
-          text: "${widget.message}",
-          fontColor: whiteColor,
-          fontSize: 13.sp,
-        ),
-      );
-    }
+    typeOfMessage(message: widget.message, sendBy: widget.sendBy);
     return BlocConsumer<ChatCubit, ChatStates>(
       listener: (context, state) { },
       builder: (context, state) {
         ChatCubit chatCubit = ChatCubit.get(context);
         return GestureDetector(
           onTap: (){
-            launchUrl(Uri.parse('tel:+01093203745'));
+            // if(chatCubit.phoneNumber != null){
+            //   launchUrl(Uri.parse('tel:+01093203745'));
+            // }
+            // print('tel:+01093203745');
+            // //launchUrl(Uri.parse('tel:+01093203745'));
           },
           child: Align(
             alignment: Alignment.centerRight,
@@ -184,5 +101,45 @@ class _ChatBubbleItemReceiveState extends State<ChatBubbleItemReceive> {
         );
       },
     );
+  }
+
+  typeOfMessage({message, sendBy}){
+    if (message.contains('jpg') ||
+        message.contains('jpeg') ||
+        message.contains('png')) {
+      child = childImage(urlImage: message, sendBy: sendBy);
+    } else if (message.contains('pdf')) {
+      child = childPdf(context: context, urlPdf: message, sendBy: sendBy);
+    } else if (message.contains('docx')) {
+      child = childWord();
+    } else if (message.contains('xlsx')) {
+      child = childExcel(sendBy: sendBy);
+    } else if (message.contains('mp3')) {
+      child = childMp3(
+        context: context,
+        sendBy: sendBy,
+        onTap: (){
+          if (isPlayingNetwork) {
+            setState(() {
+              isPlayingNetwork = false;
+            });
+            stopNetworkAudio();
+          } else {
+            setState(() {
+              isPlayingNetwork = true;
+            });
+            playNetworkAudio(message);
+          }
+        },
+        icon: isPlayingNetwork ? const Icon(Icons.pause) : const Icon(Icons.play_arrow),
+        value: currentPosition.inSeconds.toDouble(),
+        max: musicLength.inSeconds.toDouble(),
+        onChanged: (val) {
+          seekTo(val.toInt());
+        },
+      );
+    } else {
+      child = defaultMessage(message: message, sendBy: sendBy);
+    }
   }
 }

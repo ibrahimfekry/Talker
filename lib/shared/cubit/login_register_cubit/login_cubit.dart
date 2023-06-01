@@ -420,32 +420,6 @@ class LoginCubit extends Cubit<LoginStates> {
     }
   }
 
-  // Send Message for chat group
-  void onSendMessage({required String messageText, dynamic sendBy, dynamic groupChatId, required scrollController}) async {
-    FirebaseFirestore fireStore = FirebaseFirestore.instance;
-    emit(SendMessageGroupLoading());
-      if (messageText.isNotEmpty) {
-        Map<String, dynamic> chatData = {
-          "sendBy": sendBy,
-          "message": messageText,
-          "type": "text",
-          "time": DateTime.now(),
-        };
-        await fireStore
-            .collection('groups')
-            .doc(groupChatId)
-            .collection('chats')
-            .add(chatData).then((value) {
-          scrollController.animateTo(0,
-              duration: const Duration(seconds: 1),
-              curve: Curves.fastOutSlowIn);
-          emit(SendMessageGroupSuccess());
-        }).catchError((error) {
-          print('Error send message = $error');
-          emit(SendMessageGroupError());
-        });
-      }
-  }
 }
 
 // facebook authentication

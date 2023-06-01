@@ -89,6 +89,7 @@ class ChatCubit extends Cubit<ChatStates> {
   List <Contact> contacts = [];
   bool isLoading = true;
   dynamic phoneNumber;
+  dynamic callingPhone;
 
   void getContactPermission() async {
     emit(PermissionLoading());
@@ -111,6 +112,9 @@ class ChatCubit extends Cubit<ChatStates> {
     });
     return contacts;
   }
+
+
+
 }
 
 

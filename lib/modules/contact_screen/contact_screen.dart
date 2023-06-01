@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:talki/modules/group_chats/group_chats/group_chat_room.dart';
 import '../../shared/constants/colors.dart';
 import '../../shared/cubit/chat_cubit/chat_cubit.dart';
 import '../chat_screen/chat_screen.dart';
@@ -16,7 +17,11 @@ class ContactScreen extends StatefulWidget {
   String? lastName;
   String? status;
   String? url;
-  ContactScreen({super.key, this.emailId, this.googleId, this.destinationId, this.roomId, this.firstName, this.lastName, this.status,this.url,});
+  bool? isChatUserScreen;
+  String? groupChatId;
+  String? groupName;
+  ContactScreen({super.key, this.emailId, this.googleId, this.destinationId, this.roomId,
+    this.firstName, this.lastName, this.status,this.url, this.isChatUserScreen = false, this.groupChatId, this.groupName});
 
   @override
   State<ContactScreen> createState() => _ContactScreenState();
@@ -49,19 +54,28 @@ class _ContactScreenState extends State<ContactScreen> {
                     } else {
                       return GestureDetector(
                         onTap: (){
-                          chatCubit.phoneNumber = "${chatCubit.contacts[index].displayName}\n + ${chatCubit.contacts[index].phones?[0].value}" ;
+                          chatCubit.phoneNumber = "${chatCubit.contacts[index].displayName}\n + ${chatCubit.contacts[index].phones?[0].value}";
                           Navigator.pop(context);
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen(
-                            emailId: widget.emailId,
-                            googleId: widget.googleId,
-                            destinationId: widget.destinationId,
-                            chatId: widget.roomId,
-                            firstName: widget.firstName,
-                            lastName: widget.lastName,
-                            status: widget.status,
-                            url: widget.url,
-                            isContact: true,
-                          )),);
+                          if(widget.isChatUserScreen == true){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen(
+                              emailId: widget.emailId,
+                              googleId: widget.googleId,
+                              destinationId: widget.destinationId,
+                              chatId: widget.roomId,
+                              firstName: widget.firstName,
+                              lastName: widget.lastName,
+                              status: widget.status,
+                              url: widget.url,
+                              isContactChatUser: true,
+                            )),);
+                          }else{
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> GroupChatRoom(
+                              groupChatId: '${widget.groupChatId}',
+                              groupName: "${widget.groupName}",
+                              isGroupChat: true,
+                            )),);
+                          }
+
                         },
                         child: Container(
                           decoration: BoxDecoration(

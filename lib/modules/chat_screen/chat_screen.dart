@@ -28,7 +28,7 @@ import '../../shared/cubit/chat_cubit/chat_states.dart';
 
 class ChatScreen extends StatefulWidget {
   static String id = 'ChatScreen';
-  ChatScreen({super.key, this.googleId, this.emailId, this.destinationId, this.chatId, this.firstName, this.lastName, this.status,this.url, this.isContact = false});
+  ChatScreen({super.key, this.googleId, this.emailId, this.destinationId, this.chatId, this.firstName, this.lastName, this.status,this.url, this.isContactChatUser = false});
   String? emailId;
   dynamic googleId;
   dynamic destinationId;
@@ -37,7 +37,7 @@ class ChatScreen extends StatefulWidget {
   String? chatId;
   String? status;
   String? url;
-  bool? isContact;
+  bool? isContactChatUser;
 
 
   @override
@@ -73,8 +73,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     Future<bool> onBackPressed() async {
-      if(widget.isContact == true){
-        widget.isContact = false;
+      if(widget.isContactChatUser == true){
+        widget.isContactChatUser = false;
         Navigator.pop(context);
         Navigator.pop(context);
       }else{
@@ -105,6 +105,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     lastName: widget.lastName,
                     status: widget.status,
                     url: widget.url,
+                    isChatUserScreen: true,
                   )));
                 }
               },
@@ -264,7 +265,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                           Navigator.pop(context);
                                                           await chatCubit.uploadImage();
                                                           urlImage = chatCubit.url;
-                                                          if (url != null) {
+                                                          if (urlImage != null) {
                                                             sendController.text = urlImage!;
                                                           }
                                                         },
