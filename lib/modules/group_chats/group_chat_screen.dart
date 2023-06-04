@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:talki/shared/constants/colors.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_cubit.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
-import '../../../shared/components/widgets/chat_item_active.dart';
-import '../../../shared/components/widgets/text_form_field.dart';
+import '../../shared/components/widgets/chat_item_active.dart';
+import '../../shared/components/widgets/text_form_field.dart';
 import 'create_group/add_members.dart';
 import 'group_chat_room.dart';
 

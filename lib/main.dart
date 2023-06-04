@@ -5,7 +5,7 @@ import 'package:talki/shared/bloc_observer/bloc_observer.dart';
 import 'package:talki/shared/constants/theme.dart';
 import 'firebase_options.dart';
 import 'layout/home_layout_screen.dart';
-import 'modules/group_chats/group_chats/group_chat_screen.dart';
+import 'modules/group_chats/group_chat_screen.dart';
 import 'shared/cubit/layout_cubt/layout_cubit.dart';
 import 'modules/add_screen/add_screen.dart';
 import 'modules/calls_screen/calls_screen.dart';

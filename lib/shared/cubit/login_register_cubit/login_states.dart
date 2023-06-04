@@ -122,3 +122,24 @@ class SendMessageGroupLoading extends LoginStates{}
 class SendMessageGroupSuccess extends LoginStates{}
 
 class SendMessageGroupError extends LoginStates{}
+
+/////////////////////////// get group member
+class GetGroupMemberLoading extends LoginStates{}
+
+class GetGroupMemberSuccess extends LoginStates{}
+
+class GetGroupMemberError extends LoginStates{}
+
+/////////////////////////// remove user from group
+class RemoveUserGroupLoading extends LoginStates{}
+
+class RemoveUserGroupSuccess extends LoginStates{}
+
+class RemoveUserGroupError extends LoginStates{}
+
+//////////////////////////// leave the group
+class LeaveGroupLoading extends LoginStates{}
+
+class LeaveGroupSuccess extends LoginStates{}
+
+class LeaveGroupError extends LoginStates{}

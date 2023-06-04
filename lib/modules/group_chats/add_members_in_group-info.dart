@@ -70,7 +70,7 @@ class _AddMembersInGroupInfoState extends State<AddMembersInGroupInfo> {
       'name': widget.groupName,
       'id': widget.groupId,
     });
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>GroupScreen()), (route) => false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>HomeLayoutScreen()), (route) => false);
   }
 
   @override

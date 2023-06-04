@@ -420,6 +420,110 @@ class LoginCubit extends Cubit<LoginStates> {
     }
   }
 
+  // check the admin
+  final FirebaseFirestore infoFireStore = FirebaseFirestore.instance;
+  final FirebaseAuth infoAuth = FirebaseAuth.instance;
+  List infoMembersList = [];
+
+  bool checkAdmin() {
+    bool isAdmin = false;
+    infoMembersList.forEach((element) {
+      if (element['uid'] == infoAuth.currentUser!.uid) {
+        isAdmin = element['isAdmin'];
+      }
+    });
+    return isAdmin;
+  }
+
+  // get group members
+  void getGroupMembers({required groupId}) async {
+    emit(GetGroupMemberLoading());
+    await infoFireStore
+        .collection('groups')
+        .doc(groupId)
+        .get()
+        .then((value) {
+      infoMembersList = value['members'];
+        emit(GetGroupMemberSuccess());
+    }).catchError((error){
+      emit(GetGroupMemberError());
+    });
+  }
+
+  // remove user from group
+  void removeUser({required int index, required groupId}) async {
+    emit(RemoveUserGroupLoading());
+    try{
+      if (checkAdmin()) {
+        if (infoAuth.currentUser!.uid != infoMembersList[index]['uid']) {
+          String uid = infoMembersList[index]['uid'];
+          infoMembersList.removeAt(index);
+          //update list members
+          await infoFireStore.collection('groups').doc(groupId).update({
+            'members': infoMembersList,
+          });
+          await infoFireStore
+              .collection('users')
+              .doc(uid)
+              .collection('groups')
+              .doc(groupId)
+              .delete();
+        }
+        emit(RemoveUserGroupSuccess());
+      } else {
+        print('cann\'t Remove ');
+        emit(RemoveUserGroupError());
+      }
+    }catch (e){
+      emit(RemoveUserGroupError());
+    }
+  }
+
+  // show remove dialog
+  void showRemoveDialog({required int index, context, groupId}) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            content: ListTile(
+              onTap: () => removeUser(index: index, groupId: groupId),
+              title: const Text('Remove this member'),
+            ),
+          );
+        });
+  }
+
+  // On leave the group
+  void onLeaveGroup({required groupId}) async {
+    emit(LeaveGroupLoading());
+    try{
+      //if the user is admin then he can't leave the group
+      if (!checkAdmin()) {
+        String uid = infoAuth.currentUser!.uid;
+        for (int i = 0; i < infoMembersList.length; i++) {
+          if (infoMembersList[i]['uid'] == uid) {
+            infoMembersList.removeAt(i);
+          }
+        }
+        await infoFireStore.collection('groups').doc(groupId).update({
+          'members': infoMembersList,
+        });
+        await infoFireStore
+            .collection('users')
+            .doc(uid)
+            .collection('groups')
+            .doc(groupId)
+            .delete();
+        emit(LeaveGroupSuccess());
+      } else {
+        print('Can\'t Left group');
+        emit(LeaveGroupError());
+      }
+    }catch (e){
+      print("Error Leaving = $e");
+      emit(LeaveGroupError());
+    }
+  }
 }
 
 // facebook authentication

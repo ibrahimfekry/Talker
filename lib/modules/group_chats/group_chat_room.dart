@@ -10,16 +10,16 @@ import 'package:talki/shared/cubit/chat_cubit/chat_cubit.dart';
 import 'package:talki/shared/cubit/chat_cubit/chat_states.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
 
-import '../../../shared/components/widgets/bottom_sheet_item.dart';
-import '../../../shared/components/widgets/chat_bubble_item_receive.dart';
-import '../../../shared/components/widgets/chat_bubble_item_send.dart';
-import '../../../shared/components/widgets/text_form_field_send_item.dart';
-import '../../../shared/components/widgets/text_widget.dart';
-import '../../../shared/constants/colors.dart';
-import '../../../shared/cubit/login_register_cubit/login_cubit.dart';
-import '../../chat_screen/record_message/sound_player.dart';
-import '../../chat_screen/record_message/sound_recorder.dart';
-import '../../contact_screen/contact_screen.dart';
+import '../../shared/components/widgets/bottom_sheet_item.dart';
+import '../../shared/components/widgets/chat_bubble_item_receive.dart';
+import '../../shared/components/widgets/chat_bubble_item_send.dart';
+import '../../shared/components/widgets/text_form_field_send_item.dart';
+import '../../shared/components/widgets/text_widget.dart';
+import '../../shared/constants/colors.dart';
+import '../../shared/cubit/login_register_cubit/login_cubit.dart';
+import '../chat_screen/record_message/sound_player.dart';
+import '../chat_screen/record_message/sound_recorder.dart';
+import '../contact_screen/contact_screen.dart';
 import 'group_info.dart';
 
 class GroupChatRoom extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:talki/modules/group_chats/group_chats/group_chat_room.dart';
+import 'package:talki/modules/group_chats/group_chat_room.dart';
 import '../../shared/constants/colors.dart';
 import '../../shared/cubit/chat_cubit/chat_cubit.dart';
 import '../chat_screen/chat_screen.dart';
