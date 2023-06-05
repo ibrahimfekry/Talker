@@ -25,7 +25,7 @@ class AddMemberItem extends StatelessWidget{
                   color: Colors.black
               ),
               clipBehavior: Clip.antiAliasWithSaveLayer,
-              child: Image(image: NetworkImage('$url'),)
+              child: url != null ? Image(image: NetworkImage('$url'),) : const Icon(Icons.person),
           ),
         ),
         SizedBox(width: 10.w,),
@@ -36,12 +36,13 @@ class AddMemberItem extends StatelessWidget{
               DefaultText(
                 text: firstName,
                 fontColor: iconColor,
-                fontSize: 14.sp,
+                fontSize: 16.sp,
               ),
+              SizedBox(height: 2.h,),
               DefaultText(
                 text: emailAddress,
                 fontColor: iconColor,
-                fontSize: 14.sp,
+                fontSize: 12.sp,
               ),
             ],
           ),
