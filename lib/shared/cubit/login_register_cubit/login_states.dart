@@ -143,3 +143,17 @@ class LeaveGroupLoading extends LoginStates{}
 class LeaveGroupSuccess extends LoginStates{}
 
 class LeaveGroupError extends LoginStates{}
+
+//////////////////////////// on search group info
+class OnSearchGroupInfoLoading extends LoginStates{}
+
+class OnSearchGroupInfoSuccess extends LoginStates{}
+
+class OnSearchGroupInfoError extends LoginStates{}
+
+//////////////////////////// add member to group Info
+class AddMemberGroupInfoLoading extends LoginStates{}
+
+class AddMemberGroupInfoSuccess extends LoginStates{}
+
+class AddMemberGroupInfoError extends LoginStates{}

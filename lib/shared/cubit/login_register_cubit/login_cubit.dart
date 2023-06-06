@@ -479,20 +479,6 @@ class LoginCubit extends Cubit<LoginStates> {
     }
   }
 
-  // show remove dialog
-  void showRemoveDialog({required int index, context, groupId}) {
-    showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            content: ListTile(
-              onTap: () => removeUser(index: index, groupId: groupId),
-              title: const Text('Remove this member'),
-            ),
-          );
-        });
-  }
-
   // On leave the group
   void onLeaveGroup({required groupId}) async {
     emit(LeaveGroupLoading());
@@ -524,7 +510,97 @@ class LoginCubit extends Cubit<LoginStates> {
       emit(LeaveGroupError());
     }
   }
+
+  // on search add member group info
+  FirebaseFirestore fireStoreGroupInfo = FirebaseFirestore.instance;
+  Map<String, dynamic>? userMapGroupInfo;
+  List membersListGroupInfo = [];
+  FirebaseAuth authGroupInfo = FirebaseAuth.instance;
+  void onSearchGroupInfo({text}) async {
+    emit(OnSearchGroupInfoLoading());
+    try{
+      await fireStoreGroupInfo
+          .collection('users')
+          .where("firstName", isEqualTo: text)
+          .get()
+          .then((value) {
+        userMapGroupInfo = value.docs[0].data();
+        if (kDebugMode) {print(userMapGroupInfo);}
+      });
+      emit(OnSearchGroupInfoSuccess());
+    }catch(e){
+      emit(OnSearchGroupInfoError());
+    }
+  }
+
+  // add member in group info
+  void onAddMembersGroupInfo({groupId, groupName}) async {
+    emit(AddMemberGroupInfoLoading());
+    try{
+      infoMembersList.add({
+        'firstName': userMapGroupInfo!['firstName'],
+        'emailAddress': userMapGroupInfo!['emailAddress'],
+        'uid': userMapGroupInfo!['uid'],
+        "urlImage" : userMapGroupInfo!['urlImage'],
+        'isAdmin': false,
+      });
+      await fireStoreGroupInfo.collection('groups').doc(groupId).update({
+        'members': infoMembersList,
+      });
+      await fireStoreGroupInfo
+          .collection('users')
+          .doc(authGroupInfo.currentUser!.uid)
+          .collection('groups')
+          .doc(groupId)
+          .set({
+        'name': groupName,
+        'id': groupId,
+      });
+      emit(AddMemberGroupInfoSuccess());
+    }catch(e){
+      print('Error group Info = $e');
+      emit(AddMemberGroupInfoError());
+    }
+  }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // show remove dialog
+// void showRemoveDialog({required int index, context, groupId}) {
+//   showDialog(
+//       context: context,
+//       builder: (_) {
+//         return AlertDialog(
+//           content: ListTile(
+//             onTap: () => removeUser(index: index, groupId: groupId),
+//             title: const Text('Remove this member'),
+//           ),
+//         );
+//       });
+// }
+
+
 
 // facebook authentication
 // FacebookLogin facebookLogin = FacebookLogin();

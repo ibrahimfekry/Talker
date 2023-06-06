@@ -1,12 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:talki/layout/home_layout_screen.dart';
-
-import 'group_chat_screen.dart';
+import 'package:talki/modules/group_chats/group_chat_room.dart';
+import 'package:talki/modules/group_chats/group_info.dart';
+import 'package:talki/shared/components/component/components.dart';
+import 'package:talki/shared/constants/colors.dart';
+import 'package:talki/shared/cubit/login_register_cubit/login_cubit.dart';
+import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
+import '../../shared/components/widgets/add_member_Item.dart';
+import '../../shared/components/widgets/text_form_field.dart';
 
 class AddMembersInGroupInfo extends StatefulWidget {
-  AddMembersInGroupInfo(
+  const AddMembersInGroupInfo(
       {Key? key,
       required this.groupName,
       required this.groupId,
@@ -20,119 +28,103 @@ class AddMembersInGroupInfo extends StatefulWidget {
 }
 
 class _AddMembersInGroupInfoState extends State<AddMembersInGroupInfo> {
-  Map<String, dynamic>? userMap;
-  bool isLoading = false;
   final TextEditingController searchController = TextEditingController();
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  List membersList = [];
+  bool isExist = false;
 
   @override
   void initState() {
     super.initState();
-    membersList = widget.membersList;
-  }
-
-  void onSearch() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    await firestore
-        .collection('users')
-        .where("firstName", isEqualTo: searchController.text)
-        .get()
-        .then((value) {
-      setState(() {
-        userMap = value.docs[0].data();
-        isLoading = false;
-      });
-      print(userMap);
-    });
-  }
-
-  void onAddMembers() async {
-    membersList.add({
-      'firstName': userMap!['firstName'],
-      'emailAddress': userMap!['emailAddress'],
-      'uid': userMap!['uid'],
-      'isAdmin': false,
-    });
-    await firestore.collection('groups').doc(widget.groupId).update({
-      'members': membersList,
-    });
-    await firestore
-        .collection('users')
-        .doc(auth.currentUser!.uid)
-        .collection('groups')
-        .doc(widget.groupId)
-        .set({
-      'name': widget.groupName,
-      'id': widget.groupId,
-    });
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_)=>HomeLayoutScreen()), (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Add Members"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: size.height / 20,
+    LoginCubit loginCubit = LoginCubit.get(context);
+    return BlocConsumer<LoginCubit, LoginStates>(
+      listener: (context, state) {
+        if(state is AddMemberGroupInfoSuccess){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> GroupChatRoom(
+              groupName: widget.groupName,
+              groupChatId: widget.groupId,)));
+        }
+      },
+      builder: (context, state) {
+        return ModalProgressHUD(
+          inAsyncCall: state is AddMemberGroupInfoLoading,
+          child: Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: const Text("Add Members"),
             ),
-            Container(
-              height: size.height / 14,
-              width: size.width,
-              alignment: Alignment.center,
-              child: Container(
-                height: size.height / 14,
-                width: size.width / 1.15,
-                child: TextField(
-                  controller: searchController,
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsetsDirectional.symmetric(horizontal: 15.w),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DefaultTextField(
+                      color: whiteColor,
+                      suffix: ConditionalBuilder(
+                        condition: state is! OnSearchGroupInfoLoading,
+                        builder: (context) => GestureDetector(
+                            onTap: () {
+                              loginCubit.onSearchGroupInfo(
+                                text: searchController.text,
+                              );
+                            },
+                            child: Icon(Icons.search, color: orangeColor,)
+                        ),
+                        fallback: (context) => const Center(child: CircularProgressIndicator(),),
+                      ),
+                      contentVertical: 11.h,
+                      contentHorizontal: 12.w,
+                      hintText: 'Search for contents',
+                      controller: searchController,
                     ),
-                  ),
+                    SizedBox(height: 20.h,),
+                    loginCubit.userMapGroupInfo != null
+                        ? AddMemberItem (
+                      iconColor: whiteColor,
+                      firstName: loginCubit.userMapGroupInfo!['firstName'],
+                      emailAddress: loginCubit.userMapGroupInfo!['emailAddress'],
+                      icon: Icons.add,
+                      onPress: (){
+                        isExisted(loginCubit);
+                        if(isExist){
+                          defaultSnackBar(
+                              context: context,
+                              text: 'The user already exists',
+                              color: Colors.blue
+                          );
+                        }else{
+                          loginCubit.onAddMembersGroupInfo(
+                              groupId: widget.groupId,
+                              groupName: widget.groupName
+                          );
+                        }
+                      },
+                      url:loginCubit.userMapGroupInfo!['urlImage'],
+                    )
+                        : const SizedBox(),
+                  ],
                 ),
               ),
             ),
-            SizedBox(
-              height: size.height / 50,
-            ),
-            isLoading
-                ? Container(
-                    height: size.height / 12,
-                    width: size.height / 12,
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator(),
-                  )
-                : ElevatedButton(
-                    onPressed: onSearch,
-                    child: Text("Search"),
-                  ),
-            userMap != null
-                ? ListTile(
-                    leading: Icon(Icons.account_box),
-                    title: Text(userMap!['firstName']),
-                    subtitle: Text(userMap!['emailAddress']),
-                    trailing: IconButton(
-                      onPressed: onAddMembers,
-                      icon: Icon(Icons.add),
-                    ),
-                  )
-                : SizedBox(),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
+
+  void isExisted(LoginCubit loginCubit) {
+     for(int i = 0 ; i< loginCubit.infoMembersList.length ; i++){
+      if(loginCubit.infoMembersList[i]['firstName'] == loginCubit.userMapGroupInfo!['firstName']){
+        isExist = true ;
+        break;
+      }else{
+        isExist = false ;
+      }
+    }
+  }
+
 }
