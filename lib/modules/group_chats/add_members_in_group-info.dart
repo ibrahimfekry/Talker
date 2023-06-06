@@ -45,7 +45,8 @@ class _AddMembersInGroupInfoState extends State<AddMembersInGroupInfo> {
         if(state is AddMemberGroupInfoSuccess){
           Navigator.push(context, MaterialPageRoute(builder: (context)=> GroupChatRoom(
               groupName: widget.groupName,
-              groupChatId: widget.groupId,)));
+              groupChatId: widget.groupId,
+              idAddMemberFromGroup: true,)));
         }
       },
       builder: (context, state) {

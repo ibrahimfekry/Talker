@@ -59,15 +59,7 @@ class LoginCubit extends Cubit<LoginStates> {
     emit(ChangeEnsurePasswordRegisterVisibility());
   }
 
-  createUser(
-      {email,
-      firstName,
-      lastName,
-      password,
-      ensurePassword,
-      date,
-      context,
-      urlImage}) async {
+  createUser({email, firstName, lastName, password, ensurePassword, date, context, urlImage}) async {
     emit(RegisterLoadingState());
     userCredentialRegister = await registerAuth
         .createUserWithEmailAndPassword(email: email, password: password)
@@ -87,7 +79,6 @@ class LoginCubit extends Cubit<LoginStates> {
         'status': 'Offline',
         'uid': FirebaseAuth.instance.currentUser?.uid,
       });
-      userCredentialRegister?.user?.updateDisplayName('$firstName$lastName');
       print('name is = ${userCredentialRegister?.user?.displayName}');
       emit(RegisterSuccessState());
     }).catchError((e) {

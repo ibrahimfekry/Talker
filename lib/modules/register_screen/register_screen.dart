@@ -1,4 +1,8 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,6 +39,8 @@ class RegisterScreen extends StatelessWidget {
     return BlocConsumer <LoginCubit, LoginStates> (
         listener: (context, state){
           if (state is RegisterSuccessState){
+            FirebaseAuth.instance.currentUser?.updateDisplayName('${firstNameController.text} ${lastNameController.text}');
+            FirebaseAuth.instance.currentUser?.updatePhotoURL('${loginCubit.url}');
             Navigator.pushNamed(context, HomeLayoutScreen.id, arguments: emailId);
           }
           if(state is RegisterSuccessState || state is RegisterErrorState){
@@ -83,7 +89,7 @@ class RegisterScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(50),
                                       ),
                                       clipBehavior: Clip.antiAliasWithSaveLayer,
-                                      child: Image(image: NetworkImage('${loginCubit.url}'), )
+                                      child: Image(image: NetworkImage('${loginCubit.url}'),)
                               )
                           ),
                         ),
@@ -249,6 +255,7 @@ class RegisterScreen extends StatelessWidget {
                                           urlImage: loginCubit.url,
                                           context: context
                                       );
+
                                     }
                                   }
                                 },

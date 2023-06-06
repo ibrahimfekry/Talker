@@ -23,10 +23,11 @@ import '../contact_screen/contact_screen.dart';
 import 'group_info.dart';
 
 class GroupChatRoom extends StatefulWidget {
-  GroupChatRoom({Key? key, required this.groupChatId, required this.groupName, this.isGroupChat = false})
+  GroupChatRoom({Key? key, required this.groupChatId, required this.groupName, this.isGroupChat = false, this.idAddMemberFromGroup = false})
       : super(key: key);
   final String groupChatId, groupName;
   bool? isGroupChat;
+  bool? idAddMemberFromGroup;
 
   @override
   State<GroupChatRoom> createState() => _GroupChatRoomState();
@@ -51,6 +52,12 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
     Future<bool> onBackPressed() async {
       if(widget.isGroupChat == true){
         widget.isGroupChat = false;
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }else if (widget.idAddMemberFromGroup == true){
+        widget.idAddMemberFromGroup = false;
+        Navigator.pop(context);
+        Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);
       }else{
