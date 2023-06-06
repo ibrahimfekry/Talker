@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -170,17 +171,18 @@ Widget childMp3 ({
             child: Row(
               children: [
                 icon,
-                SizedBox(width: MediaQuery.of(context).size.width / 2.4,
+                SizedBox(width: MediaQuery.of(context).size.width / 2.6,
                   child: Slider(
                     value: value,
                     max: max,
                     onChanged: onChanged,
-                    activeColor: orangeColor,
-                    inactiveColor: Colors.orange.withOpacity(.3),
+                    activeColor: scaffoldColorDark,
+                    inactiveColor: Colors.black.withOpacity(.3),
                   ),
                 )
               ],
-            )),
+            )
+        ),
       ],
     ),
   );

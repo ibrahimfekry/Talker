@@ -155,6 +155,17 @@ class LoginCubit extends Cubit<LoginStates> {
           color: scaffoldColorDark,
           text: 'Login Successfully');
       cred = await authGoogle.signInWithCredential(credentialGoogle!);
+      users.doc(FirebaseAuth.instance.currentUser?.uid).set({
+        'urlImage': FirebaseAuth.instance.currentUser?.photoURL,
+        'emailAddress': FirebaseAuth.instance.currentUser?.email,
+        'firstName': FirebaseAuth.instance.currentUser?.displayName,
+        'uid': FirebaseAuth.instance.currentUser?.uid,
+        'lastName': "",
+        'password': "",
+        'ensurePassword': "",
+        'date': "",
+        'status': 'Offline',
+      });
       emit(LoginWithGoogleSuccess());
     } catch (e) {
       defaultSnackBar(

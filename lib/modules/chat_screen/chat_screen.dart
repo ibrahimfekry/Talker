@@ -212,7 +212,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               child: ListView.separated(
                                 reverse: true,
                                 itemBuilder: (context, index){
-                                    return messageList[index].sendBy == widget.emailId || messageList[index].sendBy == widget.googleId
+                                    return messageList[index].sendBy == FirebaseAuth.instance.currentUser?.email
                                         ? ChatBubbleItemReceive(message: messageList[index].message,)
                                         : ChatBubbleItem(message: messageList[index].message,);
                                 },
@@ -356,7 +356,8 @@ class _ChatScreenState extends State<ChatScreen> {
        'message': sendController.text,
        'messageTime': DateTime.now(),
        'desId' : widget.destinationId,
-       'sendBy': widget.emailId != null ? widget.emailId.toString() : widget.googleId.toString(),
+       'sendBy': FirebaseAuth.instance.currentUser?.email,
+       //'sendBy': widget.emailId != null ? widget.emailId.toString() : widget.googleId.toString(),
      }).then((value) {
        sendController.clear();
        chatCubit.phoneNumber = null;

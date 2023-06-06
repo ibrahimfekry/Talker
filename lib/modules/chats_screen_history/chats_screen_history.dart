@@ -83,11 +83,13 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
                           height: 60.h,
                           child: ListView.separated(
                               scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) => ChatActiveItem(
-                                name: '${userList[index].firstName} ${userList[index].lastName}',
-                                status: userList[index].status,
-                                url: userList[index].url,
-                              ),
+                              itemBuilder: (context, index){
+                                return ChatActiveItem(
+                                  name: '${userList[index].firstName} ${userList[index].lastName}',
+                                  status: userList[index].status,
+                                  url: userList[index].url,
+                                );
+                              },
                               separatorBuilder: (context, index) => SizedBox(width: 11.w,),
                               itemCount: userList.length),
                         ),

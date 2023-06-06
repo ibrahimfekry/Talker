@@ -49,10 +49,15 @@ class _MenuScreenState extends State<MenuScreen> {
                         fit: BoxFit.cover,
                         image: AssetImage('assets/images/background_drawer.jpeg')),
                   ),
-                  currentAccountPicture: CircleAvatar(
-                    backgroundColor: silverColor,
-                    child: FirebaseAuth.instance.currentUser?.photoURL != null ?
-                    Image(image: NetworkImage('${FirebaseAuth.instance.currentUser?.photoURL}'),) : const Icon(Icons.person),
+                  currentAccountPicture: Container(
+                      width: 60.w,
+                      height: 60.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      child: Image(
+                        image: NetworkImage('${FirebaseAuth.instance.currentUser?.photoURL}'),)
                   ),
                   accountName: DefaultText(
                     text: FirebaseAuth.instance.currentUser?.displayName,

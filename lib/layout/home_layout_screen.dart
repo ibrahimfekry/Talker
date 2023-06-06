@@ -39,11 +39,18 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
       GroupScreen(),
       MenuScreen()
     ];
+
+    List appbarTitles = [
+      DefaultText(text: 'Chats', fontSize: 20.sp,),
+      DefaultText(text: 'Groups', fontSize: 20.sp,),
+      DefaultText(text: 'Menu', fontSize: 20.sp,),
+    ];
     return BlocConsumer<LayoutCubit, LayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
+            title: appbarTitles[layoutCubit.pageIndex],
             automaticallyImplyLeading: false,
           ),
           bottomNavigationBar: CurvedNavigationBar(
@@ -58,11 +65,6 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
                 iconUrl: 'assets/images/icon_chat.svg',
                 showTxt: true,
               ),
-              // BottomBarButton(
-              //   buttonTxt: 'Add',
-              //   iconUrl: 'assets/images/icon_add.svg',
-              //   showTxt: true,
-              // ),
               BottomBarButton(
                 buttonTxt: 'Groups',
                 iconUrl: 'assets/images/icon_groups.svg',
