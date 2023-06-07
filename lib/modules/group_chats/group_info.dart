@@ -39,7 +39,7 @@ class _GroupInfoState extends State<GroupInfo> {
       listener: (context, state) {
         if(state is LeaveGroupSuccess){
           Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (context)=> HomeLayoutScreen()), (route) => false,);
+              MaterialPageRoute(builder: (context)=> HomeLayoutScreen(isGroup: true,)), (route) => false,);
         }
       },
       builder: (context, state) {

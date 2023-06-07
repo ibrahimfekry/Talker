@@ -13,10 +13,11 @@ import '../../shared/components/widgets/add_member_Item.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
 import '../../shared/cubit/login_register_cubit/login_cubit.dart';
+import '../edit_profile/edit_profile.dart';
+import '../forget_password_screen/forget_password_screen.dart';
 
 class MenuScreen extends StatefulWidget {
   static String id = 'MenuScreen';
-
   const MenuScreen({super.key});
 
   @override
@@ -28,6 +29,7 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
     super.initState();
+    LoginCubit.get(context).getProfileData();
   }
 
   @override
@@ -71,7 +73,14 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context)=> EditProfileScreen(
+                          firstName: "${loginCubit.profileData['firstName']}",
+                          lastName: "${loginCubit.profileData['lastName']}",
+                          date: loginCubit.profileData['date'],
+                        )));
+                  },
                   //leading: SvgPicture.asset('assets/images/profile_edit.svg'),
                   title: DefaultText(
                       text: 'Edit profile information',
@@ -93,7 +102,10 @@ class _MenuScreenState extends State<MenuScreen> {
                       fontSize: 14),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ForgetPasswordScreen()),);
+                  },
                   //leading: SvgPicture.asset('assets/images/lock.svg'),
                   title: DefaultText(
                       text: 'Change Password',

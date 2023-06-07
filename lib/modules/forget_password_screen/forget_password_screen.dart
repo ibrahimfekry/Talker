@@ -35,7 +35,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DefaultText(
-                      text: 'Forget\nPassword?',
+                      text: 'Reset\nPassword',
                       fontColor: whiteColor,
                       fontSize: 32.sp,
                     ),

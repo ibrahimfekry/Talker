@@ -157,3 +157,17 @@ class AddMemberGroupInfoLoading extends LoginStates{}
 class AddMemberGroupInfoSuccess extends LoginStates{}
 
 class AddMemberGroupInfoError extends LoginStates{}
+
+//////////////////////////// get profile data
+class GetProfileDataLoading extends LoginStates{}
+
+class GetProfileDataSuccess extends LoginStates{}
+
+class GetProfileDataError extends LoginStates{}
+
+//////////////////////////// update profile
+class UpdateProfileLoading extends LoginStates{}
+
+class UpdateProfileSuccess extends LoginStates{}
+
+class UpdateProfileError extends LoginStates{}

@@ -560,8 +560,46 @@ class LoginCubit extends Cubit<LoginStates> {
       });
       emit(AddMemberGroupInfoSuccess());
     }catch(e){
-      print('Error group Info = $e');
+      if (kDebugMode) {print('Error group Info = $e');}
       emit(AddMemberGroupInfoError());
+    }
+  }
+
+  // get profile data
+  Map<String, dynamic> profileData = {};
+  getProfileData() async {
+    FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    emit(GetProfileDataLoading());
+    await fireStore.collection('users').where('emailAddress' , isEqualTo: FirebaseAuth.instance.currentUser?.email).get().then((value) {
+      if (profileData == {}) {
+        profileData = value.docs[0].data();
+      } else {
+        profileData = {};
+        profileData = value.docs[0].data();
+      }
+      if (kDebugMode) {print(profileData);}
+      emit(GetProfileDataSuccess());
+    }).catchError((error) {
+      if (kDebugMode) {print("error search = $error");}
+      emit(GetProfileDataError());
+    });
+    return profileData;
+  }
+
+  // update profile
+  CollectionReference usersProfile = FirebaseFirestore.instance.collection('users');
+  updateProfile({required firstName, required lastName, date}) async{
+    emit(UpdateProfileLoading());
+    try{
+      await users.doc(FirebaseAuth.instance.currentUser?.uid).update({
+        'firstName': firstName,
+        'lastName': lastName,
+        'date': date,
+      }).then((value){
+        emit(UpdateProfileSuccess());
+      });
+    }catch (e){
+      emit(UpdateProfileError());
     }
   }
 
