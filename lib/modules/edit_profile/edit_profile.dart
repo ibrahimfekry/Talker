@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,11 +17,12 @@ import '../../shared/cubit/login_register_cubit/login_cubit.dart';
 import '../../shared/cubit/login_register_cubit/login_states.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  EditProfileScreen({Key? key, this.firstName, this.date, this.lastName}) : super(key: key);
+  EditProfileScreen({Key? key, this.firstName, this.date, this.lastName, this.urlImage}) : super(key: key);
   static String id = 'Edit Profile';
   String? firstName;
   String? lastName;
   String? date;
+  String? urlImage;
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
@@ -52,6 +54,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               if (state is UpdateProfileSuccess){
                 FirebaseAuth.instance.currentUser?.
                   updateDisplayName('${firstNameController.text} ${lastNameController.text}');
+                if(loginCubit.urlUpdate != null){
+                  FirebaseAuth.instance.currentUser?.updatePhotoURL('${loginCubit.urlUpdate}');
+                }
                 Navigator.pushAndRemoveUntil(context,
                     MaterialPageRoute(builder: (context) => HomeLayoutScreen(isMenu: true,)), (route) => false);
               }
@@ -116,9 +121,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             fontWeight: FontWeight.w600,
                             fontSize: 22.sp,
                           ),
-                          SizedBox(
-                            height: 27.h,
+                          SizedBox(height: 27.h,),
+                          ConditionalBuilder(
+                            condition: state is !UpdateImageLoading,
+                            builder: (context) => Center(
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    await loginCubit.updateImage();
+                                  },
+                                  child: loginCubit.urlUpdate == null ? SvgPicture.asset('assets/images/icon_camera.svg')
+                                      : Container(
+                                      width: 60.w,
+                                      height: 60.h,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      child: Image(image: NetworkImage('${loginCubit.urlUpdate}'),)
+                                  )
+                              ),
+                            ),
+                            fallback: (BuildContext context) => const Center(child: CircularProgressIndicator(),),
                           ),
+                          SizedBox(height: 27.h,),
                           Padding(
                             padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w),
                             child: Column(
@@ -214,7 +239,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         loginCubit.updateProfile(
                                             firstName: firstNameController.text,
                                             lastName: lastNameController.text,
-                                            date: dateController.text
+                                            date: dateController.text,
+                                            urlImage: loginCubit.urlUpdate
                                         );
                                     },
                                     child: Text(

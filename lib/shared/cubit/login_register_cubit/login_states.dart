@@ -171,3 +171,10 @@ class UpdateProfileLoading extends LoginStates{}
 class UpdateProfileSuccess extends LoginStates{}
 
 class UpdateProfileError extends LoginStates{}
+
+/////////////////////////// update image
+class UpdateImageLoading extends LoginStates{}
+
+class UpdateImageSuccess extends LoginStates{}
+
+class UpdateImageError extends LoginStates{}

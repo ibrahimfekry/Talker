@@ -588,18 +588,47 @@ class LoginCubit extends Cubit<LoginStates> {
 
   // update profile
   CollectionReference usersProfile = FirebaseFirestore.instance.collection('users');
-  updateProfile({required firstName, required lastName, date}) async{
+  updateProfile({required firstName, required lastName, date, urlImage}) async{
     emit(UpdateProfileLoading());
     try{
       await users.doc(FirebaseAuth.instance.currentUser?.uid).update({
         'firstName': firstName,
         'lastName': lastName,
         'date': date,
+        'urlImage': urlImage,
       }).then((value){
         emit(UpdateProfileSuccess());
       });
     }catch (e){
       emit(UpdateProfileError());
+    }
+  }
+
+  File? fileUpdate;
+  var imagePickerUpdate = ImagePicker();
+  String? urlUpdate;
+  updateImage() async {
+    emit(UpdateImageLoading());
+    try {
+      XFile? imgPicked =
+      await imagePickerUpdate.pickImage(source: ImageSource.gallery);
+      var nameImage = basename(imgPicked!.path);
+      if (imgPicked != null) {
+        fileUpdate = File(imgPicked.path);
+        var random = Random().nextInt(10000);
+        nameImage = '$random$nameImage';
+        var refStorage = FirebaseStorage.instance.ref("images/$nameImage");
+        print(fileUpdate);
+        await refStorage.putFile(fileUpdate!);
+        urlUpdate = await refStorage.getDownloadURL();
+        print('Url update Image : $urlUpdate');
+      }
+      emit(UpdateImageSuccess());
+    } catch (e) {
+      if (kDebugMode) {
+        print('error is $e');
+      }
+      emit(UpdateImageError());
     }
   }
 

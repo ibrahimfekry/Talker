@@ -79,7 +79,9 @@ class _MenuScreenState extends State<MenuScreen> {
                           firstName: "${loginCubit.profileData['firstName']}",
                           lastName: "${loginCubit.profileData['lastName']}",
                           date: loginCubit.profileData['date'],
-                        )));
+                          urlImage: loginCubit.profileData['urlImage'],
+                        ))
+                    );
                   },
                   //leading: SvgPicture.asset('assets/images/profile_edit.svg'),
                   title: DefaultText(
