@@ -97,8 +97,7 @@ class ForgetPasswordScreen extends StatelessWidget {
                             onTap: () {
                               loginCubit.sendCodeResetPassword(email: emailController.text);
                             },
-                            child: SvgPicture.asset(
-                                'assets/images/icon_arrow_right.svg')),
+                            child: SvgPicture.asset('assets/images/icon_arrow_right.svg')),
                         fallback: (context) => const Center(child: CircularProgressIndicator(),),
                       ),
                     ]),

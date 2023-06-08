@@ -82,6 +82,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context)=> EditProfileScreen(
+                          emailAddress: "${loginCubit.profileData['emailAddress']}",
                           firstName: "${loginCubit.profileData['firstName']}",
                           lastName: "${loginCubit.profileData['lastName']}",
                           date: loginCubit.profileData['date'],

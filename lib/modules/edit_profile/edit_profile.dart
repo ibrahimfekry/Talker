@@ -15,11 +15,12 @@ import '../../shared/cubit/login_register_cubit/login_cubit.dart';
 import '../../shared/cubit/login_register_cubit/login_states.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  EditProfileScreen({Key? key, this.firstName, this.date, this.lastName, this.urlImage}) : super(key: key);
+  EditProfileScreen({Key? key, this.firstName, this.date, this.lastName, this.urlImage, this.emailAddress}) : super(key: key);
   static String id = 'Edit Profile';
   String? firstName;
   String? lastName;
   String? date;
+  String? emailAddress;
   String? urlImage;
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -29,6 +30,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
 
   @override
   void initState(){
@@ -36,6 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     lastNameController.text = "${widget.lastName}";
     dateController.text = "${widget.date}";
     LoginCubit.get(context).urlUpdate = "${widget.urlImage}";
+    emailController.text = "${widget.emailAddress}";
     super.initState();
   }
 
@@ -55,6 +58,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }
                 FirebaseAuth.instance.currentUser?.
                   updateDisplayName('${firstNameController.text} ${lastNameController.text}');
+                FirebaseAuth.instance.currentUser?.updateEmail(emailController.text);
                 Navigator.pushAndRemoveUntil(context,
                     MaterialPageRoute(builder: (context) => HomeLayoutScreen(isMenu: true,)), (route) => false);
               }
@@ -146,6 +150,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w),
                             child: Column(
                               children: [
+                                DefaultTextField(
+                                  onTap: () {},
+                                  obscureText: false,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Required Field';
+                                    }
+                                    return null;
+                                  },
+                                  borderRadius: 10.r,
+                                  color: containerColor,
+                                  hintText: 'Date',
+                                  prefix: Icon(
+                                    Icons.email,
+                                    color: silverColor,
+                                  ),
+                                  textInputType: TextInputType.emailAddress,
+                                  controller: emailController,
+                                ),
+                                SizedBox(
+                                  height: 15.h,
+                                ),
                                 Row(
                                   children: [
                                     Expanded(
@@ -238,7 +264,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             firstName: firstNameController.text,
                                             lastName: lastNameController.text,
                                             date: dateController.text,
-                                            urlImage: loginCubit.urlUpdate
+                                            urlImage: loginCubit.urlUpdate,
+                                            emailAddress: emailController.text
                                         );
                                     },
                                     child: Text(

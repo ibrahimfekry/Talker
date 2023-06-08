@@ -605,7 +605,7 @@ class LoginCubit extends Cubit<LoginStates> {
 
   // update profile
   CollectionReference usersProfile = FirebaseFirestore.instance.collection('users');
-  updateProfile({required firstName, required lastName, date, urlImage}) async{
+  updateProfile({required firstName, required lastName, date, urlImage, emailAddress}) async{
     emit(UpdateProfileLoading());
     try{
       await users.doc(FirebaseAuth.instance.currentUser?.uid).update({
@@ -613,6 +613,7 @@ class LoginCubit extends Cubit<LoginStates> {
         'lastName': lastName,
         'date': date,
         'urlImage': urlImage,
+        'emailAddress' : emailAddress
       }).then((value){
         emit(UpdateProfileSuccess());
       });
