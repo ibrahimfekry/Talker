@@ -8,8 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:talki/layout/home_layout_screen.dart';
-import 'package:talki/modules/forget_password_screen/forget_password_screen.dart';
-import '../../models/users_model.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
@@ -32,12 +30,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController dateController = TextEditingController();
 
-
   @override
   void initState(){
     firstNameController.text = "${widget.firstName}";
     lastNameController.text = "${widget.lastName}";
     dateController.text = "${widget.date}";
+    LoginCubit.get(context).urlUpdate = "${widget.urlImage}";
     super.initState();
   }
 
@@ -52,11 +50,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: BlocConsumer<LoginCubit, LoginStates>(
             listener: (context, state) {
               if (state is UpdateProfileSuccess){
-                FirebaseAuth.instance.currentUser?.
-                  updateDisplayName('${firstNameController.text} ${lastNameController.text}');
                 if(loginCubit.urlUpdate != null){
                   FirebaseAuth.instance.currentUser?.updatePhotoURL('${loginCubit.urlUpdate}');
                 }
+                FirebaseAuth.instance.currentUser?.
+                  updateDisplayName('${firstNameController.text} ${lastNameController.text}');
                 Navigator.pushAndRemoveUntil(context,
                     MaterialPageRoute(builder: (context) => HomeLayoutScreen(isMenu: true,)), (route) => false);
               }
@@ -137,7 +135,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         borderRadius: BorderRadius.circular(50),
                                       ),
                                       clipBehavior: Clip.antiAliasWithSaveLayer,
-                                      child: Image(image: NetworkImage('${loginCubit.urlUpdate}'),)
+                                      child: Image(image: NetworkImage("${loginCubit.urlUpdate}"),)
                                   )
                               ),
                             ),

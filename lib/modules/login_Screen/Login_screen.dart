@@ -32,10 +32,12 @@ class LoginScreen extends StatelessWidget {
     return BlocConsumer <LoginCubit, LoginStates> (
         listener: (context, state){
           if (state is LoginSuccessState ){
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeLayoutScreen(emailId: emailId,)), (route) => false,);
+            Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) => HomeLayoutScreen(emailId: emailId, isGroup: true,)), (route) => false,);
           }
           if (state is LoginWithGoogleSuccess){
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeLayoutScreen(googleId: loginCubit.googleId,)), (route) => false,);
+            Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) => HomeLayoutScreen(googleId: loginCubit.googleId,isGroup: true,)), (route) => false,);
           }
           if(state is LoginSuccessState || state is LoginErrorState){
             emailController.clear();

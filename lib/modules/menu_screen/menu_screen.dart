@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:talki/modules/login_Screen/Login_screen.dart';
+import 'package:talki/modules/reset_password_screen/reset_password_screen.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
 
 import '../../models/users_model.dart';
@@ -36,7 +38,11 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     LoginCubit loginCubit = LoginCubit.get(context);
     return BlocConsumer<LoginCubit, LoginStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if(state is LogoutSuccess){
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
+        }
+      },
       builder: (context, state) {
         return Container(
           height: double.infinity,
@@ -106,7 +112,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 ListTile(
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ForgetPasswordScreen()),);
+                        MaterialPageRoute(builder: (context) => ResetPasswordScreen()),);
                   },
                   //leading: SvgPicture.asset('assets/images/lock.svg'),
                   title: DefaultText(
@@ -115,6 +121,18 @@ class _MenuScreenState extends State<MenuScreen> {
                       fontColor: whiteColor,
                       fontSize: 14),
                   trailing: Icon(Icons.chevron_right, color: whiteColor),
+                ),
+                ListTile(
+                  onTap: () {
+                    loginCubit.logOut();
+                  },
+                  //leading: SvgPicture.asset('assets/images/lock.svg'),
+                  title: DefaultText(
+                      text: 'Log Out',
+                      fontWeight: FontWeight.w400,
+                      fontColor: whiteColor,
+                      fontSize: 14),
+                  // trailing: Icon(Icons.chevron_right, color: whiteColor),
                 ),
               ],
             ),

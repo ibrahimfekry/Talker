@@ -11,8 +11,11 @@ import '../../shared/cubit/login_register_cubit/login_cubit.dart';
 import '../../shared/cubit/login_register_cubit/login_states.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  const ResetPasswordScreen({Key? key}) : super(key: key);
+  ResetPasswordScreen({Key? key}) : super(key: key);
   static String id = 'ResetPasswordScreen';
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginStates>(
@@ -25,7 +28,7 @@ class ResetPasswordScreen extends StatelessWidget {
             child: SafeArea(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 85.h, horizontal: 20.w),
-                child: Container(
+                child: SizedBox(
                   width: double.infinity,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,6 +81,7 @@ class ResetPasswordScreen extends StatelessWidget {
                               : Icon(Icons.visibility, color: silverColor,),
                         ),
                         textInputType: TextInputType.visiblePassword,
+                        controller: newPasswordController,
                       ),
                       SizedBox(
                         height: 15.h,
@@ -114,12 +118,14 @@ class ResetPasswordScreen extends StatelessWidget {
                                 ),
                         ),
                         textInputType: TextInputType.visiblePassword,
+                        controller: confirmPasswordController,
                       ),
                       SizedBox(
                         height: 50.h,
                       ),
                       GestureDetector(
-                        onTap: () {
+                        onTap: (){
+                          
                           Navigator.pushNamed(context, LoginScreen.id);
                         },
                         child: Container(

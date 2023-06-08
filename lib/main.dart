@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget{
                 LoginScreen.id:(context)=> LoginScreen(),
                 RegisterScreen.id:(context)=> RegisterScreen(),
                 ForgetPasswordScreen.id:(context)=> ForgetPasswordScreen(),
-                ResetPasswordScreen.id:(context)=> const ResetPasswordScreen(),
+                ResetPasswordScreen.id:(context)=> ResetPasswordScreen(),
                 HomeLayoutScreen.id:(context)=>  HomeLayoutScreen(),
                 ChatsScreenHistory.id:(context)=> ChatsScreenHistory(),
                 CallsScreen.id : (context) =>  CallsScreen(),

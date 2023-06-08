@@ -183,8 +183,11 @@ class LoginCubit extends Cubit<LoginStates> {
     FirebaseAuth auth = FirebaseAuth.instance;
     emit(LogoutLoading());
     try {
-      await auth.signOut();
-      emit(LogoutSuccess());
+      await auth.signOut().then((value){
+        emit(LogoutSuccess());
+      }).catchError((error){
+        emit(LogoutError());
+      });
     } catch (e) {
       if (kDebugMode) {
         print(e);
