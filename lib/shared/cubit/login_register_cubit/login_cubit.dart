@@ -39,6 +39,20 @@ class LoginCubit extends Cubit<LoginStates> {
   dynamic googleId;
   dynamic cred;
 
+  // reset password
+  bool isResetPassword = true;
+  bool isResetConfirmPassword = true;
+
+  resetPasswordVisibility() {
+    isResetPassword = !isResetPassword;
+    emit(ChangeResetPassword());
+  }
+
+  resetConfirmPasswordVisibility() {
+    isResetConfirmPassword = !isResetConfirmPassword;
+    emit(ChangeConfirmResetPassword());
+  }
+
   // FireStore Variables
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
@@ -632,6 +646,20 @@ class LoginCubit extends Cubit<LoginStates> {
         print('error is $e');
       }
       emit(UpdateImageError());
+    }
+  }
+
+  // update password
+  updatePassword({password}) async{
+    emit(UpdatePasswordLoading());
+    try{
+      await FirebaseAuth.instance.currentUser?.updatePassword(password).then((value){
+        emit(UpdatePasswordSuccess());
+      }).catchError((error){
+        emit(UpdatePasswordError());
+      });
+    }catch(e){
+      emit(UpdatePasswordError());
     }
   }
 

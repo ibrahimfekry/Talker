@@ -178,3 +178,14 @@ class UpdateImageLoading extends LoginStates{}
 class UpdateImageSuccess extends LoginStates{}
 
 class UpdateImageError extends LoginStates{}
+
+/////////////////////////// update password
+class UpdatePasswordLoading extends LoginStates{}
+
+class UpdatePasswordSuccess extends LoginStates{}
+
+class UpdatePasswordError extends LoginStates{}
+
+////////////////////////// change reset password visibility
+class ChangeResetPassword extends LoginStates{}
+class ChangeConfirmResetPassword extends LoginStates{}
