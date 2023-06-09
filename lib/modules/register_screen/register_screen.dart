@@ -41,7 +41,11 @@ class RegisterScreen extends StatelessWidget {
           if (state is RegisterSuccessState){
             FirebaseAuth.instance.currentUser?.updateDisplayName('${firstNameController.text} ${lastNameController.text}');
             FirebaseAuth.instance.currentUser?.updatePhotoURL('${loginCubit.url}');
-            Navigator.pushNamed(context, HomeLayoutScreen.id, arguments: emailId);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeLayoutScreen(
+              emailId: emailId,
+              isGroup: true,
+            )));
+            //Navigator.pushNamed(context, HomeLayoutScreen.id, arguments: emailId);
           }
           if(state is RegisterSuccessState || state is RegisterErrorState){
             emailController.clear();

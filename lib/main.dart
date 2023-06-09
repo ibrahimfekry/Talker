@@ -7,8 +7,6 @@ import 'firebase_options.dart';
 import 'layout/home_layout_screen.dart';
 import 'modules/group_chats/group_chat_screen.dart';
 import 'shared/cubit/layout_cubt/layout_cubit.dart';
-import 'modules/add_screen/add_screen.dart';
-import 'modules/calls_screen/calls_screen.dart';
 import 'shared/cubit/chat_cubit/chat_cubit.dart';
 import 'modules/chat_screen/chat_screen.dart';
 import 'modules/chats_screen_history/chats_screen_history.dart';
@@ -52,8 +50,6 @@ class MyApp extends StatelessWidget{
                 ResetPasswordScreen.id:(context)=> ResetPasswordScreen(),
                 HomeLayoutScreen.id:(context)=>  HomeLayoutScreen(),
                 ChatsScreenHistory.id:(context)=> ChatsScreenHistory(),
-                CallsScreen.id : (context) =>  CallsScreen(),
-                AddScreen.id : (context) => const AddScreen(),
                 GroupScreen.id : (context) => const GroupScreen(),
                 MenuScreen.id : (context) => const MenuScreen(),
                 ChatScreen.id : (context) => ChatScreen(),
