@@ -33,11 +33,11 @@ class LoginScreen extends StatelessWidget {
         listener: (context, state){
           if (state is LoginSuccessState ){
             Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (context) => HomeLayoutScreen(emailId: emailId, isGroup: true,)), (route) => false,);
+              MaterialPageRoute(builder: (context) => HomeLayoutScreen(emailId: emailId,)), (route) => false,);
           }
           if (state is LoginWithGoogleSuccess){
             Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (context) => HomeLayoutScreen(googleId: loginCubit.googleId,isGroup: true,)), (route) => false,);
+              MaterialPageRoute(builder: (context) => HomeLayoutScreen(googleId: loginCubit.googleId,)), (route) => false,);
           }
           if(state is LoginSuccessState || state is LoginErrorState){
             emailController.clear();

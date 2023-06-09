@@ -52,6 +52,14 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
             appBar: AppBar(
               title: appbarTitles[layoutCubit.pageIndex],
               automaticallyImplyLeading: false,
+              actions: [
+                IconButton(
+                    onPressed: (){
+                      layoutCubit.changeAppMode();
+                    },
+                    icon: const Icon(Icons.brightness_4_outlined)
+                ),
+              ],
             ),
             bottomNavigationBar: CurvedNavigationBar(
               height: 56.h,
@@ -84,6 +92,14 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
           return Scaffold(
             appBar: AppBar(
               title: appbarTitles[layoutCubit.pageIndex],
+              actions: [
+                IconButton(
+                    onPressed: (){
+                      layoutCubit.changeAppMode();
+                    },
+                    icon: const Icon(Icons.brightness_4_outlined)
+                ),
+              ],
               automaticallyImplyLeading: false,
             ),
             bottomNavigationBar: CurvedNavigationBar(
@@ -118,3 +134,5 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
     );
   }
 }
+
+

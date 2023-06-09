@@ -1,25 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'colors.dart';
 
 ThemeData lightTheme =ThemeData(
   fontFamily: 'Inter',
   scaffoldBackgroundColor: scaffoldColorLight,
   appBarTheme: AppBarTheme(
-    elevation: 0,
-    backgroundColor: scaffoldColorLight,
-    systemOverlayStyle: SystemUiOverlayStyle(
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: scaffoldColorLight,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    )
+      elevation: 0,
+      titleTextStyle: TextStyle(
+          color: Colors.black,
+          fontSize: 20.sp,
+          fontWeight: FontWeight.bold
+      ),
+      backgroundColor: scaffoldColorLight,
+      iconTheme: const IconThemeData(
+        color: Colors.black,
+        size: 25,
+      ),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: scaffoldColorLight,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      )
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
     backgroundColor: scaffoldColorLight,
+  ),
+  textTheme: TextTheme(
+    bodySmall: TextStyle(
+        fontSize: 10.sp,
+        fontWeight:FontWeight.w300,
+        color: Colors.black
+    ),
+    bodyMedium: TextStyle(
+        fontSize: 14.sp,
+        fontWeight:FontWeight.w300,
+        color: Colors.black
+    ),
+    bodyLarge: TextStyle(
+        fontSize: 20.sp,
+        fontWeight:FontWeight.w300,
+        color: Colors.black
+    ),
   ),
 );
 
@@ -29,6 +55,15 @@ ThemeData darkTheme = ThemeData(
   appBarTheme: AppBarTheme(
       elevation: 0,
       backgroundColor: scaffoldColorDark,
+      titleTextStyle: TextStyle(
+          color: whiteColor,
+          fontSize: 20.sp,
+          fontWeight: FontWeight.bold
+      ),
+      iconTheme:  IconThemeData(
+        color: whiteColor,
+        size: 25,
+      ),
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarBrightness: Brightness.dark,
         statusBarIconBrightness: Brightness.light,
@@ -41,4 +76,22 @@ ThemeData darkTheme = ThemeData(
     type: BottomNavigationBarType.fixed,
     backgroundColor: scaffoldColorDark,
   ),
+  textTheme: TextTheme(
+    bodySmall: TextStyle(
+        fontSize: 10.sp,
+        fontWeight:FontWeight.w300,
+        color: whiteColor
+    ),
+    bodyMedium: TextStyle(
+        fontSize: 14.sp,
+        fontWeight:FontWeight.w300,
+        color: whiteColor
+    ),
+    bodyLarge: TextStyle(
+        fontSize: 20.sp,
+        fontWeight:FontWeight.w300,
+        color: whiteColor
+    ),
+  ),
 );
+

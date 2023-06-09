@@ -108,8 +108,6 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
                                 Icons.search,
                                 color: orangeColor,
                               )),
-                          contentVertical: 11.h,
-                          contentHorizontal: 12.w,
                           hintText: 'Search for contents',
                           controller: searchController,
                         ),

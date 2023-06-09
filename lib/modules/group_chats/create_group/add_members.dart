@@ -88,8 +88,6 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                                   SizedBox(height: 20.h,),
                                   DefaultTextField(
                                     color: whiteColor,
-                                    contentVertical: 11.h,
-                                    contentHorizontal: 12.w,
                                     hintText: 'Enter Group Name',
                                     controller: groupNameController,
                                   ),
@@ -182,8 +180,6 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                         ),
                         fallback: (context) => const Center(child: CircularProgressIndicator(),),
                       ),
-                      contentVertical: 11.h,
-                      contentHorizontal: 12.w,
                       hintText: 'Search for contents',
                       controller: searchController,
                     ),

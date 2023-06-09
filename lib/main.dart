@@ -3,9 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talki/shared/bloc_observer/bloc_observer.dart';
 import 'package:talki/shared/constants/theme.dart';
+import 'package:talki/shared/cubit/layout_cubt/layout_states.dart';
 import 'firebase_options.dart';
 import 'layout/home_layout_screen.dart';
 import 'modules/group_chats/group_chat_screen.dart';
+import 'modules/splash_screen/splash_screen.dart';
 import 'shared/cubit/layout_cubt/layout_cubit.dart';
 import 'shared/cubit/chat_cubit/chat_cubit.dart';
 import 'modules/chat_screen/chat_screen.dart';
@@ -42,7 +44,12 @@ class MyApp extends StatelessWidget{
               BlocProvider(create: (context) => LoginCubit()),
               BlocProvider(create: (context) => ChatCubit()),
             ],
-            child: MaterialApp(
+            child: BlocConsumer<LayoutCubit, LayoutStates>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
+    return MaterialApp(
               routes: {
                 LoginScreen.id:(context)=> LoginScreen(),
                 RegisterScreen.id:(context)=> RegisterScreen(),
@@ -56,11 +63,15 @@ class MyApp extends StatelessWidget{
                 PdfScreen.id : (context) => PdfScreen(),
                 ContactScreen.id : (context) => ContactScreen(),
               },
-              theme: darkTheme,
+              theme: lightTheme,
+              darkTheme: darkTheme,
+              themeMode: LayoutCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
               debugShowCheckedModeBanner: false,
-              //home: AuthenticationScreen(),
+              home: const SplashScreen(),
               initialRoute: LoginScreen.id,
-            ),
+            );
+  },
+),
           );
         }
     );

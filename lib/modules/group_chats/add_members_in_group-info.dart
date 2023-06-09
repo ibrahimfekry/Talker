@@ -77,8 +77,6 @@ class _AddMembersInGroupInfoState extends State<AddMembersInGroupInfo> {
                         ),
                         fallback: (context) => const Center(child: CircularProgressIndicator(),),
                       ),
-                      contentVertical: 11.h,
-                      contentHorizontal: 12.w,
                       hintText: 'Search for contents',
                       controller: searchController,
                     ),

@@ -26,7 +26,12 @@ class LayoutCubit extends Cubit <LayoutStates>{
         fontColor: whiteColor,
         fontWeight: FontWeight.w800
     ),
-
   ];
+
+  bool isDark = true;
+  void changeAppMode (){
+    isDark = !isDark;
+    emit(ChangeAppMode());
+  }
 }
 

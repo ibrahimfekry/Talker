@@ -104,9 +104,7 @@ class _GroupScreenState extends State<GroupScreen> {
                             color: orangeColor,
                           )
                       ),
-                      contentVertical: 11.h,
-                      contentHorizontal: 12.w,
-                      hintText: 'Search for contents',
+                      hintText: 'Search for groups',
                       controller: searchController,
                     ),
                     SizedBox(height: 10.h,),

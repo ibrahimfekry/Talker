@@ -188,4 +188,6 @@ class UpdatePasswordError extends LoginStates{}
 
 ////////////////////////// change reset password visibility
 class ChangeResetPassword extends LoginStates{}
+
 class ChangeConfirmResetPassword extends LoginStates{}
+

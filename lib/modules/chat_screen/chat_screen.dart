@@ -354,7 +354,7 @@ class _ChatScreenState extends State<ChatScreen> {
    if(sendController.text.isNotEmpty){
      messages.doc().set({
        'message': sendController.text,
-       'messageTime': DateTime.now(),
+       'messageTime': FieldValue.serverTimestamp(),
        'desId' : widget.destinationId,
        'sendBy': FirebaseAuth.instance.currentUser?.email,
        //'sendBy': widget.emailId != null ? widget.emailId.toString() : widget.googleId.toString(),

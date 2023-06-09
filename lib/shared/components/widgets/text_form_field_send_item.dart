@@ -46,8 +46,9 @@ class SendBoxItem extends StatelessWidget{
               width: 42.w,
               child: Padding(
                   padding: EdgeInsetsDirectional.only(
-                      start: 15.w, top: 11.h, bottom: 11.h, end: 0),
+                      start: 10.w, end: 2.w),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       GestureDetector(
                         onTap: () {},
@@ -60,12 +61,10 @@ class SendBoxItem extends StatelessWidget{
                       SizedBox(
                         width: 11.w,
                       ),
-                      Positioned(
-                          child: Container(
-                            width: .5.w,
-                            height: 20.h,
-                            color: Colors.white,
-                          )
+                      Container(
+                        width: .5.w,
+                        height: 16.h,
+                        color: Colors.white,
                       ),
                     ],
                   )
@@ -75,6 +74,7 @@ class SendBoxItem extends StatelessWidget{
               width: 79.w,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   GestureDetector(
                     onTap: onTapRecord,
