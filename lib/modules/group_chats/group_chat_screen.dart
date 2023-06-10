@@ -118,7 +118,7 @@ class _GroupScreenState extends State<GroupScreen> {
                               ),
                             ),
                           )
-                        : state is SearchGroupSuccess 
+                        : state is SearchGroupSuccess
                             ? Expanded(
                                 child: SizedBox(
                                   height: 200.h,

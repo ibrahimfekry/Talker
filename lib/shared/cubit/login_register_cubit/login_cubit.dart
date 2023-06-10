@@ -275,37 +275,7 @@ class LoginCubit extends Cubit<LoginStates> {
       emit(GetAvailableGroupsError());
     });
   }
-
-  // Search method for group screen
-  searchGroupName({text, doc}) async {
-    FirebaseFirestore data = FirebaseFirestore.instance;
-    emit(SearchGroupNameLoading());
-    await data
-        .collection('users')
-        .doc(doc)
-        .collection('groups')
-        .where(
-          "name",
-          isEqualTo: text,
-        )
-        .get()
-        .then((value) {
-      if (groupSearchList != []) {
-        groupSearchList = [];
-        groupSearchList = value.docs;
-      } else {
-        groupSearchList = value.docs;
-      }
-      emit(SearchGroupNameSuccess());
-      if (kDebugMode) {
-        print('user list = $groupSearchList');
-      }
-    }).catchError((error) {
-      emit(SearchGroupNameError());
-    });
-    return groupSearchList;
-  }
-
+  
   // get Current user details
   List<Map<String, dynamic>> membersList = [];
   void getCurrentUserDetails() async {
