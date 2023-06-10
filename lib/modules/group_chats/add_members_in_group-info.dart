@@ -77,13 +77,13 @@ class _AddMembersInGroupInfoState extends State<AddMembersInGroupInfo> {
                         ),
                         fallback: (context) => const Center(child: CircularProgressIndicator(),),
                       ),
-                      hintText: 'Search for contents',
+                      hintText: 'Search for members',
                       controller: searchController,
                     ),
                     SizedBox(height: 20.h,),
                     loginCubit.userMapGroupInfo != null
                         ? AddMemberItem (
-                      iconColor: whiteColor,
+                      iconColor: Theme.of(context).iconTheme.color,
                       firstName: loginCubit.userMapGroupInfo!['firstName'],
                       emailAddress: loginCubit.userMapGroupInfo!['emailAddress'],
                       icon: Icons.add,

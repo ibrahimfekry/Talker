@@ -11,6 +11,7 @@ import 'package:talki/layout/home_layout_screen.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
+import '../../shared/cubit/layout_cubt/layout_cubit.dart';
 import '../../shared/cubit/login_register_cubit/login_cubit.dart';
 import '../../shared/cubit/login_register_cubit/login_states.dart';
 
@@ -59,8 +60,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 FirebaseAuth.instance.currentUser?.
                   updateDisplayName('${firstNameController.text} ${lastNameController.text}');
                 FirebaseAuth.instance.currentUser?.updateEmail(emailController.text);
+                LayoutCubit.get(context).pageIndex = 0 ;
                 Navigator.pushAndRemoveUntil(context,
-                    MaterialPageRoute(builder: (context) => HomeLayoutScreen(isMenu: true,)), (route) => false);
+                    MaterialPageRoute(builder: (context) => HomeLayoutScreen()), (route) => false);
               }
             },
             builder: (context, state) {
@@ -119,9 +121,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                           DefaultText(
                             text: 'Edit Profile',
-                            fontColor: whiteColor,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 22.sp,
+                            textStyle: Theme.of(context).textTheme.bodyLarge,
                           ),
                           SizedBox(height: 27.h,),
                           ConditionalBuilder(
@@ -160,7 +160,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     return null;
                                   },
                                   borderRadius: 10.r,
-                                  color: containerColor,
+                                  color: Theme.of(context).focusColor,
                                   hintText: 'Date',
                                   prefix: Icon(
                                     Icons.email,
@@ -184,7 +184,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           return null;
                                         },
                                         borderRadius: 10.r,
-                                        color: containerColor,
+                                        color: Theme.of(context).focusColor,
                                         prefix: Icon(
                                           Icons.person,
                                           color: silverColor,
@@ -205,7 +205,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           return null;
                                         },
                                         borderRadius: 10.r,
-                                        color: containerColor,
+                                        color: Theme.of(context).focusColor,
                                         prefix: Icon(
                                           Icons.person,
                                           color: silverColor,
@@ -239,7 +239,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     return null;
                                   },
                                   borderRadius: 10.r,
-                                  color: containerColor,
+                                  color: Theme.of(context).focusColor,
                                   hintText: 'Date',
                                   prefix: Icon(
                                     Icons.calendar_month,

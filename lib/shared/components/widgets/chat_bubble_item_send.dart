@@ -75,11 +75,7 @@ class _ChatBubbleItemState extends State<ChatBubbleItem> {
       builder: (context, state) {
         ChatCubit chatCubit = ChatCubit.get(context);
         return GestureDetector(
-          onTap: (){
-            // if(chatCubit.phoneNumber != null){
-            //   launchUrl(chatCubit.contacts[0].phones![0].value! as Uri);
-            // }
-          },
+          onTap: (){},
           child: Align(
             alignment: Alignment.centerLeft,
             child: Container(
@@ -103,13 +99,13 @@ class _ChatBubbleItemState extends State<ChatBubbleItem> {
     if (message.contains('jpg') ||
         message.contains('jpeg') ||
         message.contains('png')) {
-      child = childImage(urlImage: message, sendBy: sendBy);
+      child = childImage(urlImage: message, sendBy: sendBy, context: context);
     } else if (message.contains('pdf')) {
       child = childPdf(context: context, urlPdf: message, sendBy: sendBy);
     } else if (message.contains('docx')) {
-      child = childWord();
+      child = childWord(sendBy: sendBy, context: context);
     } else if (message.contains('xlsx')) {
-      child = childExcel(sendBy: sendBy);
+      child = childExcel(sendBy: sendBy, context: context);
     } else if (message.contains('mp3')) {
       child = childMp3(
         context: context,
@@ -135,7 +131,7 @@ class _ChatBubbleItemState extends State<ChatBubbleItem> {
         },
       );
     } else {
-      child = defaultMessage(message: message, sendBy: sendBy);
+      child = defaultMessage(message: message, sendBy: sendBy, context: context);
     }
   }
 }

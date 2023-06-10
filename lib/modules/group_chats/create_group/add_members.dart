@@ -13,6 +13,7 @@ import '../../../../layout/home_layout_screen.dart';
 import '../../../../shared/components/widgets/add_member_Item.dart';
 import '../../../../shared/components/widgets/default_button_create_group.dart';
 import '../../../../shared/components/widgets/text_form_field.dart';
+import '../../../shared/cubit/layout_cubt/layout_cubit.dart';
 
 class AddMembersInGroup extends StatefulWidget {
   const AddMembersInGroup({Key? key}) : super(key: key);
@@ -46,6 +47,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
         }
         if (state is CreateGroupSuccess) {
           Navigator.pop(context);
+          LayoutCubit.get(context).pageIndex = 1 ;
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (_) => HomeLayoutScreen()),
@@ -61,7 +63,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
               automaticallyImplyLeading: false,
               title: DefaultText(
                 text: "Add Members",
-                fontSize: 20.sp,
+                textStyle: Theme.of(context).textTheme.bodyLarge,
               ),
               actions: [
                 loginCubit.membersList.length >= 2 ? IconButton( onPressed: () {
@@ -71,7 +73,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                           listener: (context, state){},
                           builder: (context, state) => Container(
                             decoration: BoxDecoration(
-                              color: scaffoldColorDark,
+                              color: Theme.of(context).focusColor,
                             ),
                             clipBehavior: Clip.antiAliasWithSaveLayer,
                             child: Padding(
@@ -82,8 +84,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                                 children: [
                                   DefaultText(
                                     text: "Create Group Name",
-                                    fontSize: 20.sp,
-                                    fontColor: whiteColor,
+                                    textStyle: Theme.of(context).textTheme.bodyLarge,
                                   ),
                                   SizedBox(height: 20.h,),
                                   DefaultTextField(
@@ -133,8 +134,6 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                     Navigator.pop(context);
                     isBottomSheet = true;
                   }
-                  // Navigator.of(context).push( MaterialPageRoute(
-                  //   builder: (_) => CreateGroup( membersList: loginCubit.membersList,),),);
                   },
                     icon: Icon(Icons.forward, color: orangeColor, size: 30,),
                 ) : const SizedBox(),
@@ -155,7 +154,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return AddMemberItem (
-                            iconColor: whiteColor,
+                            iconColor: Theme.of(context).iconTheme.color,
                             firstName: loginCubit.membersList[index]['firstName'],
                             emailAddress: loginCubit.membersList[index]['emailAddress'],
                             icon: Icons.close,
@@ -185,7 +184,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                     ),
                     SizedBox(height: size.height / 50,),
                     loginCubit.userMap != null ? AddMemberItem (
-                      iconColor: whiteColor,
+                      iconColor: Theme.of(context).iconTheme.color,
                       firstName: "${loginCubit.userMap?['firstName']}",
                       emailAddress: "${loginCubit.userMap?['emailAddress']}",
                       icon: Icons.add,

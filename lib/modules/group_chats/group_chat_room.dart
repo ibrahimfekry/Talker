@@ -92,13 +92,14 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
                     child: Scaffold(
                       key: scaffoldKey,
                       appBar: AppBar(
-                        leading: const Icon(Icons.group, color: Colors.white,),
+                        elevation: .5,
+                        leading: const Icon(Icons.group,),
                         automaticallyImplyLeading: false,
                         title: Padding(
                           padding: EdgeInsetsDirectional.only(start: 10.w),
                           child: DefaultText(
                             text: widget.groupName,
-                            fontSize: 20.sp,
+                            textStyle: Theme.of(context).textTheme.bodyLarge,
                           ),
                         ),
                         actions: [
@@ -125,7 +126,7 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
                                 itemCount: snapshot.data!.docs.length,
                                 itemBuilder: (context, index) {
                                   Map<String, dynamic> chatMap = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                                  return chatMap['sendBy'] == auth.currentUser!.email
+                                  return chatMap['sendBy'] == auth.currentUser!.displayName
                                       ? ChatBubbleItemReceive(message: chatMap['message'], sendBy: chatMap['sendBy'] , )
                                       : ChatBubbleItem(message: chatMap['message'], sendBy: chatMap['sendBy'],);
                                   // return messageTile(size, chatMap);
@@ -134,6 +135,7 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
                                 ),
                               ),
                             ),
+                            SizedBox(height: 10.h,),
                             SendBoxItem(
                               containerColor: HexColor('#1C1C1C'),
                               onTapRecord: () async {
@@ -152,7 +154,7 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
                                 onSendMessage(
                                   messageText: messageController.text,
                                   groupChatId: widget.groupChatId,
-                                  sendBy: auth.currentUser!.email,
+                                  sendBy: auth.currentUser!.displayName,
                                   chatCubit: chatCubit
                                 );
                               },
@@ -273,7 +275,7 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
         "sendBy": sendBy,
         "message": messageText,
         "type": "text",
-        "time": DateTime.now(),
+        "time": FieldValue.serverTimestamp(),
       };
       await fireStore
           .collection('groups')
@@ -294,87 +296,4 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
     }
   }
 
-
-  Widget messageTile(Size size, Map<String, dynamic> chatMap) {
-    return Builder(builder: (_) {
-      if (chatMap['type'] == "text") {
-        return Container(
-          width: size.width,
-          alignment: chatMap['sendBy'] == auth.currentUser!.email
-              ? Alignment.centerRight
-              : Alignment.centerLeft,
-          child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 14.w),
-              margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.blue,
-              ),
-              child: Column(
-                children: [
-                  //Sender
-
-                  Text(
-                    "${chatMap['sendBy']}",
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(
-                    height: size.height / 200,
-                  ),
-                  Text(
-                    chatMap['message'],
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              )),
-        );
-      } else if (chatMap['type'] == "img") {
-        return Container(
-          width: size.width,
-          alignment: chatMap['sendBy'] == auth.currentUser!.displayName
-              ? Alignment.centerRight
-              : Alignment.centerLeft,
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 14.w),
-            margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
-            height: size.height / 2,
-            child: Image.network(
-              chatMap['message'],
-            ),
-          ),
-        );
-      } else if (chatMap['type'] == "notify") {
-        return Container(
-          width: size.width,
-          alignment: Alignment.center,
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
-            margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Colors.black38,
-            ),
-            child: Text(
-              chatMap['message'],
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
-      } else {
-        return const SizedBox();
-      }
-    });
-  }
 }

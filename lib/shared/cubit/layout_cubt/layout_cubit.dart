@@ -13,7 +13,6 @@ class LayoutCubit extends Cubit <LayoutStates>{
   static LayoutCubit get (context) => BlocProvider.of(context);
 
   int pageIndex =0;
-
   changeIndex(int currentIndex){
     pageIndex = currentIndex;
     emit(ChangeBottomIndex());

@@ -5,7 +5,13 @@ import 'colors.dart';
 
 ThemeData lightTheme =ThemeData(
   fontFamily: 'Inter',
+  primarySwatch: Colors.grey,
+  primaryColor: Colors.white,
+  focusColor: scaffoldColorLight,
   scaffoldBackgroundColor: scaffoldColorLight,
+  iconTheme: IconThemeData(
+    color: silverColor
+  ),
   appBarTheme: AppBarTheme(
       elevation: 0,
       titleTextStyle: TextStyle(
@@ -34,24 +40,34 @@ ThemeData lightTheme =ThemeData(
     bodySmall: TextStyle(
         fontSize: 10.sp,
         fontWeight:FontWeight.w300,
-        color: Colors.black
+        color: silverColor
     ),
     bodyMedium: TextStyle(
         fontSize: 14.sp,
         fontWeight:FontWeight.w300,
-        color: Colors.black
+        color: silverColor
     ),
     bodyLarge: TextStyle(
         fontSize: 20.sp,
         fontWeight:FontWeight.w300,
-        color: Colors.black
+        color: silverColor
+    ),
+    titleLarge: TextStyle(
+        fontSize: 32.sp,
+        fontWeight:FontWeight.w300,
+        color: silverColor
     ),
   ),
 );
 
 ThemeData darkTheme = ThemeData(
   fontFamily: 'Inter',
+  primaryColor: containerColor,
+  focusColor: containerColor,
   scaffoldBackgroundColor: scaffoldColorDark,
+  iconTheme: IconThemeData(
+      color: whiteColor
+  ),
   appBarTheme: AppBarTheme(
       elevation: 0,
       backgroundColor: scaffoldColorDark,
@@ -89,6 +105,11 @@ ThemeData darkTheme = ThemeData(
     ),
     bodyLarge: TextStyle(
         fontSize: 20.sp,
+        fontWeight:FontWeight.w300,
+        color: whiteColor
+    ),
+    titleLarge: TextStyle(
+        fontSize: 32.sp,
         fontWeight:FontWeight.w300,
         color: whiteColor
     ),

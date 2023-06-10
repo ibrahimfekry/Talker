@@ -13,14 +13,14 @@ void defaultSnackBar({required BuildContext context , required String text , req
     content: Center(
       child: Text(
         text,
-        style: TextStyle(color: Colors.white, fontSize: 12.sp),
+        style: Theme.of(context).textTheme.bodyMedium
       ),
     ),
-    backgroundColor: color,
+    backgroundColor: Theme.of(context).primaryColor,
   ));
 }
 
- Widget childImage({urlImage, sendBy}){
+ Widget childImage({urlImage, sendBy, context}){
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
       child: Column(
@@ -28,11 +28,11 @@ void defaultSnackBar({required BuildContext context , required String text , req
         children: [
           if(sendBy != null)
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DefaultText(
                   text: '$sendBy',
-                  fontColor: whiteColor,
-                  fontSize: 13.sp,
+                  textStyle: Theme.of(context).textTheme.bodyMedium,
                 ),
                 SizedBox(height: 2.h,),
                 Container(height: 1.h, color: scaffoldColorDark,),
@@ -53,11 +53,11 @@ Widget childPdf({urlPdf, context, sendBy}){
       children: [
         if(sendBy != null)
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DefaultText(
                 text: '$sendBy',
-                fontColor: whiteColor,
-                fontSize: 13.sp,
+                textStyle: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 2.h,),
               Container(height: 1.h, color: scaffoldColorDark,),
@@ -70,14 +70,14 @@ Widget childPdf({urlPdf, context, sendBy}){
             },
             child: DefaultText(
               text: 'file.pdf',
-              fontColor: whiteColor,
+              textStyle: Theme.of(context).textTheme.bodyMedium,
             )),
       ],
     ),
   );
 }
 
-Widget childWord ({sendBy}){
+Widget childWord ({sendBy, context}){
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
     child: Column(
@@ -85,11 +85,11 @@ Widget childWord ({sendBy}){
       children: [
         if(sendBy != null)
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DefaultText(
                 text: '$sendBy',
-                fontColor: whiteColor,
-                fontSize: 13.sp,
+                textStyle: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 2.h,),
               Container(height: 1.h, color: scaffoldColorDark,),
@@ -100,14 +100,14 @@ Widget childWord ({sendBy}){
             onTap: () {},
             child: DefaultText(
               text: 'file.docx',
-              fontColor: whiteColor,
+              textStyle: Theme.of(context).textTheme.bodyMedium,
             )),
       ],
     ),
   );
 }
 
-Widget childExcel ({sendBy}){
+Widget childExcel ({sendBy, context}){
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
     child: Column(
@@ -115,11 +115,11 @@ Widget childExcel ({sendBy}){
       children: [
         if(sendBy != null)
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DefaultText(
                 text: '$sendBy',
-                fontColor: whiteColor,
-                fontSize: 13.sp,
+                textStyle: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 2.h,),
               Container(height: 1.h, color: scaffoldColorDark,),
@@ -132,7 +132,7 @@ Widget childExcel ({sendBy}){
             },
             child: DefaultText(
               text: 'file.xlsx',
-              fontColor: whiteColor,
+              textStyle: Theme.of(context).textTheme.bodyMedium,
             )),
       ],
     ),
@@ -155,11 +155,11 @@ Widget childMp3 ({
       children: [
         if(sendBy != null)
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DefaultText(
                 text: '$sendBy',
-                fontColor: whiteColor,
-                fontSize: 13.sp,
+                textStyle: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 2.h,),
               Container(height: 1.h, color: scaffoldColorDark,),
@@ -188,7 +188,7 @@ Widget childMp3 ({
   );
 }
 
-Widget defaultMessage({message, sendBy}){
+Widget defaultMessage({message, sendBy, context}){
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
     child: Column(
@@ -196,11 +196,11 @@ Widget defaultMessage({message, sendBy}){
       children: [
         if(sendBy != null)
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DefaultText(
                 text: '$sendBy',
-                fontColor: silverColor,
-                fontSize: 13.sp,
+                textStyle: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 2.h,),
               Container(height: 1.h, color: scaffoldColorDark,),
@@ -209,8 +209,7 @@ Widget defaultMessage({message, sendBy}){
           ),
         DefaultText(
           text: "$message",
-          fontColor: whiteColor,
-          fontSize: 13.sp,
+          textStyle: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     ),

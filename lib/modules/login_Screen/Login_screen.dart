@@ -33,11 +33,13 @@ class LoginScreen extends StatelessWidget {
         listener: (context, state){
           if (state is LoginSuccessState ){
             Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (context) => HomeLayoutScreen(emailId: emailId,)), (route) => false,);
+              MaterialPageRoute(builder: (context) =>
+                  HomeLayoutScreen(emailId: emailId,)), (route) => false,);
           }
           if (state is LoginWithGoogleSuccess){
             Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (context) => HomeLayoutScreen(googleId: loginCubit.googleId,)), (route) => false,);
+              MaterialPageRoute(builder: (context) =>
+                  HomeLayoutScreen(googleId: loginCubit.googleId,)), (route) => false,);
           }
           if(state is LoginSuccessState || state is LoginErrorState){
             emailController.clear();
@@ -70,7 +72,7 @@ class LoginScreen extends StatelessWidget {
                           return null;
                         },
                         borderRadius: 10.r,
-                        color:  containerColor,
+                        color:  Theme.of(context).focusColor,
                         controller: emailController,
                         hintText: 'Enter your email address',
                         prefix: Padding(
@@ -87,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                       SizedBox(height: 21.h,),
                       DefaultTextField(
                         borderRadius: 10.r,
-                        color:  containerColor,
+                        color:  Theme.of(context).focusColor,
                         controller: passwordController,
                         obscureText: loginCubit.isPasswordLogin,
                         hintText: 'Password',
@@ -144,8 +146,8 @@ class LoginScreen extends StatelessWidget {
                           Expanded(
                               child: GestureDetector(
                                 child:DefaultText(
-                                  text: 'Sign in ',fontSize: 24.sp,
-                                  fontColor: whiteColor,
+                                  text: 'Sign in ',
+                                  textStyle: Theme.of(context).textTheme.bodyLarge,
                                 ),
                               )),
                           ConditionalBuilder(

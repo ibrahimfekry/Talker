@@ -10,7 +10,7 @@ class AddMemberItem extends StatelessWidget{
   dynamic onPress;
   String? url;
 
-  AddMemberItem({super.key, this.iconColor, this.firstName, this.emailAddress, this.onPress, this.icon, this.url});
+  AddMemberItem({super.key, this.iconColor , this.firstName, this.emailAddress, this.onPress, this.icon, this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +35,21 @@ class AddMemberItem extends StatelessWidget{
             children: [
               DefaultText(
                 text: firstName,
-                fontColor: iconColor,
-                fontSize: 16.sp,
+                textStyle: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 2.h,),
               DefaultText(
                 text: emailAddress,
-                fontColor: iconColor,
-                fontSize: 12.sp,
+                textStyle: Theme.of(context).textTheme.bodySmall,
               ),
             ],
           ),
         ),
         SizedBox(width: 10.w,),
         IconButton(
-          icon: Icon(icon, color: iconColor,),
+          icon: Icon(icon,
+            color: iconColor
+          ),
           onPressed: onPress,
         ),
       ],

@@ -191,3 +191,9 @@ class ChangeResetPassword extends LoginStates{}
 
 class ChangeConfirmResetPassword extends LoginStates{}
 
+////////////////////////// search Chat history screen states
+class SearchGroupLoading extends LoginStates{}
+
+class SearchGroupSuccess extends LoginStates{}
+
+class SearchGroupError extends LoginStates{}

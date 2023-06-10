@@ -32,153 +32,148 @@ class ResetPasswordScreen extends StatelessWidget {
         return ModalProgressHUD(
           inAsyncCall: state is UpdatePasswordLoading,
           child: Scaffold(
-            backgroundColor: scaffoldColorDark,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: SingleChildScrollView(
-              child: SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 85.h, horizontal: 20.w),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Form(
-                      key: formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset('assets/images/icon_key.svg'),
-                          SizedBox(
-                            height: 20.h,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 85.h, horizontal: 20.w),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/images/icon_key.svg'),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        DefaultText(
+                          text: 'Reset Password',
+                          textStyle: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        SizedBox(
+                          height: 5.h,
+                        ),
+                        DefaultText(
+                          text: 'Enter your new password',
+                          textStyle: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        SizedBox(
+                          height: 36.h,
+                        ),
+                        DefaultTextField(
+                          borderRadius: 10.r,
+                          color: Theme.of(context).focusColor,
+                          hintText: 'Password',
+                          obscureText: loginCubit.isResetPassword,
+                          prefix: Padding(
+                            padding: EdgeInsetsDirectional.only(start: 15.w),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/icon_lock.svg',
+                                  width: 16.w,
+                                  height: 21.h,
+                                ),
+                              ],
+                            ),
                           ),
-                          DefaultText(
-                            text: 'Reset Password',
-                            fontColor: whiteColor,
-                            fontSize: 32.sp,
+                          suffix: GestureDetector(
+                            onTap: () {
+                              loginCubit.resetPasswordVisibility();
+                            },
+                            child: loginCubit.isResetPassword
+                                ? Icon(Icons.visibility_off, color: silverColor,)
+                                : Icon(Icons.visibility, color: silverColor,),
                           ),
-                          SizedBox(
-                            height: 5.h,
+                          textInputType: TextInputType.visiblePassword,
+                          controller: newPasswordController,
+                          validator: (value){
+                            if(value!.isEmpty){
+                              return 'Required Field';
+                            }
+                            return null ;
+                          },
+                        ),
+                        SizedBox(
+                          height: 15.h,
+                        ),
+                        DefaultTextField(
+                          borderRadius: 10.r,
+                          color: Theme.of(context).focusColor,
+                          hintText: 'Confirm Password',
+                          obscureText: loginCubit.isResetConfirmPassword,
+                          prefix: Padding(
+                            padding: EdgeInsetsDirectional.only(start: 15.w),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/icon_lock.svg',
+                                  width: 16.w,
+                                  height: 21.h,
+                                ),
+                              ],
+                            ),
                           ),
-                          DefaultText(
-                            text: 'Enter your new password',
-                            fontColor: HexColor("#FFFFFF"),
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w300,
-                          ),
-                          SizedBox(
-                            height: 36.h,
-                          ),
-                          DefaultTextField(
-                            borderRadius: 10.r,
-                            color: containerColor,
-                            hintText: 'Password',
-                            obscureText: loginCubit.isResetPassword,
-                            prefix: Padding(
-                              padding: EdgeInsetsDirectional.only(start: 15.w),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/icon_lock.svg',
-                                    width: 16.w,
-                                    height: 21.h,
+                          suffix: GestureDetector(
+                            onTap: () {
+                              loginCubit.resetConfirmPasswordVisibility();
+                            },
+                            child: loginCubit.isResetConfirmPassword
+                                ? Icon(
+                                    Icons.visibility_off,
+                                    color: silverColor,
+                                  )
+                                : Icon(
+                                    Icons.visibility,
+                                    color: silverColor,
                                   ),
-                                ],
-                              ),
-                            ),
-                            suffix: GestureDetector(
-                              onTap: () {
-                                loginCubit.resetPasswordVisibility();
-                              },
-                              child: loginCubit.isResetPassword
-                                  ? Icon(Icons.visibility_off, color: silverColor,)
-                                  : Icon(Icons.visibility, color: silverColor,),
-                            ),
-                            textInputType: TextInputType.visiblePassword,
-                            controller: newPasswordController,
-                            validator: (value){
-                              if(value!.isEmpty){
-                                return 'Required Field';
+                          ),
+                          textInputType: TextInputType.visiblePassword,
+                          controller: confirmPasswordController,
+                          validator: (value){
+                            if(value!.isEmpty){
+                              return 'Required Field';
+                            }
+                            return null ;
+                          },
+                        ),
+                        SizedBox(
+                          height: 50.h,
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            if(formKey.currentState!.validate()){
+                              if(newPasswordController.text == confirmPasswordController.text){
+                                loginCubit.updatePassword(password: newPasswordController.text);
+                              }else{
+                                defaultSnackBar(
+                                    context: context,
+                                    text: 'Two password not matching',
+                                    color: Colors.red
+                                );
                               }
-                              return null ;
-                            },
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          DefaultTextField(
-                            borderRadius: 10.r,
-                            color: containerColor,
-                            hintText: 'Confirm Password',
-                            obscureText: loginCubit.isResetConfirmPassword,
-                            prefix: Padding(
-                              padding: EdgeInsetsDirectional.only(start: 15.w),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/icon_lock.svg',
-                                    width: 16.w,
-                                    height: 21.h,
-                                  ),
-                                ],
-                              ),
+                            }
+                          },
+                          child: Container(
+                            width: 237.w,
+                            height: 56.h,
+                            decoration: BoxDecoration(
+                              color: orangeColor,
+                              borderRadius: BorderRadius.circular(10.r),
                             ),
-                            suffix: GestureDetector(
-                              onTap: () {
-                                loginCubit.resetConfirmPasswordVisibility();
-                              },
-                              child: loginCubit.isResetConfirmPassword
-                                  ? Icon(
-                                      Icons.visibility_off,
-                                      color: silverColor,
-                                    )
-                                  : Icon(
-                                      Icons.visibility,
-                                      color: silverColor,
-                                    ),
-                            ),
-                            textInputType: TextInputType.visiblePassword,
-                            controller: confirmPasswordController,
-                            validator: (value){
-                              if(value!.isEmpty){
-                                return 'Required Field';
-                              }
-                              return null ;
-                            },
+                            child: Center(
+                                child: DefaultText(
+                              fontSize: 20.sp,
+                              fontColor: whiteColor,
+                              text: 'Submit',
+                            )),
                           ),
-                          SizedBox(
-                            height: 50.h,
-                          ),
-                          GestureDetector(
-                            onTap: (){
-                              if(formKey.currentState!.validate()){
-                                if(newPasswordController.text == confirmPasswordController.text){
-                                  loginCubit.updatePassword(password: newPasswordController.text);
-                                }else{
-                                  defaultSnackBar(
-                                      context: context,
-                                      text: 'Two password not matching',
-                                      color: Colors.red
-                                  );
-                                }
-                              }
-                            },
-                            child: Container(
-                              width: 237.w,
-                              height: 56.h,
-                              decoration: BoxDecoration(
-                                color: orangeColor,
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              child: Center(
-                                  child: DefaultText(
-                                fontSize: 20.sp,
-                                fontColor: whiteColor,
-                                text: 'Submit',
-                              )),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

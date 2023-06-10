@@ -42,6 +42,7 @@ class DefaultTextField extends StatelessWidget {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(width: 1.w, color: silverColor)
         ),
         child: TextFormField(
           onTap: onTap,
@@ -52,8 +53,9 @@ class DefaultTextField extends StatelessWidget {
           obscureText: obscureText,
           style: TextStyle(color: silverColor,),
           decoration: InputDecoration(
-            prefix: SizedBox(width: 15.w,),
+            prefixIcon: prefix != null ? prefix : null,
             suffixIcon: suffix,
+            prefix: prefix != null ? null : SizedBox(width: 10.w,),
             border: InputBorder.none,
             hintText: hintText,
             hintStyle: TextStyle(fontSize: 12.sp,fontWeight: FontWeight.w700, color: silverColor),

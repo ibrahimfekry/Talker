@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:talki/shared/components/component/components.dart';
+import 'package:talki/shared/cubit/layout_cubt/layout_cubit.dart';
 import '../../layout/home_layout_screen.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
@@ -41,9 +42,9 @@ class RegisterScreen extends StatelessWidget {
           if (state is RegisterSuccessState){
             FirebaseAuth.instance.currentUser?.updateDisplayName('${firstNameController.text} ${lastNameController.text}');
             FirebaseAuth.instance.currentUser?.updatePhotoURL('${loginCubit.url}');
+            LayoutCubit.get(context).pageIndex = 0 ;
             Navigator.push(context, MaterialPageRoute(builder: (context) => HomeLayoutScreen(
               emailId: emailId,
-              isGroup: true,
             )));
             //Navigator.pushNamed(context, HomeLayoutScreen.id, arguments: emailId);
           }
@@ -73,8 +74,7 @@ class RegisterScreen extends StatelessWidget {
                         width: 152.w,
                         child: DefaultText(
                           text: 'Create an account',
-                          fontColor: whiteColor,
-                          fontSize: 30.sp,
+                          textStyle: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                       SizedBox(height: 4.h,),
@@ -102,7 +102,7 @@ class RegisterScreen extends StatelessWidget {
                       SizedBox(height: 14.h,),
                       DefaultTextField(
                         controller: emailController,
-                        color:  containerColor,
+                        color:  Theme.of(context).focusColor,
                         hintText: 'Email or phone number',
                         prefix: Icon(Icons.person, color: silverColor,),
                         textInputType: TextInputType.emailAddress,
@@ -118,7 +118,7 @@ class RegisterScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: DefaultTextField(
-                              color:  containerColor,
+                              color:  Theme.of(context).focusColor,
                               controller: firstNameController,
                               hintText: 'First name',
                               prefix: Icon(Icons.person, color: silverColor,),
@@ -134,7 +134,7 @@ class RegisterScreen extends StatelessWidget {
                           SizedBox(width: 16.w,),
                           Expanded(
                             child: DefaultTextField(
-                              color:  containerColor,
+                              color:  Theme.of(context).focusColor,
                               controller: lastNameController,
                               hintText: 'Last name',
                               prefix: Icon(Icons.person, color: silverColor,),
@@ -149,9 +149,9 @@ class RegisterScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 9.h,),
+                      SizedBox(height: 10.h,),
                       DefaultTextField(
-                        color:  containerColor,
+                        color: Theme.of(context).focusColor,
                         hintText: 'Password',
                         controller: passwordController,
                         prefix: Icon(Icons.lock, color: silverColor,),
@@ -170,9 +170,9 @@ class RegisterScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      SizedBox(height: 9.h,),
+                      SizedBox(height: 10.h,),
                       DefaultTextField(
-                        color:  containerColor,
+                        color: Theme.of(context).focusColor,
                         controller: ensurePasswordController,
                         obscureText: loginCubit.isEnsurePasswordRegister,
                         hintText: 'Confirm Password',
@@ -193,9 +193,9 @@ class RegisterScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      SizedBox(height: 9.h,),
+                      SizedBox(height: 10.h,),
                       DefaultTextField(
-                        color:  containerColor,
+                        color: Theme.of(context).focusColor,
                         controller: dateController,
                         hintText: 'Birthdate dd / mm / yy',
                         prefix: Icon(Icons.date_range, color: silverColor,),
@@ -217,7 +217,7 @@ class RegisterScreen extends StatelessWidget {
                           return null;
                         },
                       ),
-                      SizedBox(height: 10.h,),
+                      SizedBox(height: 20.h,),
                       Container(
                         padding: EdgeInsets.only(right: 63.w,),
                         child: RichText(
@@ -235,7 +235,9 @@ class RegisterScreen extends StatelessWidget {
                       SizedBox(height: 23.h,),
                       Row(
                         children: [
-                          Expanded(child: DefaultText(text: 'Register',fontColor: whiteColor,fontSize: 24.sp,)),
+                          Expanded(child: DefaultText(
+                            text: 'Register',
+                            textStyle: Theme.of(context).textTheme.bodyLarge,)),
                           ConditionalBuilder(
                             condition: state is !RegisterLoadingState,
                             builder: (context) => GestureDetector(

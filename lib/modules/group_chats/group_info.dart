@@ -39,7 +39,7 @@ class _GroupInfoState extends State<GroupInfo> {
       listener: (context, state) {
         if(state is LeaveGroupSuccess){
           Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (context)=> HomeLayoutScreen(isGroup: true,)), (route) => false,);
+              MaterialPageRoute(builder: (context)=> HomeLayoutScreen()), (route) => false,);
         }
       },
       builder: (context, state) {
@@ -74,7 +74,7 @@ class _GroupInfoState extends State<GroupInfo> {
                           //physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return AddMemberItem (
-                              iconColor: loginCubit.infoMembersList[index]['isAdmin'] ? orangeColor : whiteColor,
+                              iconColor: loginCubit.infoMembersList[index]['isAdmin'] ? orangeColor : Theme.of(context).iconTheme.color,
                               firstName: '${loginCubit.infoMembersList[index]['firstName']}',
                               emailAddress: '${loginCubit.infoMembersList[index]['emailAddress']}',
                               icon: loginCubit.infoMembersList[index]['isAdmin']? Icons.person : Icons.close,

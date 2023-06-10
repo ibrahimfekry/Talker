@@ -146,8 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   children: [
                                     DefaultText(
                                       text: '${widget.firstName} ${widget.lastName}',
-                                      fontSize: 13.sp,
-                                      fontColor: whiteColor,
+                                      textStyle: Theme.of(context).textTheme.bodyMedium,
                                     ),
                                     SizedBox(
                                       height: 5.h,
@@ -166,8 +165,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                         ),
                                         DefaultText(
                                           text: widget.status,
-                                          fontSize: 12.sp,
-                                          fontColor: orangeColor,
+                                          textStyle: Theme.of(context).textTheme.bodySmall,
                                         ),
                                       ],
                                     )
@@ -177,32 +175,6 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                         ),
-                        actions: [
-                          SvgPicture.asset(
-                            'assets/images/videoCall.svg',
-                            width: 15.w,
-                            height: 13.h,
-                          ),
-                          SizedBox(
-                            width: 12.w,
-                          ),
-                          SvgPicture.asset(
-                            'assets/images/calling.svg',
-                            width: 15.w,
-                            height: 13.h,
-                          ),
-                          SizedBox(
-                            width: 12.w,
-                          ),
-                          SvgPicture.asset(
-                            'assets/images/menu.svg',
-                            width: 15.w,
-                            height: 13.h,
-                          ),
-                          SizedBox(
-                            width: 15.w,
-                          ),
-                        ],
                       ),
                       body: Padding(
                         padding: EdgeInsetsDirectional.only(start: 15.w, top: 29.h, end: 15.w),

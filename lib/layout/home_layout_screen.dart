@@ -13,14 +13,12 @@ import '../shared/cubit/layout_cubt/layout_states.dart';
 
 class HomeLayoutScreen extends StatefulWidget {
 
-  HomeLayoutScreen({Key? key, this.emailId, this.googleId, this.isMenu = false, this.isGroup}) : super(key: key);
+  HomeLayoutScreen({Key? key, this.emailId, this.googleId,}) : super(key: key);
 
   //////////////////////// variables
   static String id = 'HomeLayout';
   String? emailId;
   dynamic googleId;
-  bool? isGroup;
-  bool? isMenu;
 
   @override
   State<HomeLayoutScreen> createState() => _HomeLayoutScreenState();
@@ -38,98 +36,53 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
     ];
 
     List appbarTitles = [
-      DefaultText(text: 'Chats', fontSize: 20.sp,),
-      DefaultText(text: 'Groups', fontSize: 20.sp,),
-      DefaultText(text: 'Menu', fontSize: 20.sp,),
+      DefaultText(text: 'Chats', textStyle: Theme.of(context).appBarTheme.titleTextStyle,),
+      DefaultText(text: 'Groups', textStyle: Theme.of(context).appBarTheme.titleTextStyle),
+      DefaultText(text: 'Menu', textStyle: Theme.of(context).appBarTheme.titleTextStyle),
     ];
     return BlocConsumer<LayoutCubit, LayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        if(widget.isGroup == true || widget.isMenu == true) {
-          widget.isMenu = false;
-          widget.isGroup = false;
-          return  Scaffold(
-            appBar: AppBar(
-              title: appbarTitles[layoutCubit.pageIndex],
-              automaticallyImplyLeading: false,
-              actions: [
-                IconButton(
-                    onPressed: (){
-                      layoutCubit.changeAppMode();
-                    },
-                    icon: const Icon(Icons.brightness_4_outlined)
-                ),
-              ],
-            ),
-            bottomNavigationBar: CurvedNavigationBar(
-              height: 56.h,
-              index: 0,
-              color: scaffoldColorDark,
-              backgroundColor: orangeColor,
-              animationCurve: Curves.easeInOut,
-              onTap: (index) { layoutCubit.changeIndex(index);},
-              items: <Widget>[
-                BottomBarButton(
-                  buttonTxt: 'Chats',
-                  iconUrl: 'assets/images/icon_chat.svg',
-                  showTxt: true,
-                ),
-                BottomBarButton(
-                  buttonTxt: 'Groups',
-                  iconUrl: 'assets/images/icon_groups.svg',
-                  showTxt: true,
-                ),
-                BottomBarButton(
-                  buttonTxt: 'Menu',
-                  iconUrl: 'assets/images/icon_menu.svg',
-                  showTxt: true,
-                ),
-              ],
-            ),
-            body: screens[0],
-          );
-        }else {
-          return Scaffold(
-            appBar: AppBar(
-              title: appbarTitles[layoutCubit.pageIndex],
-              actions: [
-                IconButton(
-                    onPressed: (){
-                      layoutCubit.changeAppMode();
-                    },
-                    icon: const Icon(Icons.brightness_4_outlined)
-                ),
-              ],
-              automaticallyImplyLeading: false,
-            ),
-            bottomNavigationBar: CurvedNavigationBar(
-              height: 56.h,
-              index: layoutCubit.pageIndex,
-              color: scaffoldColorDark,
-              backgroundColor: orangeColor,
-              animationCurve: Curves.easeInOut,
-              onTap: (index) { layoutCubit.changeIndex(index);},
-              items: <Widget>[
-                BottomBarButton(
-                  buttonTxt: 'Chats',
-                  iconUrl: 'assets/images/icon_chat.svg',
-                  showTxt: true,
-                ),
-                BottomBarButton(
-                  buttonTxt: 'Groups',
-                  iconUrl: 'assets/images/icon_groups.svg',
-                  showTxt: true,
-                ),
-                BottomBarButton(
-                  buttonTxt: 'Menu',
-                  iconUrl: 'assets/images/icon_menu.svg',
-                  showTxt: true,
-                ),
-              ],
-            ),
-            body: screens[layoutCubit.pageIndex],
-          );
-        }
+        return Scaffold(
+          appBar: AppBar(
+            title: appbarTitles[layoutCubit.pageIndex],
+            actions: [
+              IconButton(
+                  onPressed: (){
+                    layoutCubit.changeAppMode();
+                  },
+                  icon: const Icon(Icons.brightness_4_outlined)
+              ),
+            ],
+            automaticallyImplyLeading: false,
+          ),
+          bottomNavigationBar: CurvedNavigationBar(
+            height: 56.h,
+            index: layoutCubit.pageIndex,
+            color: scaffoldColorDark,
+            backgroundColor: orangeColor,
+            animationCurve: Curves.easeInOut,
+            onTap: (index) { layoutCubit.changeIndex(index);},
+            items: <Widget>[
+              BottomBarButton(
+                buttonTxt: 'Chats',
+                iconUrl: 'assets/images/icon_chat.svg',
+                showTxt: true,
+              ),
+              BottomBarButton(
+                buttonTxt: 'Groups',
+                iconUrl: 'assets/images/icon_groups.svg',
+                showTxt: true,
+              ),
+              BottomBarButton(
+                buttonTxt: 'Menu',
+                iconUrl: 'assets/images/icon_menu.svg',
+                showTxt: true,
+              ),
+            ],
+          ),
+          body: screens[layoutCubit.pageIndex],
+        );
       },
     );
   }

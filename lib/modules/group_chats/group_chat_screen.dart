@@ -31,7 +31,8 @@ class _GroupScreenState extends State<GroupScreen> {
   @override
   Widget build(BuildContext context) {
     LoginCubit loginCubit = LoginCubit.get(context);
-    CollectionReference groups = FirebaseFirestore.instance.collection('users').doc(loginCubit.uid).collection('groups');
+    CollectionReference groups = FirebaseFirestore.instance.collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid).collection('groups');
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     return StreamBuilder<QuerySnapshot>(
         stream: groups.snapshots(),
@@ -97,7 +98,8 @@ class _GroupScreenState extends State<GroupScreen> {
                           onTap: () {
                             loginCubit.searchGroupName(
                                 text: searchController.text,
-                                doc: loginCubit.uid);
+                                doc: loginCubit.uid
+                            );
                           },
                           child: Icon(
                             Icons.search,
@@ -113,17 +115,16 @@ class _GroupScreenState extends State<GroupScreen> {
                             child: Center(
                               child: Text(
                                 'There is no groups',
-                                style: TextStyle(color: whiteColor),
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ),
                           )
-                        : loginCubit.groupSearchList == []
+                        : loginCubit.groupSearchList == [] 
                             ? Expanded(
                                 child: SizedBox(
                                   height: 200.h,
                                   child: ListView.builder(
-                                      itemCount:
-                                          loginCubit.groupSearchList.length,
+                                      itemCount: loginCubit.groupSearchList.length,
                                       itemBuilder: (context, index) {
                                         return ListTile(
                                           onTap: () => Navigator.push(
@@ -133,15 +134,13 @@ class _GroupScreenState extends State<GroupScreen> {
                                                         groupChatId: loginCubit.groupSearchList[index]['id'],
                                                         groupName: loginCubit.groupSearchList[index]['name'],
                                                       ))),
-                                          leading: const Icon(
+                                          leading: Icon(
                                             Icons.group,
-                                            color: Colors.white,
+                                            color: Theme.of(context).iconTheme.color,
                                           ),
                                           title: Text(
-                                            loginCubit.groupSearchList[index]
-                                                ['name'],
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                            loginCubit.groupSearchList[index]['name'],
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           ),
                                         );
                                       }),
@@ -161,14 +160,13 @@ class _GroupScreenState extends State<GroupScreen> {
                                                         groupChatId: snapshot.data?.docs[index]['id'],
                                                         groupName: snapshot.data?.docs[index]['name'],
                                                       ))),
-                                          leading: const Icon(
+                                          leading: Icon(
                                             Icons.group,
-                                            color: Colors.white,
+                                            color: Theme.of(context).iconTheme.color,
                                           ),
                                           title: Text(
                                             snapshot.data?.docs[index]['name'],
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                            style: Theme.of(context).textTheme.bodyMedium,
                                           ),
                                         );
                                       }),

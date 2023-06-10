@@ -36,15 +36,14 @@ class ForgetPasswordScreen extends StatelessWidget {
                   children: [
                     DefaultText(
                       text: 'Reset\nPassword',
-                      fontColor: whiteColor,
-                      fontSize: 32.sp,
+                      textStyle: Theme.of(context).textTheme.titleLarge,
                     ),
                     SizedBox(
                       height: 30.h,
                     ),
                     DefaultTextField(
                       borderRadius: 10.r,
-                      color: containerColor,
+                      color: Theme.of(context).focusColor,
                       hintText: 'Enter your email',
                       prefix: Padding(
                         padding: EdgeInsetsDirectional.only(start: 15.w),
@@ -81,15 +80,14 @@ class ForgetPasswordScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 56,
+                    SizedBox(
+                      height: 30.h,
                     ),
                     Row(children: [
                       Expanded(
                           child: DefaultText(
                         text: 'Send Code',
-                        fontColor: whiteColor,
-                        fontSize: 24,
+                        textStyle: Theme.of(context).textTheme.bodyLarge,
                       )),
                       ConditionalBuilder(
                         condition: state is !SendCodeLoading,

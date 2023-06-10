@@ -35,7 +35,8 @@ class ChatActiveItem extends StatelessWidget{
           ),
         ),
         SizedBox(height: 5.h,),
-        DefaultText(text: name ,fontColor: whiteColor,fontSize: 10.sp,fontWeight: FontWeight.w300,),
+        DefaultText(text: name ,
+          textStyle: Theme.of(context).textTheme.bodySmall,),
       ],
     );
   }

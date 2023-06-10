@@ -116,8 +116,8 @@ class _ChatsScreenHistoryState extends State<ChatsScreenHistory> with WidgetsBin
                         ),
                         DefaultText(
                             text: 'Your Messages',
-                            fontColor: whiteColor,
-                            fontWeight: FontWeight.w800),
+                            textStyle: Theme.of(context).textTheme.bodyLarge,
+                        ),
                         SizedBox(
                           height: 28.h,
                         ),

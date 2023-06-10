@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:talki/modules/login_Screen/Login_screen.dart';
 import 'package:talki/modules/reset_password_screen/reset_password_screen.dart';
+import 'package:talki/shared/cubit/layout_cubt/layout_cubit.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
 
 import '../../models/users_model.dart';
@@ -40,6 +41,7 @@ class _MenuScreenState extends State<MenuScreen> {
     return BlocConsumer<LoginCubit, LoginStates>(
       listener: (context, state) {
         if(state is LogoutSuccess){
+          LayoutCubit.get(context).pageIndex = 0 ;
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
         }
       },
@@ -48,7 +50,7 @@ class _MenuScreenState extends State<MenuScreen> {
           height: double.infinity,
           alignment: Alignment.topRight,
           child: Drawer(
-            backgroundColor: scaffoldColorDark,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             child: Column(
               children: [
                 UserAccountsDrawerHeader(
@@ -69,13 +71,13 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                   accountName: DefaultText(
                     text: FirebaseAuth.instance.currentUser?.displayName,
-                    fontColor: whiteColor,
                     fontSize: 14.sp,
+                    fontColor: whiteColor,
                   ),
                   accountEmail: DefaultText(
                     text: FirebaseAuth.instance.currentUser?.email,
+                    fontSize: 14.sp,
                     fontColor: whiteColor,
-                    fontSize: 12.sp,
                   ),
                 ),
                 ListTile(
@@ -93,22 +95,11 @@ class _MenuScreenState extends State<MenuScreen> {
                   //leading: SvgPicture.asset('assets/images/profile_edit.svg'),
                   title: DefaultText(
                       text: 'Edit profile information',
-                      fontWeight: FontWeight.w400,
-                      fontColor: whiteColor,
-                      fontSize: 14),
+                      textStyle: Theme.of(context).textTheme.bodyMedium,),
                   trailing: Icon(
                     Icons.chevron_right,
-                    color: whiteColor,
+                    color: Theme.of(context).iconTheme.color,
                   ),
-                ),
-                ListTile(
-                  onTap: () {},
-                  //leading: SvgPicture.asset('assets/images/dark-mode.svg'),
-                  title: DefaultText(
-                      text: 'Dark Mode',
-                      fontWeight: FontWeight.w400,
-                      fontColor: whiteColor,
-                      fontSize: 14),
                 ),
                 ListTile(
                   onTap: () {
@@ -118,22 +109,19 @@ class _MenuScreenState extends State<MenuScreen> {
                   //leading: SvgPicture.asset('assets/images/lock.svg'),
                   title: DefaultText(
                       text: 'Change Password',
-                      fontWeight: FontWeight.w400,
-                      fontColor: whiteColor,
-                      fontSize: 14),
-                  trailing: Icon(Icons.chevron_right, color: whiteColor),
+                      textStyle: Theme.of(context).textTheme.bodyMedium),
+                  trailing: Icon(Icons.chevron_right,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
                 ),
                 ListTile(
                   onTap: () {
                     loginCubit.logOut();
                   },
-                  //leading: SvgPicture.asset('assets/images/lock.svg'),
                   title: DefaultText(
                       text: 'Log Out',
-                      fontWeight: FontWeight.w400,
-                      fontColor: whiteColor,
-                      fontSize: 14),
-                  // trailing: Icon(Icons.chevron_right, color: whiteColor),
+                      textStyle: Theme.of(context).textTheme.bodyMedium),
+                  trailing: Icon(Icons.logout, color: Theme.of(context).iconTheme.color),
                 ),
               ],
             ),

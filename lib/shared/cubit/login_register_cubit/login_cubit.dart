@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:talki/models/group_model.dart';
 import 'package:uuid/uuid.dart';
 import '../../../models/users_model.dart';
 import '../../components/component/components.dart';
@@ -241,7 +242,7 @@ class LoginCubit extends Cubit<LoginStates> {
         )
         .get()
         .then((value) {
-      if (userListSearch != null) {
+      if (userListSearch != []) {
         userListSearch = [];
         userListSearch.add(UserModelRegister.fromJson(value.docs[0].data()));
       } else {
@@ -663,6 +664,30 @@ class LoginCubit extends Cubit<LoginStates> {
       emit(UpdatePasswordError());
     }
   }
+
+  // search for group
+  // List<GroupModel> groupSearch = [];
+  // searchGroup({text}) async {
+  //   FirebaseFirestore data = FirebaseFirestore.instance;
+  //   emit(SearchGroupLoading());
+  //   await data.collection('groups').where("groupName", isEqualTo: text,)
+  //       .get()
+  //       .then((value) {
+  //     if (groupSearch != []) {
+  //       groupSearch = [];
+  //       groupSearch.add(GroupModel.fromJson(value.docs[0].data()));
+  //     } else {
+  //       groupSearch.add(GroupModel.fromJson(value.docs[0].data()));
+  //     }
+  //     emit(SearchGroupSuccess());
+  //     if (kDebugMode) {
+  //       print('user list = $groupSearch');
+  //     }
+  //   }).catchError((error) {
+  //     emit(SearchGroupError());
+  //   });
+  //   return groupSearch;
+  // }
 
 }
 

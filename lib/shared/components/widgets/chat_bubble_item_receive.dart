@@ -77,13 +77,7 @@ class _ChatBubbleItemReceiveState extends State<ChatBubbleItemReceive> {
       builder: (context, state) {
         ChatCubit chatCubit = ChatCubit.get(context);
         return GestureDetector(
-          onTap: (){
-            // if(chatCubit.phoneNumber != null){
-            //   launchUrl(Uri.parse('tel:+01093203745'));
-            // }
-            // print('tel:+01093203745');
-            // //launchUrl(Uri.parse('tel:+01093203745'));
-          },
+          onTap: (){ },
           child: Align(
             alignment: Alignment.centerRight,
             child: Container(
@@ -139,7 +133,7 @@ class _ChatBubbleItemReceiveState extends State<ChatBubbleItemReceive> {
         },
       );
     } else {
-      child = defaultMessage(message: message, sendBy: sendBy);
+      child = defaultMessage(message: message, sendBy: sendBy, context: context);
     }
   }
 }
