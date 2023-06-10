@@ -665,29 +665,34 @@ class LoginCubit extends Cubit<LoginStates> {
     }
   }
 
-  // search for group
-  // List<GroupModel> groupSearch = [];
-  // searchGroup({text}) async {
-  //   FirebaseFirestore data = FirebaseFirestore.instance;
-  //   emit(SearchGroupLoading());
-  //   await data.collection('groups').where("groupName", isEqualTo: text,)
-  //       .get()
-  //       .then((value) {
-  //     if (groupSearch != []) {
-  //       groupSearch = [];
-  //       groupSearch.add(GroupModel.fromJson(value.docs[0].data()));
-  //     } else {
-  //       groupSearch.add(GroupModel.fromJson(value.docs[0].data()));
-  //     }
-  //     emit(SearchGroupSuccess());
-  //     if (kDebugMode) {
-  //       print('user list = $groupSearch');
-  //     }
-  //   }).catchError((error) {
-  //     emit(SearchGroupError());
-  //   });
-  //   return groupSearch;
-  // }
+  //////////search for group
+  List<GroupModel> groupSearch = [];
+  searchGroup({text}) async {
+    FirebaseFirestore data = FirebaseFirestore.instance;
+    emit(SearchGroupLoading());
+    await data.collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('groups')
+        .where(
+      "name",
+      isEqualTo: text,)
+        .get()
+        .then((value) {
+      if (groupSearch != []) {
+        groupSearch = [];
+        groupSearch.add(GroupModel.fromJson(value.docs[0].data()));
+      } else {
+        groupSearch.add(GroupModel.fromJson(value.docs[0].data()));
+      }
+      emit(SearchGroupSuccess());
+      if (kDebugMode) {
+        print('user list = $groupSearch');
+      }
+    }).catchError((error) {
+      emit(SearchGroupError());
+    });
+    return groupSearch;
+  }
 
 }
 

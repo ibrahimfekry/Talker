@@ -96,9 +96,8 @@ class _GroupScreenState extends State<GroupScreen> {
                       color: whiteColor,
                       suffix: GestureDetector(
                           onTap: () {
-                            loginCubit.searchGroupName(
+                            loginCubit.searchGroup(
                                 text: searchController.text,
-                                doc: loginCubit.uid
                             );
                           },
                           child: Icon(
@@ -119,27 +118,27 @@ class _GroupScreenState extends State<GroupScreen> {
                               ),
                             ),
                           )
-                        : loginCubit.groupSearchList == [] 
+                        : state is SearchGroupSuccess 
                             ? Expanded(
                                 child: SizedBox(
                                   height: 200.h,
                                   child: ListView.builder(
-                                      itemCount: loginCubit.groupSearchList.length,
+                                      itemCount: loginCubit.groupSearch.length,
                                       itemBuilder: (context, index) {
                                         return ListTile(
                                           onTap: () => Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (_) => GroupChatRoom(
-                                                        groupChatId: loginCubit.groupSearchList[index]['id'],
-                                                        groupName: loginCubit.groupSearchList[index]['name'],
+                                                        groupChatId: '${loginCubit.groupSearch[index].id}',
+                                                        groupName: '${loginCubit.groupSearch[index].groupName}',
                                                       ))),
                                           leading: Icon(
                                             Icons.group,
                                             color: Theme.of(context).iconTheme.color,
                                           ),
                                           title: Text(
-                                            loginCubit.groupSearchList[index]['name'],
+                                            '${loginCubit.groupSearch[index].groupName}',
                                             style: Theme.of(context).textTheme.bodyMedium,
                                           ),
                                         );

@@ -8,7 +8,7 @@ class GroupModel {
   });
 
   GroupModel.fromJson(json){
-    groupName = json['groupName'];
+    groupName = json['name'];
     id = json['id'];
   }
 }
