@@ -275,7 +275,7 @@ class LoginCubit extends Cubit<LoginStates> {
       emit(GetAvailableGroupsError());
     });
   }
-  
+
   // get Current user details
   List<Map<String, dynamic>> membersList = [];
   void getCurrentUserDetails() async {
