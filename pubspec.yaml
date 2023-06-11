@@ -50,7 +50,7 @@ dependencies:
   google_sign_in: ^6.0.1
   flutter_facebook_auth: ^5.0.8
   audioplayers: ^0.20.1
-  #record_mp3: ^3.0.0
+  record_mp3: ^3.0.0
   permission_handler: ^10.0.0
   path_provider: ^2.0.15
   file_picker: ^5.2.11

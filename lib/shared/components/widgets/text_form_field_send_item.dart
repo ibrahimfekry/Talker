@@ -77,8 +77,8 @@ class SendBoxItem extends StatelessWidget{
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   GestureDetector(
-                    onTap: onTapRecord,
-                    onDoubleTap: onTapStop,
+                    onLongPress: onTapRecord,
+                    onLongPressUp: onTapStop,
                     child: SvgPicture.asset('assets/images/record.svg', width: 16.w, height: 16.h,)),
                   SizedBox(width: 9.w,),
                   GestureDetector(

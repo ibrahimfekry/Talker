@@ -125,7 +125,7 @@ class _ChatBubbleItemReceiveState extends State<ChatBubbleItemReceive> {
             playNetworkAudio(message);
           }
         },
-        icon: isPlayingNetwork ? const Icon(Icons.pause) : const Icon(Icons.play_arrow),
+        icon: isPlayingNetwork && (currentPosition.inSeconds.toDouble() !=  musicLength.inSeconds.toDouble()) ? const Icon(Icons.pause) : const Icon(Icons.play_arrow) ,
         value: currentPosition.inSeconds.toDouble(),
         max: musicLength.inSeconds.toDouble(),
         onChanged: (val) {

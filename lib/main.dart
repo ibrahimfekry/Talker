@@ -24,20 +24,22 @@ import 'modules/reset_password_screen/reset_password_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   Bloc.observer = MyBlocObserver();
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget{
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(360,690),
+        designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (BuildContext context, Widget? child){
+        builder: (BuildContext context, Widget? child) {
           return MultiBlocProvider(
             providers: [
               BlocProvider(create: (context) => LayoutCubit()),
@@ -45,37 +47,35 @@ class MyApp extends StatelessWidget{
               BlocProvider(create: (context) => ChatCubit()),
             ],
             child: BlocConsumer<LayoutCubit, LayoutStates>(
-  listener: (context, state) {
-    // TODO: implement listener
-  },
-  builder: (context, state) {
-    return MaterialApp(
-              routes: {
-                LoginScreen.id:(context)=> LoginScreen(),
-                RegisterScreen.id:(context)=> RegisterScreen(),
-                ForgetPasswordScreen.id:(context)=> ForgetPasswordScreen(),
-                ResetPasswordScreen.id:(context)=> ResetPasswordScreen(),
-                HomeLayoutScreen.id:(context)=>  HomeLayoutScreen(),
-                ChatsScreenHistory.id:(context)=> ChatsScreenHistory(),
-                GroupScreen.id : (context) => const GroupScreen(),
-                MenuScreen.id : (context) => const MenuScreen(),
-                ChatScreen.id : (context) => ChatScreen(),
-                PdfScreen.id : (context) => PdfScreen(),
-                ContactScreen.id : (context) => ContactScreen(),
+              listener: (context, state) {},
+              builder: (context, state) {
+                return MaterialApp(
+                  routes: {
+                    LoginScreen.id: (context) => LoginScreen(),
+                    RegisterScreen.id: (context) => RegisterScreen(),
+                    ForgetPasswordScreen.id: (context) =>
+                        ForgetPasswordScreen(),
+                    ResetPasswordScreen.id: (context) => ResetPasswordScreen(),
+                    HomeLayoutScreen.id: (context) => HomeLayoutScreen(),
+                    ChatsScreenHistory.id: (context) => ChatsScreenHistory(),
+                    GroupScreen.id: (context) => const GroupScreen(),
+                    MenuScreen.id: (context) => const MenuScreen(),
+                    ChatScreen.id: (context) => ChatScreen(),
+                    PdfScreen.id: (context) => PdfScreen(),
+                    ContactScreen.id: (context) => ContactScreen(),
+                  },
+                  theme: lightTheme,
+                  darkTheme: darkTheme,
+                  themeMode: LayoutCubit.get(context).isDark
+                      ? ThemeMode.dark
+                      : ThemeMode.light,
+                  debugShowCheckedModeBanner: false,
+                  home: const SplashScreen(),
+                  //initialRoute: LoginScreen.id,
+                );
               },
-              theme: lightTheme,
-              darkTheme: darkTheme,
-              themeMode: LayoutCubit.get(context).isDark ? ThemeMode.dark : ThemeMode.light,
-              debugShowCheckedModeBanner: false,
-              home: const SplashScreen(),
-              initialRoute: LoginScreen.id,
-            );
-  },
-),
+            ),
           );
-        }
-    );
+        });
   }
 }
-
-

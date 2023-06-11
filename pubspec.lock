@@ -808,6 +808,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  record_mp3:
+    dependency: "direct main"
+    description:
+      name: record_mp3
+      sha256: dd3d221d223f4a38816835e7a887a401a808c583d11d793ef04a60e4f13e781e
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   rxdart:
     dependency: transitive
     description:
