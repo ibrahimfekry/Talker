@@ -64,10 +64,6 @@ class _ChatScreenState extends State<ChatScreen> {
   String? urlImage;
   String? urlCameraImage;
   String? urlFile;
-  String? urlRecord;
-  String statusText = "";
-  bool isComplete = false;
-  late String recordFilePath;
 
   @override
   void initState() {
@@ -81,58 +77,6 @@ class _ChatScreenState extends State<ChatScreen> {
     player.dispose();
     recorder.dispose();
     super.dispose();
-  }
-
-  Future<bool> checkPermission() async {
-    if (!await Permission.microphone.isGranted) {
-      PermissionStatus status = await Permission.microphone.request();
-      if (status != PermissionStatus.granted) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  void startRecord() async {
-    bool hasPermission = await checkPermission();
-    if (hasPermission) {
-      statusText = "Recording...";
-      recordFilePath = await getFilePath();
-      isComplete = false;
-      RecordMp3.instance.start(recordFilePath, (type) {
-        statusText = "Record error--->$type";
-        setState(() {});
-      });
-    } else {
-      statusText = "No microphone permission";
-    }
-    setState(() {});
-  }
-
-  Future<String> stopRecord()async {
-    bool s = RecordMp3.instance.stop();
-    if (s) {
-      statusText = "Record complete";
-      isComplete = true;
-      setState(() {});
-    }
-    var refStorage = FirebaseStorage.instance.ref('voice-notes/$recordFilePath');
-    final file =File(recordFilePath);
-    await refStorage.putFile(file);
-    urlRecord = await refStorage.getDownloadURL();
-    print('Url :::: $url');
-    return urlRecord!;
-  }
-
-  int i = 0;
-  Future<String> getFilePath() async {
-    Directory storageDirectory = await getApplicationDocumentsDirectory();
-    String sdPath = storageDirectory.path + "/record";
-    var d = Directory(sdPath);
-    if (!d.existsSync()) {
-      d.createSync(recursive: true);
-    }
-    return sdPath + "/test_${i++}.mp3";
   }
 
   @override
@@ -180,7 +124,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   sendController.text = chatCubit.phoneNumber;
                 }
                 return ModalProgressHUD(
-                  inAsyncCall: state is UploadImageLoading || state is UploadCameraImageLoading || state is UploadFileLoading ? true : false,
+                  inAsyncCall: state is UploadImageLoading ||
+                      state is UploadCameraImageLoading ||
+                      state is UploadFileLoading ||
+                      state is StopRecordLoading ? true : false,
                   child: WillPopScope(
                     onWillPop: onBackPressed,
                     child: Scaffold(
@@ -264,12 +211,12 @@ class _ChatScreenState extends State<ChatScreen> {
                             SendBoxItem(
                               containerColor: HexColor('#1C1C1C'),
                               onTapRecord: () async {
-                                startRecord();
+                                chatCubit.startRecord();
                                 setState((){});
                               },
                               onTapStop: () async {
-                                stopRecord().then((value){
-                                  sendController.text = urlRecord!;
+                                chatCubit.stopRecord().then((value){
+                                  sendController.text = chatCubit.urlRecord!;
                                 });
                                 setState((){});
                               },
@@ -403,7 +350,7 @@ class _ChatScreenState extends State<ChatScreen> {
        urlImage = null;
        urlCameraImage = null;
        urlFile = null ;
-       urlRecord = null ;
+       chatCubit.urlRecord = null ;
        scrollController.animateTo(
            0,
            duration: const Duration(seconds: 1),

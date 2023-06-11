@@ -130,6 +130,8 @@ class _ChatBubbleItemState extends State<ChatBubbleItem> {
           seekTo(val.toInt());
         },
       );
+    } else if (message.contains('txt')){
+      child = childTxt(context: context, sendBy: sendBy, urlTxt: message);
     } else {
       child = defaultMessage(message: message, sendBy: sendBy, context: context);
     }

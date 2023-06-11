@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:talki/modules/txt_screen/txt_screen.dart';
 
 import '../../../modules/pdf_screen/pdf_screen.dart';
 import '../../constants/colors.dart';
@@ -72,6 +73,39 @@ Widget childPdf({urlPdf, context, sendBy}){
               text: 'file.pdf',
               textStyle: Theme.of(context).textTheme.bodyMedium,
             )),
+      ],
+    ),
+  );
+}
+
+Widget childTxt({urlTxt, context, sendBy}){
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if(sendBy != null)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DefaultText(
+                text: '$sendBy',
+                textStyle: Theme.of(context).textTheme.bodyMedium,
+              ),
+              SizedBox(height: 2.h,),
+              Container(height: 1.h, color: scaffoldColorDark,),
+              SizedBox(height: 4.h,),
+            ],
+          ),
+        GestureDetector(
+            onTap: () {
+             //Navigator.push(context, MaterialPageRoute(builder: (context) => TxtScreen(message: urlTxt,)));
+            },
+            child: DefaultText(
+              text: 'TXTFile.txt',
+              textStyle: Theme.of(context).textTheme.bodyMedium,
+            )
+        ),
       ],
     ),
   );

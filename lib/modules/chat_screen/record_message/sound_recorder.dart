@@ -25,7 +25,6 @@ class SoundRecorder{
 
   void dispose(){
     _isRecorderInitalized = true;
-
     audioRecorder!.closeAudioSession();
     audioRecorder = null;
     _isRecorderInitalized = false;

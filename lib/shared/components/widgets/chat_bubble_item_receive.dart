@@ -56,7 +56,6 @@ class _ChatBubbleItemReceiveState extends State<ChatBubbleItemReceive> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     networkPlayer = AudioPlayer();
     cache = AudioCache(fixedPlayer: networkPlayer);
@@ -132,6 +131,8 @@ class _ChatBubbleItemReceiveState extends State<ChatBubbleItemReceive> {
           seekTo(val.toInt());
         },
       );
+    } else if (message.contains('txt')){
+      child = childTxt(context: context, sendBy: sendBy, urlTxt: message);
     } else {
       child = defaultMessage(message: message, sendBy: sendBy, context: context);
     }

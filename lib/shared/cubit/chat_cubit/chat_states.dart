@@ -31,3 +31,21 @@ class PermissionLoading extends ChatStates{}
 class PermissionSuccess extends ChatStates{}
 
 class PermissionError extends ChatStates{}
+
+class RecordSuccess extends ChatStates{}
+
+class RecordLoading extends ChatStates{}
+
+class RecordError extends ChatStates{}
+
+class StopRecordLoading extends ChatStates{}
+
+class StopRecordSuccess extends ChatStates{}
+
+class StopRecordError extends ChatStates{}
+
+class GetPathLoading extends ChatStates{}
+
+class GetPathSuccess extends ChatStates{}
+
+class GetPathError extends ChatStates{}
