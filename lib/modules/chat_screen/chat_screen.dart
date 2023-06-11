@@ -124,8 +124,8 @@ class _ChatScreenState extends State<ChatScreen> {
     return urlRecord!;
   }
 
+  int i = 0;
   Future<String> getFilePath() async {
-    int i = 0;
     Directory storageDirectory = await getApplicationDocumentsDirectory();
     String sdPath = storageDirectory.path + "/record";
     var d = Directory(sdPath);
