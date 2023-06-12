@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../../../modules/emoji_screen/emoji_screen.dart';
+import '../component/components.dart';
+
 class SendBoxItem extends StatelessWidget{
   HexColor? containerColor;
   HexColor? textColor;
@@ -25,6 +28,7 @@ class SendBoxItem extends StatelessWidget{
     this.onTapRecord,
     this.onTapStop
   });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,7 +55,10 @@ class SendBoxItem extends StatelessWidget{
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          //return showEmojiPicker(controller: sendController);
+                          //Navigator.push(context, MaterialPageRoute(builder: (context) => EmojiScreen(sendController: sendController,)));
+                        },
                         child: SvgPicture.asset(
                           'assets/images/emoji.svg',
                           width: 16.w,

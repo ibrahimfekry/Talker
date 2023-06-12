@@ -1,3 +1,4 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -246,6 +247,21 @@ Widget defaultMessage({message, sendBy, context}){
           textStyle: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
+    ),
+  );
+}
+
+showEmojiPicker({controller}){
+  return SizedBox(
+    height: 300.h,
+    child: EmojiPicker(
+      onEmojiSelected: (emoji, category){
+        print(emoji);
+      },
+      textEditingController: controller,
+      config: const Config(
+          columns: 7,
+      ),
     ),
   );
 }
