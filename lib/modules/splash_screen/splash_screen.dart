@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: whiteColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        backwardsCompatibility: false,
+        // backwardsCompatibility: false,
         systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: Brightness.dark,
