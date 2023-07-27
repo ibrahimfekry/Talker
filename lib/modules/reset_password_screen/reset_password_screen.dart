@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:talki/shared/components/component/components.dart';
+import 'package:talki/shared/cubit/layout_cubt/layout_cubit.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
@@ -24,6 +25,7 @@ class ResetPasswordScreen extends StatelessWidget {
     return BlocConsumer<LoginCubit, LoginStates>(
       listener: (context, state) {
         if(state is UpdatePasswordSuccess){
+          LayoutCubit.get(context).pageIndex = 0;
           Navigator.pushNamed(context, LoginScreen.id);
         }
       },
@@ -162,7 +164,7 @@ class ResetPasswordScreen extends StatelessWidget {
                             width: 237.w,
                             height: 56.h,
                             decoration: BoxDecoration(
-                              color: orangeColor,
+                              color: blueColor.withOpacity(0.6),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Center(

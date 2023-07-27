@@ -4,7 +4,7 @@ class MessageModel {
 
   MessageModel({
     this.message,
-    this.sendBy
+    this.sendBy,
   });
 
    MessageModel.fromJson(json){
@@ -12,3 +12,4 @@ class MessageModel {
      sendBy = json['sendBy'];
   }
 }
+

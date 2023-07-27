@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'colors.dart';
 
 ThemeData lightTheme =ThemeData(
   fontFamily: 'Inter',
   primarySwatch: Colors.grey,
   primaryColor: Colors.white,
-  focusColor: scaffoldColorLight,
-  scaffoldBackgroundColor: scaffoldColorLight,
+  focusColor: lightFocusColor,
+  scaffoldBackgroundColor: whiteColor,
   iconTheme: IconThemeData(
     color: silverColor
   ),
@@ -19,7 +20,7 @@ ThemeData lightTheme =ThemeData(
           fontSize: 20.sp,
           fontWeight: FontWeight.bold
       ),
-      backgroundColor: scaffoldColorLight,
+      backgroundColor: whiteColor,
       iconTheme: const IconThemeData(
         color: Colors.black,
         size: 25,
@@ -28,13 +29,13 @@ ThemeData lightTheme =ThemeData(
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: scaffoldColorLight,
+        systemNavigationBarColor: whiteColor,
         systemNavigationBarIconBrightness: Brightness.dark,
       )
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     type: BottomNavigationBarType.fixed,
-    backgroundColor: scaffoldColorLight,
+    backgroundColor: whiteColor,
   ),
   textTheme: TextTheme(
     bodySmall: TextStyle(
@@ -63,14 +64,14 @@ ThemeData lightTheme =ThemeData(
 ThemeData darkTheme = ThemeData(
   fontFamily: 'Inter',
   primaryColor: containerColor,
-  focusColor: containerColor,
-  scaffoldBackgroundColor: scaffoldColorDark,
+  focusColor: darkFocusColor,
+  scaffoldBackgroundColor: HexColor('#0F1828'),
   iconTheme: IconThemeData(
       color: whiteColor
   ),
   appBarTheme: AppBarTheme(
       elevation: 0,
-      backgroundColor: scaffoldColorDark,
+      backgroundColor: HexColor('#0F1828'),
       titleTextStyle: TextStyle(
           color: whiteColor,
           fontSize: 20.sp,

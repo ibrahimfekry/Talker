@@ -72,7 +72,11 @@ Widget childPdf({urlPdf, context, sendBy}){
             },
             child: DefaultText(
               text: 'file.pdf',
-              textStyle: Theme.of(context).textTheme.bodyMedium,
+              textStyle: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight:FontWeight.w300,
+                  color: whiteColor
+              ),
             )),
       ],
     ),
@@ -104,7 +108,11 @@ Widget childTxt({urlTxt, context, sendBy}){
             },
             child: DefaultText(
               text: 'TXTFile.txt',
-              textStyle: Theme.of(context).textTheme.bodyMedium,
+              textStyle: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight:FontWeight.w300,
+                  color: whiteColor
+              ),
             )
         ),
       ],
@@ -135,7 +143,11 @@ Widget childWord ({sendBy, context}){
             onTap: () {},
             child: DefaultText(
               text: 'file.docx',
-              textStyle: Theme.of(context).textTheme.bodyMedium,
+              textStyle: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight:FontWeight.w300,
+                  color: whiteColor
+              ),
             )),
       ],
     ),
@@ -167,7 +179,11 @@ Widget childExcel ({sendBy, context}){
             },
             child: DefaultText(
               text: 'file.xlsx',
-              textStyle: Theme.of(context).textTheme.bodyMedium,
+              textStyle: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight:FontWeight.w300,
+                  color: whiteColor
+              ),
             )),
       ],
     ),
@@ -244,7 +260,11 @@ Widget defaultMessage({message, sendBy, context}){
           ),
         DefaultText(
           text: "$message",
-          textStyle: Theme.of(context).textTheme.bodyMedium,
+          textStyle: TextStyle(
+              fontSize: 14.sp,
+              fontWeight:FontWeight.w300,
+              color:blackColor
+          ),
         ),
       ],
     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:talki/modules/group_chats/group_chat_room.dart';
 import '../../shared/constants/colors.dart';
 import '../../shared/cubit/chat_cubit/chat_cubit.dart';
@@ -80,26 +81,32 @@ class _ContactScreenState extends State<ContactScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15.r),
-                            color: silverColor,
+                            color: Theme.of(context).scaffoldBackgroundColor,
                           ),
                           child: Padding(
                             padding: EdgeInsets.all(8.r),
-                            child: Row(
+                            child: Column(
                               children: [
-                                CircleAvatar(
-                                  backgroundColor: orangeColor,
-                                  child: Text('${(chatCubit.contacts[index].displayName)?.substring(0,1).trim()}'),
-                                ),
-                                SizedBox(width: 10.w,),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                // SizedBox(height: 5.h,),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Text('${chatCubit.contacts[index].displayName}'),
-                                    // SizedBox(height: 3.h,),
-                                    // Text('${chatCubit.contacts[index].phones?[0].value}'),
-                                    //Text('mohamed'),
+                                    CircleAvatar(
+                                      backgroundColor: HexColor('#152033'),
+                                      child: Text('${(chatCubit.contacts[index].displayName)?.substring(0,1).trim()}'),
+                                    ),
+                                    SizedBox(width: 10.w,),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('${chatCubit.contacts[index].displayName}'),
+                                      ],
+                                    ),
                                   ],
                                 ),
+                                SizedBox(height: 10.h,),
+                                Divider(color: Colors.grey.shade900,)
                               ],
                             ),
                           ),

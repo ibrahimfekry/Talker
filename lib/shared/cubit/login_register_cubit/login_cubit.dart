@@ -191,22 +191,39 @@ class LoginCubit extends Cubit<LoginStates> {
   }
 
   Future<void> signOut() async {
-    await googleSignIn.signOut();
+    emit(SignOutGoogleLoading());
+    try{
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .update({"status": "Offline",}).then((value){
+            googleSignIn.signOut().then((value){
+          emit(SignOutGoogleSuccess());
+        }).catchError((error){
+          emit(SignOutGoogleError());
+        });
+      });
+    }catch(e){
+      emit(SignOutGoogleError());
+    }
   }
 
   Future logOut() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     emit(LogoutLoading());
     try {
-      await auth.signOut().then((value){
-        emit(LogoutSuccess());
-      }).catchError((error){
-        emit(LogoutError());
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .update({"status": "Offline",}).then((value) {
+            auth.signOut().then((value){
+          emit(LogoutSuccess());
+        }).catchError((error){
+          emit(LogoutError());
+        });
       });
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) {print(e);}
       emit(LogoutError());
     }
   }
@@ -236,10 +253,7 @@ class LoginCubit extends Cubit<LoginStates> {
     emit(SearchLoading());
     await data
         .collection('users')
-        .where(
-          "firstName",
-          isEqualTo: text,
-        )
+        .where("firstName", isEqualTo: text,)
         .get()
         .then((value) {
       if (userListSearch != []) {
@@ -257,7 +271,6 @@ class LoginCubit extends Cubit<LoginStates> {
     });
     return userListSearch;
   }
-
   // get Available groups
   String? uid;
   void getAvailableGroups() async {
@@ -662,6 +675,19 @@ class LoginCubit extends Cubit<LoginStates> {
       emit(SearchGroupError());
     });
     return groupSearch;
+  }
+
+  signInWithFacebook() async {
+    emit(SignWithFacebookLoading());
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
+      emit(SignWithFacebookSuccess());
+      return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    }catch(e){
+      print('error face = $e');
+      emit(SignWithFacebookError());
+    }
   }
 
 }

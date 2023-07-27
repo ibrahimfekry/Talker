@@ -78,7 +78,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             height: 200.h,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: orangeColor,
+                              color: blueColor.withOpacity(0.3),
                               borderRadius: BorderRadius.only(
                                 bottomRight: Radius.elliptical(200.w, 40.h),
                                 bottomLeft: Radius.elliptical(200.w, 40.h),
@@ -161,7 +161,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   },
                                   borderRadius: 10.r,
                                   color: Theme.of(context).focusColor,
-                                  hintText: 'Date',
+                                  hintText: 'email address',
                                   prefix: Icon(
                                     Icons.email,
                                     color: silverColor,
@@ -256,7 +256,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   height: 40.h,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.r),
-                                    color: orangeColor,
+                                    color:blueColor.withOpacity(0.5),
                                   ),
                                   child: MaterialButton(
                                     onPressed: () {

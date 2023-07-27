@@ -74,7 +74,7 @@ class _GroupInfoState extends State<GroupInfo> {
                           //physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return AddMemberItem (
-                              iconColor: loginCubit.infoMembersList[index]['isAdmin'] ? orangeColor : Theme.of(context).iconTheme.color,
+                              iconColor: loginCubit.infoMembersList[index]['isAdmin'] ? blueColor : Theme.of(context).iconTheme.color,
                               firstName: '${loginCubit.infoMembersList[index]['firstName']}',
                               emailAddress: '${loginCubit.infoMembersList[index]['emailAddress']}',
                               icon: loginCubit.infoMembersList[index]['isAdmin']? Icons.person : Icons.close,
@@ -92,7 +92,7 @@ class _GroupInfoState extends State<GroupInfo> {
                       SizedBox(height: 20.h,),
                       ButtonCreateDeleteGroup(
                         fontColor: whiteColor,
-                        backgroundColor: orangeColor,
+                        backgroundColor: blueColor.withOpacity(0.7),
                         text: 'Add Members',
                         onTap: (){
                           Navigator.push(context, MaterialPageRoute(
@@ -106,7 +106,7 @@ class _GroupInfoState extends State<GroupInfo> {
                       SizedBox(height: 20.h,),
                       ButtonCreateDeleteGroup(
                         fontColor: whiteColor,
-                        backgroundColor: orangeColor,
+                        backgroundColor: blueColor.withOpacity(0.7),
                         text: 'Leave Group',
                         onTap: (){
                           loginCubit.onLeaveGroup(groupId: widget.groupId);

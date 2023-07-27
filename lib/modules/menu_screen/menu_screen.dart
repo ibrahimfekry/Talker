@@ -1,23 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:talki/modules/login_Screen/Login_screen.dart';
 import 'package:talki/modules/reset_password_screen/reset_password_screen.dart';
+import 'package:talki/shared/constants/constants.dart';
 import 'package:talki/shared/cubit/layout_cubt/layout_cubit.dart';
 import 'package:talki/shared/cubit/login_register_cubit/login_states.dart';
-
-import '../../models/users_model.dart';
-import '../../shared/components/widgets/add_member_Item.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
 import '../../shared/cubit/login_register_cubit/login_cubit.dart';
 import '../edit_profile/edit_profile.dart';
-import '../forget_password_screen/forget_password_screen.dart';
 
 class MenuScreen extends StatefulWidget {
   static String id = 'MenuScreen';
@@ -38,10 +33,12 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     LoginCubit loginCubit = LoginCubit.get(context);
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
     return BlocConsumer<LoginCubit, LoginStates>(
       listener: (context, state) {
-        if(state is LogoutSuccess){
+        if(state is LogoutSuccess || state is SignOutGoogleSuccess){
           LayoutCubit.get(context).pageIndex = 0 ;
+          isGoogleEmail = false;
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
         }
       },
@@ -115,14 +112,26 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                 ),
                 ListTile(
+                  onTap: () =>
+                    launchUrl(privacyUrl),
+                  //leading: SvgPicture.asset('assets/images/lock.svg'),
+                  title: DefaultText(
+                      text: 'Privacy Policy',
+                      textStyle: Theme.of(context).textTheme.bodyMedium),
+                  trailing: Icon(Icons.chevron_right,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                ),
+                ListTile(
                   onTap: () {
-                    loginCubit.logOut();
+                    isGoogleEmail?  loginCubit.signOut() : loginCubit.logOut();
                   },
                   title: DefaultText(
                       text: 'Log Out',
                       textStyle: Theme.of(context).textTheme.bodyMedium),
                   trailing: Icon(Icons.logout, color: Theme.of(context).iconTheme.color),
                 ),
+
               ],
             ),
           ),

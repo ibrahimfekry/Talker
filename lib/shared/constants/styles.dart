@@ -9,7 +9,7 @@ TextStyle defaultStyle = TextStyle(
 );
 
 TextStyle linkStyle = TextStyle(
-    color: orangeColor,
+    color: blueColor,
     fontSize: 12.sp,
     fontWeight: FontWeight.w700
 );

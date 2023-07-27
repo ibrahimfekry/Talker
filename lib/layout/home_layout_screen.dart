@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:talki/modules/privacy_screen.dart';
 import '../modules/chats_screen_history/chats_screen_history.dart';
 import '../modules/group_chats/group_chat_screen.dart';
 import '../modules/menu_screen/menu_screen.dart';
@@ -12,13 +13,17 @@ import '../shared/cubit/layout_cubt/layout_cubit.dart';
 import '../shared/cubit/layout_cubt/layout_states.dart';
 
 class HomeLayoutScreen extends StatefulWidget {
-
-  HomeLayoutScreen({Key? key, this.emailId, this.googleId,}) : super(key: key);
+  HomeLayoutScreen({
+    Key? key,
+    this.emailId,
+    this.googleId,
+  }) : super(key: key);
 
   //////////////////////// variables
   static String id = 'HomeLayout';
   String? emailId;
   dynamic googleId;
+
 
   @override
   State<HomeLayoutScreen> createState() => _HomeLayoutScreenState();
@@ -26,18 +31,36 @@ class HomeLayoutScreen extends StatefulWidget {
 
 class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
   @override
+  void initState() {
+    super.initState();
+    // showPrivacyOverlay();
+      // Navigator.pushAndRemoveUntil(
+      //     context, MaterialPageRoute(builder: (context) => PrivacyScreen()),(route) => true,);
+  }
+  OverlayEntry? entry;
+  @override
   Widget build(BuildContext context) {
     LayoutCubit layoutCubit = LayoutCubit.get(context);
     List screens = [
-      ChatsScreenHistory(emailId: widget.emailId, googleId: widget.googleId,),
+      ChatsScreenHistory(
+        emailId: widget.emailId,
+        googleId: widget.googleId,
+      ),
       GroupScreen(),
       MenuScreen()
     ];
 
     List appbarTitles = [
-      DefaultText(text: 'Chats', textStyle: Theme.of(context).appBarTheme.titleTextStyle,),
-      DefaultText(text: 'Groups', textStyle: Theme.of(context).appBarTheme.titleTextStyle),
-      DefaultText(text: 'Menu', textStyle: Theme.of(context).appBarTheme.titleTextStyle),
+      DefaultText(
+        text: 'Chats',
+        textStyle: Theme.of(context).appBarTheme.titleTextStyle,
+      ),
+      DefaultText(
+          text: 'Groups',
+          textStyle: Theme.of(context).appBarTheme.titleTextStyle),
+      DefaultText(
+          text: 'Menu',
+          textStyle: Theme.of(context).appBarTheme.titleTextStyle),
     ];
     return BlocConsumer<LayoutCubit, LayoutStates>(
       listener: (context, state) {},
@@ -47,11 +70,10 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
             title: appbarTitles[layoutCubit.pageIndex],
             actions: [
               IconButton(
-                  onPressed: (){
+                  onPressed: () {
                     layoutCubit.changeAppMode();
                   },
-                  icon: const Icon(Icons.brightness_4_outlined)
-              ),
+                  icon: const Icon(Icons.brightness_4_outlined)),
             ],
             automaticallyImplyLeading: false,
           ),
@@ -59,9 +81,11 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
             height: 56.h,
             index: layoutCubit.pageIndex,
             color: scaffoldColorDark,
-            backgroundColor: orangeColor,
+            backgroundColor: blueColor.withOpacity(0.2),
             animationCurve: Curves.easeInOut,
-            onTap: (index) { layoutCubit.changeIndex(index);},
+            onTap: (index) {
+              layoutCubit.changeIndex(index);
+            },
             items: <Widget>[
               BottomBarButton(
                 buttonTxt: 'Chats',
@@ -85,6 +109,9 @@ class _HomeLayoutScreenState extends State<HomeLayoutScreen> {
       },
     );
   }
+  void showPrivacyOverlay(){
+    entry = OverlayEntry(builder: (context)=> PrivacyScreen());
+    final overlay = Overlay.of(context);
+    overlay.insert(entry!);
+  }
 }
-
-

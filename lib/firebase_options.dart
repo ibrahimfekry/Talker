@@ -44,39 +44,40 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyApmInP9D7TKX2UVegOUkH8hth6BSB8AZk',
-    appId: '1:69247963633:web:fe0e22072e0dea66f57450',
-    messagingSenderId: '69247963633',
-    projectId: 'talki-app-70ff9',
-    authDomain: 'talki-app-70ff9.firebaseapp.com',
-    storageBucket: 'talki-app-70ff9.appspot.com',
+    apiKey: 'AIzaSyAyahevGscBd_3BrTJuZOgKCByqawlJW7w',
+    appId: '1:221467203358:web:09542d43c8432aa90c1b0f',
+    messagingSenderId: '221467203358',
+    projectId: 'talker-f1ac5',
+    authDomain: 'talker-f1ac5.firebaseapp.com',
+    storageBucket: 'talker-f1ac5.appspot.com',
+    measurementId: 'G-5BS0KPGLKS',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyACR-3rIe-uymAfNGGWBsUSNc22NxgJvNI',
-    appId: '1:69247963633:android:92340e9dfd9dfdaff57450',
-    messagingSenderId: '69247963633',
-    projectId: 'talki-app-70ff9',
-    storageBucket: 'talki-app-70ff9.appspot.com',
+    apiKey: 'AIzaSyDsombzCvSmM7mSbnIkvVcwv1FmvDS18KU',
+    appId: '1:221467203358:android:f13a4fb85c2b034f0c1b0f',
+    messagingSenderId: '221467203358',
+    projectId: 'talker-f1ac5',
+    storageBucket: 'talker-f1ac5.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBOJfjYijpNS7VIWEjM__gJgWBXzvCoLdw',
-    appId: '1:69247963633:ios:90843274fa89668ef57450',
-    messagingSenderId: '69247963633',
-    projectId: 'talki-app-70ff9',
-    storageBucket: 'talki-app-70ff9.appspot.com',
-    iosClientId: '69247963633-b04eg70m4kts4gksro0dn9itupqqgrpq.apps.googleusercontent.com',
-    iosBundleId: 'com.example.talki',
+    apiKey: 'AIzaSyCIF-le6iaq03ZZIIP1jmB3uewmWTXW6x8',
+    appId: '1:221467203358:ios:3dfd4c5504adbcb40c1b0f',
+    messagingSenderId: '221467203358',
+    projectId: 'talker-f1ac5',
+    storageBucket: 'talker-f1ac5.appspot.com',
+    iosClientId: '221467203358-q4s0r0or4qtikea0o46qhl356i9ep69m.apps.googleusercontent.com',
+    iosBundleId: 'com.IFLap.talker',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBOJfjYijpNS7VIWEjM__gJgWBXzvCoLdw',
-    appId: '1:69247963633:ios:90843274fa89668ef57450',
-    messagingSenderId: '69247963633',
-    projectId: 'talki-app-70ff9',
-    storageBucket: 'talki-app-70ff9.appspot.com',
-    iosClientId: '69247963633-b04eg70m4kts4gksro0dn9itupqqgrpq.apps.googleusercontent.com',
-    iosBundleId: 'com.example.talki',
+    apiKey: 'AIzaSyCIF-le6iaq03ZZIIP1jmB3uewmWTXW6x8',
+    appId: '1:221467203358:ios:3dfd4c5504adbcb40c1b0f',
+    messagingSenderId: '221467203358',
+    projectId: 'talker-f1ac5',
+    storageBucket: 'talker-f1ac5.appspot.com',
+    iosClientId: '221467203358-q4s0r0or4qtikea0o46qhl356i9ep69m.apps.googleusercontent.com',
+    iosBundleId: 'com.IFLap.talker',
   );
 }

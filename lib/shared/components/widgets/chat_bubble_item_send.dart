@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../constants/theme.dart';
 import '../../cubit/chat_cubit/chat_cubit.dart';
 import '../../cubit/chat_cubit/chat_states.dart';
 import '../../constants/colors.dart';
@@ -86,7 +87,8 @@ class _ChatBubbleItemState extends State<ChatBubbleItem> {
                     topRight: Radius.circular(10.r),
                     bottomRight: Radius.circular(10.r),
                   ),
-                  color: silverColor),
+                  color: Theme.of(context).primaryColorLight.withOpacity(0.7)
+              ),
               child: child!,
             ),
           ),

@@ -4,21 +4,33 @@ import 'package:hexcolor/hexcolor.dart';
 import '../../constants/colors.dart';
 
 class DefaultText extends StatelessWidget {
-  DefaultText({Key? key,this.text,this.textStyle,this.fontSize = 14,this.fontColor,this.fontWeight}) : super(key: key);
+  DefaultText(
+      {Key? key,
+      this.text,
+      this.textStyle,
+      this.fontSize = 14,
+      this.fontColor,
+      this.fontWeight,
+      this.maxLines})
+      : super(key: key);
   String? text;
   FontWeight? fontWeight;
   double? fontSize;
   HexColor? fontColor = silverColor;
   dynamic textStyle;
+  int? maxLines;
   @override
   Widget build(BuildContext context) {
     return Text(
       '$text',
-      style: textStyle ?? TextStyle(
-        fontSize: fontSize,
-        color: fontColor,
-        fontWeight: fontWeight
-      ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: maxLines,
+      style: textStyle ??
+          TextStyle(
+            fontSize: fontSize,
+            color: fontColor,
+            fontWeight: fontWeight,
+          ),
     );
   }
 }

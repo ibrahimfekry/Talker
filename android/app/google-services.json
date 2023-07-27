@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "69247963633",
-    "project_id": "talki-app-70ff9",
-    "storage_bucket": "talki-app-70ff9.appspot.com"
+    "project_number": "221467203358",
+    "project_id": "talker-f1ac5",
+    "storage_bucket": "talker-f1ac5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:69247963633:android:92340e9dfd9dfdaff57450",
+        "mobilesdk_app_id": "1:221467203358:android:f13a4fb85c2b034f0c1b0f",
         "android_client_info": {
-          "package_name": "com.example.talki"
+          "package_name": "com.IFLap.talker"
         }
       },
       "oauth_client": [
         {
-          "client_id": "69247963633-ffm9hn051109mnrib5tflgb129fphtab.apps.googleusercontent.com",
+          "client_id": "221467203358-hoeqb898oneo05ed0ru72obp29jg4k4f.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyACR-3rIe-uymAfNGGWBsUSNc22NxgJvNI"
+          "current_key": "AIzaSyDsombzCvSmM7mSbnIkvVcwv1FmvDS18KU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "69247963633-ffm9hn051109mnrib5tflgb129fphtab.apps.googleusercontent.com",
+              "client_id": "221467203358-hoeqb898oneo05ed0ru72obp29jg4k4f.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String? urlImage;
   String? urlCameraImage;
   String? urlFile;
+  bool showEmoji = false;
 
   @override
   void initState() {
@@ -91,9 +93,9 @@ class _ChatScreenState extends State<ChatScreen> {
       }
       return true;
     }
-    CollectionReference messages = FirebaseFirestore.instance.collection('messages')
-        .doc(widget.chatId).collection('channel');
+    CollectionReference messages = FirebaseFirestore.instance.collection('messages').doc(widget.chatId).collection('channel');
     CollectionReference users = FirebaseFirestore.instance.collection('users');
+    CollectionReference uid = FirebaseFirestore.instance.collection('uid');
     return StreamBuilder<QuerySnapshot>(
         stream: messages.orderBy('messageTime', descending: true).snapshots(),
         builder: (context, snapshot) {
@@ -159,6 +161,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     DefaultText(
                                       text: '${widget.firstName} ${widget.lastName}',
                                       textStyle: Theme.of(context).textTheme.bodyMedium,
+                                      //fontSize: 15,
                                     ),
                                     SizedBox(
                                       height: 5.h,
@@ -170,7 +173,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                           width: 8.w,
                                           decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(50),
-                                              color: orangeColor),
+                                              color: scaffoldColorDark),
                                         ),
                                         SizedBox(
                                           width: 4.w,
@@ -209,7 +212,6 @@ class _ChatScreenState extends State<ChatScreen> {
                               height: 15.h,
                             ),
                             SendBoxItem(
-                              containerColor: HexColor('#1C1C1C'),
                               onTapRecord: () async {
                                 chatCubit.startRecord();
                                 setState((){});
@@ -223,7 +225,38 @@ class _ChatScreenState extends State<ChatScreen> {
                               fontSize: 13.sp,
                               sendController: sendController,
                               textColor: whiteColor,
-                              onTapTextForm: (){},
+                              child: Visibility(
+                                visible: showEmoji,
+                                child: SizedBox(
+                                  height: MediaQuery.of(context).size.height / 2.9,
+                                  child: EmojiPicker(
+                                    onEmojiSelected: (category, emoji) {
+                                      sendController.text =
+                                          sendController.text + emoji.emoji;
+                                    },
+                                    config: Config(
+                                      columns: 7,
+                                      emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              onTapTextForm: (){
+                                if (showEmoji) {
+                                  setState(() {
+                                    showEmoji = !showEmoji;
+                                  });
+                                }
+                              },
+                              emojiTap: (){
+                                setState(() {
+                                  showEmoji = !showEmoji;
+                                  Navigator.pop;
+                                });
+                                if (showEmoji) {
+                                } else {}
+                                FocusScope.of(context).unfocus();
+                              },
                               sendFunction: () {
                                 sendMessage(messages, chatCubit);
                               },
@@ -345,6 +378,11 @@ class _ChatScreenState extends State<ChatScreen> {
        'sendBy': FirebaseAuth.instance.currentUser?.email,
        //'sendBy': widget.emailId != null ? widget.emailId.toString() : widget.googleId.toString(),
      }).then((value) {
+       FirebaseFirestore.instance.collection('uid').doc().set({
+         'uid': widget.chatId,
+         'desId': widget.destinationId,
+         'sendBy': FirebaseAuth.instance.currentUser?.email,
+       });
        sendController.clear();
        chatCubit.phoneNumber = null;
        urlImage = null;

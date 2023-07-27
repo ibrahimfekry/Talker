@@ -1,13 +1,18 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:talki/shared/constants/styles.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../layout/home_layout_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../shared/components/widgets/text_form_field.dart';
 import '../../shared/components/widgets/text_widget.dart';
 import '../../shared/constants/colors.dart';
+import '../../shared/constants/constants.dart';
 import '../../shared/cubit/login_register_cubit/login_cubit.dart';
 import '../../shared/cubit/login_register_cubit/login_states.dart';
 import '../forget_password_screen/forget_password_screen.dart';
@@ -37,6 +42,7 @@ class LoginScreen extends StatelessWidget {
                   HomeLayoutScreen(emailId: emailId,)), (route) => false,);
           }
           if (state is LoginWithGoogleSuccess){
+            isGoogleEmail = true;
             Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) =>
                   HomeLayoutScreen(googleId: loginCubit.googleId,)), (route) => false,);
@@ -44,6 +50,11 @@ class LoginScreen extends StatelessWidget {
           if(state is LoginSuccessState || state is LoginErrorState){
             emailController.clear();
             passwordController.clear();
+          }
+          if(state is SignWithFacebookSuccess){
+            Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) =>
+                  HomeLayoutScreen()), (route) => false,);
           }
         },
         builder: (context, state){
@@ -59,9 +70,11 @@ class LoginScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image(image: const AssetImage('assets/images/talkiImage.png',),
-                        width: 132.w,
-                        height: 55.h,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/images/chat_logo.svg',width: 210,height: 150,),
+                        ],
                       ),
                       SizedBox(height: 34.h,),
                       DefaultTextField(
@@ -114,7 +127,7 @@ class LoginScreen extends StatelessWidget {
                           },
                           child: loginCubit.isPasswordLogin ? Icon(Icons.visibility_off, color: silverColor,) : Icon(Icons.visibility, color: silverColor,),
                         ),
-                        textInputType: TextInputType.number,
+                        textInputType: TextInputType.visiblePassword,
                       ),
                       SizedBox(height: 12.h,),
                       Row(
@@ -125,7 +138,7 @@ class LoginScreen extends StatelessWidget {
                                   Navigator.pushNamed(context, RegisterScreen.id);
                                 },
                                 child: DefaultText(
-                                    fontColor: orangeColor,
+                                    fontColor: blueColor,
                                     text: 'Create a new account'
                                 ),
                               )),
@@ -134,7 +147,7 @@ class LoginScreen extends StatelessWidget {
                               Navigator.pushNamed(context, ForgetPasswordScreen.id);
                             },
                             child: DefaultText(
-                                fontColor: orangeColor,
+                                fontColor: blueColor,
                                 text: 'Forget Password!'
                             ),
                           ),
@@ -169,7 +182,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 52.h,),
+                      SizedBox(height: 35.h,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -195,19 +208,42 @@ class LoginScreen extends StatelessWidget {
                             fallback: (context) => const Center(child: CircularProgressIndicator()),
                           ),
                           SizedBox(width: 20.h,),
-                          GestureDetector(
-                              child:SvgPicture.asset('assets/images/icon_facebook.svg')
+                        ],
+                      ),
+                      SizedBox(height: 30.h,),
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              DefaultText(
+                                text: 'By Continuing you agree to our ',
+                                fontSize: 12.sp,
+                              ),
+                              GestureDetector(
+                                child: Text(' Privacy Policy ',style: linkStyle,),
+                                onTap: () =>
+                                    launchUrl(privacyUrl),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5.h,),
+                          Row(
+                            children: [
+                              DefaultText(text:'and ' , fontSize: 12.sp,),
+                              GestureDetector(
+                                child: Text(' Terms of Service',style: linkStyle,),
+                                onTap: () =>
+                                    launchUrl(termsUrl),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
+                    ],),
               ),
             ),
-          );
+          ));
         },
-
     );
   }
 }

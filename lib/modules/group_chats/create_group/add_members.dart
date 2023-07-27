@@ -100,7 +100,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                                         child: ButtonCreateDeleteGroup(
                                           text: 'Create Group',
                                           fontColor: whiteColor,
-                                          backgroundColor: orangeColor,
+                                          backgroundColor: scaffoldColorDark,
                                           onTap: (){
                                             loginCubit.createGroup(
                                                 text: groupNameController.text,
@@ -113,7 +113,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                                         child: ButtonCreateDeleteGroup(
                                           text: 'Delete Group',
                                           fontColor: whiteColor,
-                                          backgroundColor: orangeColor,
+                                          backgroundColor: scaffoldColorDark,
                                           onTap: (){
                                             loginCubit.deleteGroup();
                                           },
@@ -135,7 +135,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                     isBottomSheet = true;
                   }
                   },
-                    icon: Icon(Icons.forward, color: orangeColor, size: 30,),
+                    icon: Icon(Icons.forward, color: blueColor, size: 30,),
                 ) : const SizedBox(),
                 SizedBox(width: 10.w,),
               ],
@@ -175,7 +175,7 @@ class _AddMembersInGroupState extends State<AddMembersInGroup> {
                             onTap: () {
                               loginCubit.searchAddMember(text: searchController.text);
                             },
-                            child: Icon(Icons.search, color: orangeColor,)
+                            child: Icon(Icons.search, color: scaffoldColorDark,)
                         ),
                         fallback: (context) => const Center(child: CircularProgressIndicator(),),
                       ),

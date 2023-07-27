@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'text_widget.dart';
-import '../../constants/colors.dart';
-import '../../../modules/chat_screen/chat_screen.dart';
 
 class ChatScreenHistoryItem extends StatelessWidget {
-
   String? name;
   String? time;
   String? status;
   String? url;
-
+  
   ChatScreenHistoryItem({super.key, this.name, this.time, this.status, this.url});
-
   @override
   Widget build(BuildContext context) {
     return Row(

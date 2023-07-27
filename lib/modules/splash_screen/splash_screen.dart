@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:talki/modules/authentication_screen/auth_screen.dart';
 import 'package:talki/modules/login_Screen/Login_screen.dart';
 import 'package:talki/shared/constants/colors.dart';
@@ -36,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
             systemNavigationBarIconBrightness: Brightness.dark
         ),
       ),
-      body: const Center(child: Image(image: AssetImage('assets/images/splash_image.png')),),
+      body:  Center(child: SvgPicture.asset('assets/images/splash_image.svg')),
     );
   }
 }

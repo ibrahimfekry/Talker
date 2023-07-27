@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/users_model.dart';
 import '../../../modules/chat_screen/chat_screen.dart';
+import '../../constants/constants.dart';
 import 'chat_screen_history_item.dart';
 
 class ItemChatHistory extends StatelessWidget{

@@ -137,7 +137,6 @@ class _GroupChatRoomState extends State<GroupChatRoom> {
                             ),
                             SizedBox(height: 10.h,),
                             SendBoxItem(
-                              containerColor: HexColor('#1C1C1C'),
                               onTapRecord: () async {
                                 await recorder.toogleRecording();
                                 setState((){});

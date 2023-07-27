@@ -197,3 +197,17 @@ class SearchGroupLoading extends LoginStates{}
 class SearchGroupSuccess extends LoginStates{}
 
 class SearchGroupError extends LoginStates{}
+
+//////////////////////// status states
+class SignOutGoogleLoading extends LoginStates{}
+
+class SignOutGoogleSuccess extends LoginStates{}
+
+class SignOutGoogleError extends LoginStates{}
+
+/////////////////////// login with facebook
+class SignWithFacebookLoading extends LoginStates{}
+
+class SignWithFacebookSuccess extends LoginStates{}
+
+class SignWithFacebookError extends LoginStates{}

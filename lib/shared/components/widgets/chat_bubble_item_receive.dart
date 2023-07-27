@@ -87,7 +87,8 @@ class _ChatBubbleItemReceiveState extends State<ChatBubbleItemReceive> {
                     topLeft: Radius.circular(10.r),
                     bottomRight: Radius.circular(10.r),
                   ),
-                  color: orangeColor),
+                  color: Theme.of(context).highlightColor.withOpacity(1),
+              ),
               child: child!,
             ),
           ),
@@ -100,13 +101,13 @@ class _ChatBubbleItemReceiveState extends State<ChatBubbleItemReceive> {
     if (message.contains('jpg') ||
         message.contains('jpeg') ||
         message.contains('png')) {
-      child = childImage(urlImage: message, sendBy: sendBy);
+      child = childImage(urlImage: message, sendBy: sendBy, context: context);
     } else if (message.contains('pdf')) {
       child = childPdf(context: context, urlPdf: message, sendBy: sendBy);
     } else if (message.contains('docx')) {
-      child = childWord();
+      child = childWord(context: context, sendBy: sendBy);
     } else if (message.contains('xlsx')) {
-      child = childExcel(sendBy: sendBy);
+      child = childExcel(sendBy: sendBy, context: context);
     } else if (message.contains('mp3')) {
       child = childMp3(
         context: context,

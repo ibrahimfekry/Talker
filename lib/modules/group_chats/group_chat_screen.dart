@@ -59,7 +59,7 @@ class _GroupScreenState extends State<GroupScreen> {
                             width: 50.w,
                             height: 50.h,
                             decoration: BoxDecoration(
-                              color: silverColor,
+                              color: blueColor.withOpacity(0.7),
                               borderRadius: BorderRadius.circular(50.r),
                             ),
                             child: Icon(Icons.add, color: whiteColor,),
@@ -76,9 +76,11 @@ class _GroupScreenState extends State<GroupScreen> {
                                   return ListView.separated(
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (context, index) => ChatActiveItem(
-                                        name: '${snapshot.data?.docs[index]['firstName']} ${snapshot.data?.docs[index]['lastName']}',
+                                        firstName: '${snapshot.data?.docs[index]['firstName']}',
+                                        lastName: '${snapshot.data?.docs[index]['lastName']}',
                                         status: snapshot.data?.docs[index]['status'],
                                         url: snapshot.data?.docs[index]['urlImage'],
+                                        isGroup: true,
                                       ),
                                       separatorBuilder: (context, index) => SizedBox(width: 5.h,),
                                       itemCount: snapshot.data!.docs.length);
@@ -102,7 +104,7 @@ class _GroupScreenState extends State<GroupScreen> {
                           },
                           child: Icon(
                             Icons.search,
-                            color: orangeColor,
+                            color: scaffoldColorDark,
                           )
                       ),
                       hintText: 'Search for groups',

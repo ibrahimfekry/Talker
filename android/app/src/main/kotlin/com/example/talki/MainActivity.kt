@@ -1,4 +1,4 @@
-package com.example.talki
+package com.IFLap.talker
 
 import io.flutter.embedding.android.FlutterActivity
 

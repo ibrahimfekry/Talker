@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:talki/modules/privacy_screen.dart';
 import 'package:talki/shared/bloc_observer/bloc_observer.dart';
 import 'package:talki/shared/constants/theme.dart';
 import 'package:talki/shared/cubit/layout_cubt/layout_states.dart';
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
                     ChatScreen.id: (context) => ChatScreen(),
                     PdfScreen.id: (context) => PdfScreen(),
                     ContactScreen.id: (context) => ContactScreen(),
+                    PrivacyScreen.id: (context)=> PrivacyScreen(),
                   },
                   theme: lightTheme,
                   darkTheme: darkTheme,
