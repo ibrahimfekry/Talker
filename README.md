@@ -1,15 +1,15 @@
 # talki
 
 ## A firebase chat app with all the features of whatsapp
-*channel chat between users
-*Group chat (add members , delete members , leave group )
-*Recording voice notes
-*Sending voice notes , documents , images , videos , contacts 
-*Sign in with Google
-*Forget password
-*Reset password
-*Edit profile
-*Screen responsive with all mobile phones
+* channel chat between users
+* Group chat (add members , delete members , leave group )
+* Recording voice notes
+* Sending voice notes , documents , images , videos , contacts 
+* Sign in with Google
+* Forget password
+* Reset password
+* Edit profile
+* Screen responsive with all mobile phones
 *******
 * Firebase auth
 * Firebase storage
